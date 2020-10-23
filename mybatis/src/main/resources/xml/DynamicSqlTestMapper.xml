@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.test.mybatis.mapper.zj.DynamicSqlTestMapper">
+
+	<sql id="table_name">
+		book
+	</sql>
+
+	<!--1.if标签测试-->
+	<select id="selectWithIf" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+		select * from <include refid="table_name"/>
+
+		<where>
+			<!--001.where只能去除前and，不能移除后and，当有连续的前and时，只会移除第一个
+
+            002.test条件的书写：
+            test中不等于: !=，不能使用is not null和is null
+            test中且: and
+            test中或: or
+
+            003. /**/注释不能放在标签如<select>内，否则会作为sql语句的内容。
+            如果想要添加注释请使用<!
+			-->
+			<if test="bookName != null">
+				and book_name=#{bookName}
+			</if>
+			<if test="authorName!=null">
+				and author_name=#{authorName}
+			</if>
+		</where>
+	    limit 5;
+	</select>
+
+	<!--2.foreach标签 + in测试
+	004.item: 指定collection中元素的引用名
+		open,close: 字符串拼接开始、结束字符串
+		separator: 分隔符
+	005.应在<foreach></foreach>之间添加值引用表达式
+	-->
+	<select id="selectWithForeach" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+		select * from <include refid="table_name"/>
+		where book_name in
+		<foreach collection="list" open="(" close=")" separator="," item="bookname">
+			#{bookname}
+		</foreach>
+	</select>
+</mapper>

@@ -1,0 +1,2 @@
+项目名：mybatis-test.test
+描述：mybatis测试项目

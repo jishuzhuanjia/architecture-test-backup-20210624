@@ -1,0 +1,15 @@
+server:
+  port: 8091 #Tomcat端口
+spring:
+  dubbo:
+    application:
+      name: springboot-dubbo-demo #应用名
+    # dubbo注册
+    registry:
+      address: zookeeper://localhost #zookeeper地址
+      port: 2181 #zookeeper提供注册服务的端口
+    protocol:
+      name: dubbo #暴露接口的协议
+      port: 20890 #dubbo服务暴露的端口
+    scan: com.zj.test.dubbo.impl #会扫描bean中的@Reference注解的接口。会订阅并实例化接口
+    timeout: 3000

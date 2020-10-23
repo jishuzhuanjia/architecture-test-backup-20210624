@@ -1,0 +1,33 @@
+server:
+  port: 8091 #Tomcat端口
+spring:
+  dubbo:
+    # dubbo服务是否对外提供接口,默认true
+    # 消费者也可以是提供者,也可以设置true
+    # 为了测试消费者也可以是提供者, 设置为true
+    server: true
+    application:
+      # 注册到zookeeper的应用名
+      name: springboot-dubbo-customer #应用名
+    # dubbo注册信息
+    registry:
+      # zookeeper注册地址
+      # 格式: zookeeper://ip
+      # 本地可用localhost表示
+      address: zookeeper://localhost #zookeeper地址
+      # zookeeper端口
+      port: 2181 #zookeeper提供注册服务的端口
+    protocol:
+      # 对外提供服务所用协议
+      name: dubbo
+      # 对外提供服务所用端口,默认20880
+      # port: 20890
+
+      # scan的配置:
+      # 1.对于提供者,dubbo的@Service注解注解的类必须在此包下
+      # 2.对于消费者,dubbo的@Reference注解注解的类必须在此包下。
+      # 3.对于即使提供者又是消费者的服务,dubbo的@Service和@Reference注解的类
+      # 都需要在此包下,否则扫描不到。
+    scan: com.zj.test.dubbocustomer.service.impl #会扫描bean中的@Reference注解的接口。会订阅并实例化接口
+    # 该参数是否真实有效未测试
+    timeout: 3000

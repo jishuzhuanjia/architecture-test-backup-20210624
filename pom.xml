@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <groupId>com.zj.test</groupId>
+    <artifactId>tests</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <!--Sub Modules-->
+    <!--start-->
+    <modules>
+        <module>mybatis</module>
+        <module>debuge-run</module>
+        <module>collection</module>
+        <module>spring</module>
+        <module>springmvc</module>
+        <module>java</module>
+        <module>lombok</module>
+        <module>junit</module>
+        <module>active-mq</module>
+    </modules>
+    <!--end-->
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <!--Fixed Dependencies-->
+    <dependencies>
+        <dependency>
+            <groupId>com.zj.util</groupId>
+            <artifactId>springmvc-util</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zj.util</groupId>
+            <artifactId>mybatis-util</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <!--********** springmvc **********-->
+        <!--start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!--end-->
+
+        <!--********** mybatis **********-->
+        <!--start-->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!--end-->
+
+        <!--tomcat-->
+        <!--start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!--end-->
+
+        <!--Spring Boot JUnit Test-->
+        <!--Class Like:
+        @RunWith(SpringRunner.class)
+        @SpringBootTest-->
+        <!--start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!--end-->
+
+        <!-- 日志打印，Druid数据库监控 -->
+        <!--<dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>-->
+
+        <!-- ================================ spring boot 打包jar运行时异常处理 ================================= -->
+        <!-- 异常1 -->
+        <!-- java.lang.NoClassDefFoundError: javax/el/ExpressionFactory -->
+        <!-- 之前使用的el-api 2.2版本的,更新到新版本3.0.0就解决了此问题，然后又出现异常2-->
+        <!--<dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>-->
+
+        <!--<dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <version>3.0.0</version>
+        </dependency>-->
+
+        <!-- 异常2 -->
+        <!-- com.sun.el.ExpressionFactoryImpl not found -->
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>el-impl</artifactId>
+            <version>2.2</version>
+        </dependency>
+
+        <!-- ========================================================= JSP ======================================= -->
+        <!-- spring boot解析jsp的依赖，否则会将jsp作为附件进行下载。 -->
+        <!-- 在本地以war形式发布运行时，如果包有冲突，会优先使用tomcat自带的依赖，因此当spring boot 以jar包形式打包发布时，需要
+        解决冲突问题-->
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+
+        <!-- 以下两个和jsp标签库相关，要一起添加-->
+        <!-- 由于与spring boot内嵌tomcat-embed-jasper中有相关依赖，会冲突，因此spring打包jar时需要注释掉 -->
+        <!--<dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>-->
+
+        <!-- spring boot中并没有标签库api，因此这个要添加上 -->
+        <dependency>
+            <groupId>taglibs</groupId>
+            <artifactId>standard</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+
+        <!--有时jsp c:forEach标签在不同的机器上运行，可能会出现java.lang.ClassNotFoundException: javax.servlet.jsp.jstl.core.LoopTag错误，
+        为了在所有机器上都能正常运行，这两个依赖必须要加-->
+        <!-- jstl-api -->
+        <!--后因为spring boot打包jar，会和内嵌tomcat冲突，因此注解掉，如果只是在tomcat中运行，则可以保留 -->
+        <dependency>
+            <groupId>javax.servlet.jsp.jstl</groupId>
+            <artifactId>jstl-api</artifactId>
+            <version>1.2</version>
+            <!---->
+            <exclusions>
+                <exclusion>
+                    <artifactId>jsp-api</artifactId>
+                    <groupId>javax.servlet.jsp</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>servlet-api</artifactId>
+                    <groupId>javax.servlet</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--idea中当修改类时，会修改xml中的类，是一个辅助插件-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!--lombok依赖,@Setter,@Getter注解-->
+        <!--start-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency><!--end-->
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.zj.util</groupId>
+                <artifactId>test-util</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <!--============================================spring cloud微服务配置=====================================-->
+            <!--spring cloud eureka微服务客户端-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+                <version>2.2.2.RELEASE</version>
+            </dependency>
+
+            <!-- 微服务eureka组件 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+                <version>2.2.2.RELEASE</version>
+            </dependency>
+
+            <!--spring cloud 注册中心-->
+            <!--<dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            </dependency>-->
+
+            <!-- jstl-impl 和spring boot tomcat内嵌依赖冲突，独立打包Jar需要注解掉，因为其自动导入el-api2.1与tomcat冲突-->
+            <!--<dependency>
+                <groupId>org.glassfish.web</groupId>
+                <artifactId>jstl-impl</artifactId>
+                <version>1.2</version>
+            </dependency>-->
+
+            <!-- 安全 -->
+            <!-- ========================================================= Shiro ======================================= -->
+            <!--shiro-->
+            <!--start-->
+            <!--<dependency>
+                <groupId>org.apache.shiro</groupId>
+                <artifactId>shiro-all</artifactId>
+                <version>1.2.2</version>
+            </dependency>-->
+            <!--end-->
+
+            <!-- 如果dependencyManage 管理父类已经管理的依赖，则需要指定版本，否则子工程将会版本UNKOOWN,报错。-->
+            <!-- shiro依赖的包 -->
+            <!-- <dependency>
+                 <groupId>org.quartz-scheduler</groupId>
+                 <artifactId>quartz</artifactId>
+             </dependency>-->
+
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-library</artifactId>
+            </dependency>
+
+            <!-- ========================================================= JSON ======================================= -->
+            <!-- JSONObject -->
+            <!--start-->
+            <!--<dependency>
+                <groupId>net.sf.json-lib</groupId>
+                <artifactId>json-lib</artifactId>
+                <version>2.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>1.9.3</version>
+            </dependency>--><!--end-->
+
+            <!-- ========================================================= 工具 ======================================= -->
+            <!--文件名工具,io工具-->
+            <!--start-->
+            <!-- <dependency>
+                 <groupId>commons-io</groupId>
+                 <artifactId>commons-io</artifactId>
+                 <version>2.4</version>
+             </dependency>--><!--end-->
+
+            <!--=========================================== excel ==================================================-->
+            <!--Java解析、生成Excel比较有名的框架有Apache poi、jxl。但他们都存在一个严重的问题就是非常的耗内存，
+            poi有一套SAX模式的API可以一定程度的解决一些内存溢出的问题，但POI还是有一些缺陷，
+            比如07版Excel解压缩以及解压后存储都是在内存中完成的，内存消耗依然很大。easyexcel重写了poi对07版Excel的解析，
+            能够原本一个3M的excel用POI sax依然需要100M左右内存降低到KB级别，并且再大的excel不会出现内存溢出，
+            03版依赖POI的sax模式。在上层做了模型转换的封装，让使用者更加简单方便-->
+            <!--<dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>2.1.6</version>
+            </dependency>-->
+
+            <!--=============================================== AOP =================================================-->
+            <!--<dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjrt</artifactId>
+            </dependency>-->
+
+            <!--============================================= junit单元测试 ==========================================-->
+            <!--<dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+            </dependency>-->
+
+            <!-- ************************* Mybatis 通用 Mapper Jar 集成  ******************* -->
+            <!--PageHelper分页插件-->
+            <!--start-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>1.2.5</version>
+            </dependency><!--end-->
+
+            <!--mapper.jar-->
+            <!--like: BaseMapper,Example-->
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper</artifactId>
+                <version>4.1.5</version>
+            </dependency>
+
+            <!--mapper.jar BaseMapper依赖的@Table jpa注解-->
+            <!--like: @Table-->
+            <dependency>
+                <groupId>org.hibernate.javax.persistence</groupId>
+                <artifactId>hibernate-jpa-2.1-api</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.16.10</version>
+                <scope>provided</scope>
+            </dependency>
+
+
+        </dependencies>
+    </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>local-releases</id>
+            <url>http://localhost:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>local-snapshots</id>
+            <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
+            <id>snapshot</id>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.4.2.RELEASE</version>
+                <!--必有指定主类，否则java -jar运行失败：
+                Error: Invalid or corrupt jarfile SpringBoot-Commons-0.0.1-SNAPSHOT.jar-->
+                <configuration>
+                    <mainClass>com.SpringbootApplication</mainClass>
+                </configuration>
+            </plugin>
+
+            <!--Maven部署插件: 将jar包部署到Nexus仓库。-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.8.2</version>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <!--解决xml在spring boot编译被排除的问题，主要是用来解决mybatis xml映射文件被编译排除在外的问题-->
+            <resource>
+                <directory>src/main/java/</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
+            <!--解决spring boot配置文件application.properties编译被排除的问题；
+            注意，在不同的机器，配置下，环境问题百出，可能有的机器会保留application.properties文件，而有的
+            机器不会保留，为了统一解决这些问题，兼容在eclipse和idea不同情况，强烈建议添加如下配置:
+            -->
+            <resource>
+                <directory>src/main/resources/</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
+            <resource>
+                <directory>src/main/webapp</directory>
+                <!--注意此次必须要放在此目录下才能被访问到-->
+                <targetPath>META-INF/resources</targetPath>
+                <includes>
+                    <include>**/**</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>
