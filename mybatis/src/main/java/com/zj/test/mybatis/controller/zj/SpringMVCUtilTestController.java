@@ -5,8 +5,8 @@ package com.zj.test.mybatis.controller.zj;
  * @version: 1.0
  */
 
-import com.zj.util.springmvc.request.ReqParam;
-import com.zj.util.springmvc.response.HttpResult;
+import com.zj.util.springmvc.reqeust.bean.ReqBean;
+import com.zj.util.springmvc.response.bean.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,13 +25,13 @@ public class SpringMVCUtilTestController {
     @Autowired Test005Mapper mapper;
 
     @RequestMapping("test1")
-    public HttpResult<List<UserPO>> test1(@RequestBody ReqParam<Map> param) {
+    public RespBean<List<UserPO>> test1(@RequestBody ReqBean<Map> param) {
         TestHelper.startTest("spring-util测试");
         TestHelper.printSubTitle("参数");
         TestHelper.println(param.getParam());
         List<UserPO> userPOS = mapper.selectByExample(param.createExample(UserPO.class));
         TestHelper.printSubTitle("查询到的结果:");
         TestHelper.println(userPOS);
-        return new HttpResult<List<UserPO>>(userPOS);
+        return new RespBean<List<UserPO>>(userPOS);
     }
 }

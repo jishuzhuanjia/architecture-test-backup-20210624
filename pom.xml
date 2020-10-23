@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <groupId>com.zj.test</groupId>
-    <artifactId>tests</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <artifactId>architecture-test</artifactId>
+    <name>architecture-test</name>
 
     <!--Sub Modules-->
     <!--start-->
     <modules>
         <module>mybatis</module>
         <module>debuge-run</module>
-        <module>collection</module>
         <module>spring</module>
         <module>springmvc</module>
         <module>java</module>
@@ -34,13 +34,13 @@
     <dependencies>
         <dependency>
             <groupId>com.zj.util</groupId>
-            <artifactId>springmvc-util</artifactId>
+            <artifactId>utilbox-springmvc</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.zj.util</groupId>
-            <artifactId>mybatis-util</artifactId>
+            <artifactId>utilbox-mybatis</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
@@ -343,7 +343,7 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <repositories>
+    <!--<repositories>
         <repository>
             <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
             <id>snapshot</id>
@@ -351,7 +351,7 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
-    </repositories>
+    </repositories>-->
 
     <build>
         <plugins>
