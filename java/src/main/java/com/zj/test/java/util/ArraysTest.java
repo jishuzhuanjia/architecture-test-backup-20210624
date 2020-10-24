@@ -216,4 +216,13 @@ public class ArraysTest {
         int[] ints = {2, 21, 32, 45, 5};
         TestHelper.println("toString(int[])", Arrays.toString(ints));
     }
+
+    /**
+     * 10.* binarySearch(..)
+     * 二分查找，被查找数组必须经过排序, 如果满足查找的元素有多个，不能保证某一个先被查找到。
+     */
+    @Test
+    public void testBinarySearch(){
+        // wait for test
+    }
 }
