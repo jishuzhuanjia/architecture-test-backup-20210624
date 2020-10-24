@@ -85,7 +85,6 @@ public class ArraysTest {
      */
     @Test
     public void copyOf() {
-
         // 基础类型数组的复制，这里用int[]测试
         int[] ints = {1, 2, 3, 4};
         TestHelper.println("待复制的数组", Arrays.toString(ints));
