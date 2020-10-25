@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -222,7 +223,136 @@ public class ArraysTest {
      * 二分查找，被查找数组必须经过排序, 如果满足查找的元素有多个，不能保证某一个先被查找到。
      */
     @Test
-    public void testBinarySearch(){
+    public void testBinarySearch() {
         // wait for test
+    }
+
+    /**
+     * 11.sort()和parallelSort()性能对比
+     *
+     * 数据量较少时,大约在2万条以内,sort排序更快。
+     *
+     * 结论: 数据量少时,sort性能更佳。
+     */
+    @Test
+    public void testSort() {
+        /*
+        量级10000.0: sort用时: 10ms, parallelSort用时: 10ms
+        量级20000.0: sort用时: 5ms, parallelSort用时: 4ms
+        量级30000.0: sort用时: 9ms, parallelSort用时: 6ms
+        量级40000.0: sort用时: 12ms, parallelSort用时: 10ms
+        量级50000.0: sort用时: 15ms, parallelSort用时: 8ms
+        量级60000.0: sort用时: 30ms, parallelSort用时: 3ms
+        量级70000.0: sort用时: 27ms, parallelSort用时: 6ms
+        量级80000.0: sort用时: 30ms, parallelSort用时: 5ms
+        量级90000.0: sort用时: 28ms, parallelSort用时: 3ms
+        量级100000.0: sort用时: 15ms, parallelSort用时: 5ms
+        量级110000.0: sort用时: 16ms, parallelSort用时: 1ms
+        量级120000.0: sort用时: 14ms, parallelSort用时: 2ms
+        量级130000.0: sort用时: 16ms, parallelSort用时: 1ms
+        量级140000.0: sort用时: 19ms, parallelSort用时: 2ms
+        量级150000.0: sort用时: 18ms, parallelSort用时: 2ms
+        量级160000.0: sort用时: 24ms, parallelSort用时: 2ms
+        量级170000.0: sort用时: 25ms, parallelSort用时: 3ms
+        量级180000.0: sort用时: 22ms, parallelSort用时: 1ms
+        量级190000.0: sort用时: 28ms, parallelSort用时: 2ms
+        量级200000.0: sort用时: 27ms, parallelSort用时: 1ms
+        量级210000.0: sort用时: 29ms, parallelSort用时: 3ms
+        量级220000.0: sort用时: 32ms, parallelSort用时: 1ms
+        量级230000.0: sort用时: 32ms, parallelSort用时: 1ms
+        量级240000.0: sort用时: 32ms, parallelSort用时: 2ms
+        量级250000.0: sort用时: 33ms, parallelSort用时: 1ms
+        量级260000.0: sort用时: 38ms, parallelSort用时: 2ms
+        量级270000.0: sort用时: 35ms, parallelSort用时: 2ms
+        量级280000.0: sort用时: 38ms, parallelSort用时: 3ms
+        量级290000.0: sort用时: 46ms, parallelSort用时: 5ms
+        量级300000.0: sort用时: 48ms, parallelSort用时: 2ms
+        量级310000.0: sort用时: 49ms, parallelSort用时: 3ms
+        量级320000.0: sort用时: 80ms, parallelSort用时: 2ms
+        量级330000.0: sort用时: 67ms, parallelSort用时: 5ms
+        量级340000.0: sort用时: 53ms, parallelSort用时: 3ms
+        量级350000.0: sort用时: 54ms, parallelSort用时: 2ms
+        量级360000.0: sort用时: 77ms, parallelSort用时: 5ms
+        量级370000.0: sort用时: 60ms, parallelSort用时: 8ms
+        量级380000.0: sort用时: 58ms, parallelSort用时: 4ms
+        量级390000.0: sort用时: 54ms, parallelSort用时: 58ms
+        量级400000.0: sort用时: 61ms, parallelSort用时: 4ms
+        量级410000.0: sort用时: 67ms, parallelSort用时: 5ms
+        量级420000.0: sort用时: 66ms, parallelSort用时: 3ms
+        量级430000.0: sort用时: 61ms, parallelSort用时: 7ms
+        量级440000.0: sort用时: 56ms, parallelSort用时: 2ms
+        量级450000.0: sort用时: 56ms, parallelSort用时: 2ms
+        量级460000.0: sort用时: 57ms, parallelSort用时: 3ms
+        量级470000.0: sort用时: 57ms, parallelSort用时: 3ms
+        量级480000.0: sort用时: 60ms, parallelSort用时: 3ms
+        量级490000.0: sort用时: 60ms, parallelSort用时: 3ms
+        量级500000.0: sort用时: 61ms, parallelSort用时: 3ms
+        量级510000.0: sort用时: 61ms, parallelSort用时: 3ms
+        量级520000.0: sort用时: 64ms, parallelSort用时: 4ms
+        量级530000.0: sort用时: 66ms, parallelSort用时: 3ms
+        量级540000.0: sort用时: 66ms, parallelSort用时: 4ms
+        量级550000.0: sort用时: 68ms, parallelSort用时: 4ms
+        量级560000.0: sort用时: 68ms, parallelSort用时: 4ms
+        量级570000.0: sort用时: 71ms, parallelSort用时: 3ms
+        量级580000.0: sort用时: 71ms, parallelSort用时: 3ms
+        量级590000.0: sort用时: 72ms, parallelSort用时: 4ms
+        量级600000.0: sort用时: 74ms, parallelSort用时: 3ms
+        量级610000.0: sort用时: 76ms, parallelSort用时: 3ms
+        量级620000.0: sort用时: 78ms, parallelSort用时: 3ms
+        量级630000.0: sort用时: 78ms, parallelSort用时: 3ms
+        量级640000.0: sort用时: 80ms, parallelSort用时: 3ms
+        量级650000.0: sort用时: 79ms, parallelSort用时: 4ms
+        量级660000.0: sort用时: 86ms, parallelSort用时: 4ms
+        量级670000.0: sort用时: 89ms, parallelSort用时: 5ms
+        量级680000.0: sort用时: 87ms, parallelSort用时: 4ms
+        量级690000.0: sort用时: 89ms, parallelSort用时: 5ms
+        量级700000.0: sort用时: 96ms, parallelSort用时: 4ms
+        量级710000.0: sort用时: 95ms, parallelSort用时: 5ms
+        量级720000.0: sort用时: 92ms, parallelSort用时: 4ms
+        量级730000.0: sort用时: 95ms, parallelSort用时: 4ms
+        量级740000.0: sort用时: 94ms, parallelSort用时: 5ms
+        量级750000.0: sort用时: 97ms, parallelSort用时: 6ms
+        量级760000.0: sort用时: 98ms, parallelSort用时: 6ms
+        量级770000.0: sort用时: 97ms, parallelSort用时: 6ms
+        量级780000.0: sort用时: 96ms, parallelSort用时: 6ms
+        量级790000.0: sort用时: 100ms, parallelSort用时: 7ms
+        量级800000.0: sort用时: 103ms, parallelSort用时: 6ms
+        量级810000.0: sort用时: 115ms, parallelSort用时: 7ms
+        量级820000.0: sort用时: 116ms, parallelSort用时: 6ms
+        量级830000.0: sort用时: 110ms, parallelSort用时: 6ms
+        量级840000.0: sort用时: 104ms, parallelSort用时: 6ms
+        量级850000.0: sort用时: 106ms, parallelSort用时: 6ms
+        量级860000.0: sort用时: 114ms, parallelSort用时: 6ms
+        量级870000.0: sort用时: 114ms, parallelSort用时: 7ms
+        量级880000.0: sort用时: 120ms, parallelSort用时: 7ms
+        量级890000.0: sort用时: 120ms, parallelSort用时: 6ms
+        量级900000.0: sort用时: 121ms, parallelSort用时: 6ms
+        量级910000.0: sort用时: 117ms, parallelSort用时: 7ms
+        量级920000.0: sort用时: 118ms, parallelSort用时: 5ms
+        量级930000.0: sort用时: 119ms, parallelSort用时: 6ms
+        量级940000.0: sort用时: 119ms, parallelSort用时: 7ms
+        量级950000.0: sort用时: 123ms, parallelSort用时: 7ms
+        量级960000.0: sort用时: 138ms, parallelSort用时: 9ms
+        量级970000.0: sort用时: 144ms, parallelSort用时: 6ms
+        量级980000.0: sort用时: 129ms, parallelSort用时: 9ms
+        量级990000.0: sort用时: 127ms, parallelSort用时: 6ms
+        量级1000000.0: sort用时: 131ms, parallelSort用时: 7ms*/
+        float size = 1;
+        Random random = new Random();
+        for (; size <= 100; size+=1) {
+            int[] ints = new int[(int) (size * 10000)];
+            for (int i = 0; i < ints.length; i++) {
+                ints[i] = random.nextInt(ints.length + 1);
+            }
+            int[] intsclone = Arrays.copyOf(ints, ints.length);
+            long startTime = System.currentTimeMillis();
+            Arrays.sort(ints);
+            long useTime1 = System.currentTimeMillis() - startTime;
+            startTime = System.currentTimeMillis();
+            Arrays.parallelSort(ints);
+            long useTime2 = System.currentTimeMillis() - startTime;
+            TestHelper.println("量级" + (size * 10000), "sort用时: " + useTime1 + "ms, parallelSort用时: " + useTime2 + "ms");
+            Arrays.parallelSort(intsclone);
+        }
     }
 }
