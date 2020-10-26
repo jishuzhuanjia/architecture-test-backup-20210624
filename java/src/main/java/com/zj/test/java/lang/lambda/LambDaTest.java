@@ -1,10 +1,11 @@
-package com.zj.test.java.lang;
+package com.zj.test.java.lang.lambda;
 
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -62,7 +63,7 @@ public class LambDaTest {
      * };
      * <p>
      * 会编译报错：
-     * Multiple non-overriding abstract methods found in interface com.zj.test.java.lang.LambDaTest.LambdaTestInterface
+     * Multiple non-overriding abstract methods found in interface com.zj.test.java.lang.lambda.LambDaTest.LambdaTestInterface
      * <p>
      * 2.对于只有一个未实现方法的接口，如:
      * public interface LambdaTestInterface {
@@ -125,6 +126,18 @@ public class LambDaTest {
 
     private void predicateTest(List<String> languages, Predicate<String> condition) {
         List<String> collect = languages.stream().filter(x -> condition.test(x)).collect(Collectors.toList());
+        System.out.println(collect);
+    }
+
+    /**
+      * 6.测试: labmda配合Objects空值方法 - 更加直观
+      *
+      * <p><pre>结果:</pre>
+      */
+    @Test
+    public void test5(){
+        List<Object> strings = Arrays.asList("Jdk", "java", null);
+        List<Object> collect = strings.stream().filter(x -> Objects.nonNull(x)).collect(Collectors.toList());
         System.out.println(collect);
     }
 
