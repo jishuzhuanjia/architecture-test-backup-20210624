@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  * @create-time: 2020/10/26 13:38
  * @description: lambda表达式测试
  * @version: 1.0
- * @finished: false
- * @finished-time:
+ * @finished: 1
+ * @finished-time: 2020年10月26日 14:24:35
  */
 public class LambDaTest {
     /**
