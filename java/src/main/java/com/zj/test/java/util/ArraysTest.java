@@ -54,7 +54,7 @@ public class ArraysTest {
      * at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58)
      *
      * <p>
-     * 2.asLisdt(..)返回的List后续不能添加元素。
+     * 2.asLisdt(..)返回的List后续不能增加(add)、删 除(remove)，可以进行查询(get),更新(set)。
      */
     @Test
     public void asList() {
@@ -70,6 +70,11 @@ public class ArraysTest {
         //TestHelper.println(integers);
         //TestHelper.println(integers.size());
 
+        // java.lang.UnsupportedOperationException
+        //integers.remove(1);
+
+        //TestHelper.println(integers.get(1));//ok
+        //integers.set(1, 2); //ok
         // asList参数为不同类型测试
         TestHelper.printSubTitle("asList参数为不同类型测试");
         TestHelper.println(Arrays.asList(1, 1f, 2d, "hello", 'c'));
@@ -134,7 +139,6 @@ public class ArraysTest {
         TestHelper.println("equals({1,2,3,4},{1,2,3,4,5})", Arrays.equals(ints1, ints3));
         TestHelper.println("equals({1,2,3,4},{1,2,3})", Arrays.equals(ints1, ints4));
     }
-
 
     /**
      * 5.与equals相比， deppEquals可用来比较复杂类型。
@@ -229,9 +233,9 @@ public class ArraysTest {
 
     /**
      * 11.sort()和parallelSort()性能对比
-     *
+     * <p>
      * 数据量较少时,大约在2万条以内,sort排序更快。
-     *
+     * <p>
      * 结论: 数据量少时,sort性能更佳。
      */
     @Test
@@ -339,7 +343,7 @@ public class ArraysTest {
         量级1000000.0: sort用时: 131ms, parallelSort用时: 7ms*/
         float size = 1;
         Random random = new Random();
-        for (; size <= 100; size+=1) {
+        for (; size <= 100; size += 1) {
             int[] ints = new int[(int) (size * 10000)];
             for (int i = 0; i < ints.length; i++) {
                 ints[i] = random.nextInt(ints.length + 1);
