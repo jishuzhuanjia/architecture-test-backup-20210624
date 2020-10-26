@@ -1,4 +1,4 @@
-package com.zj.test.java.lang.identifier_keyword;
+package com.zj.test.java.lang;
 
 /* @author: zhoujian
  * @qq: 2025513

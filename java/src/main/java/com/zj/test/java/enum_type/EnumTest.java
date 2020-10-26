@@ -1,7 +1,5 @@
 package com.zj.test.java.enum_type;
 
-import org.omg.CORBA.UNKNOWN;
-
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/10/19 9:03
