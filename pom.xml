@@ -20,6 +20,7 @@
         <module>lombok</module>
         <module>junit</module>
         <module>active-mq</module>
+        <module>elastic-search</module>
     </modules>
     <!--end-->
 
