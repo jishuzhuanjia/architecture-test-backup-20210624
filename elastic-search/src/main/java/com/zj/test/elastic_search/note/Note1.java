@@ -138,13 +138,16 @@ public class Note1 {
      *   "_primary_term" : 3
      * }
      *
-     * 注意，路径 /megacorp/employee/1 包含了三部分的信息：
-     *
+     * 注意，
+     * 1.路径 /megacorp/employee/1 包含了三部分的信息：
      * megacorp     索引名称
      * employee     类型名称
      * 1            特定雇员的ID(就相当于数据库中的主键，代表一条文档)
      *
      * es接口可以看出是restful风格
+     *
+     * 2.PUT方法可用来更新，如果请求body没有传递json数据，会导致该条文档没有任何属性。
+     * 因此增加和更新的时候需要注意
      *
      * 11.查
      * 检索文档
@@ -168,6 +171,8 @@ public class Note1 {
      *     ]
      *   }
      * }
+     *
+     * 注意: type不能省略。
      *
      * 12.更新
      * 再次进行索引操作即可
