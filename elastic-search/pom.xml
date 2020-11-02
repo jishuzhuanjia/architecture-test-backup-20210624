@@ -12,10 +12,32 @@
     <artifactId>elastic-search</artifactId>
 
     <dependencies>
+        <!--es dependencies start-->
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
-            <version>2.4.1</version>
+            <version>6.4.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>transport</artifactId>
+            <version>6.4.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.elasticsearch</groupId>
+                    <artifactId>elasticsearch</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--异常解决:
+        java.lang.IllegalStateException: Unsupported transport.type [netty4]-->
+        <dependency>
+            <groupId>org.elasticsearch.plugin</groupId>
+            <artifactId>transport-netty4-client</artifactId>
+            <version>6.2.4</version>
+        </dependency>
+        <!--es dependencies end-->
     </dependencies>
 </project>
