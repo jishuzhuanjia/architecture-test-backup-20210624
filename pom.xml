@@ -21,6 +21,7 @@
         <module>junit</module>
         <module>active-mq</module>
         <module>elastic-search</module>
+        <module>redis</module>
     </modules>
     <!--end-->
 
