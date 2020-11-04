@@ -16,7 +16,7 @@ import java.util.Objects;
 public class ObjectsTest {
     /**
      * 1.T requireNonNull(T obj)
-     * 作用: 检测对象是否为null，如果为null，抛出NullPointerException,代码中断执行:
+     * 检测对象是否为null，如果为null，抛出运行时异常: NullPointerException:
      * java.lang.NullPointerException
      * at java.util.Objects.requireNonNull(Objects.java:203)
      * at com.zj.test.java.util.ObjectsTest.test1(ObjectsTest.java:20)
@@ -52,34 +52,33 @@ public class ObjectsTest {
 
     /**
      * 2.requireNonNull(T obj,String message)
-     * 作用: 检测对象是否为null，如果为null，抛出NullPointerException并且打印message异常信息，代码中断执行。
-     * <p>
+     *
+     * 作用: 检测对象是否为null，如果为null，抛出NullPointerException运行时异常并且打印message异常信息，代码中断执行:
      * java.lang.NullPointerException: content can not be null
-     * <p>
-     * at java.util.Objects.requireNonNull(Objects.java:228)
-     * at com.zj.test.java.util.ObjectsTest.requireNonNull1(ObjectsTest.java:60)
-     * at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-     * at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-     * at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-     * at java.lang.reflect.Method.invoke(Method.java:498)
-     * at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
-     * at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
-     * at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
-     * at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
-     * at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
-     * at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
-     * at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
-     * at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
-     * at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
-     * at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
-     * at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
-     * at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
-     * at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
-     * at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
-     * at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
-     * at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33)
-     * at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:230)
-     * at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58)
+     *  at java.util.Objects.requireNonNull(Objects.java:228)
+     *  at com.zj.test.java.util.ObjectsTest.requireNonNull1(ObjectsTest.java:60)
+     *  at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+     *  at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+     *  at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+     *  at java.lang.reflect.Method.invoke(Method.java:498)
+     *  at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+     *  at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+     *  at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+     *  at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+     *  at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+     *  at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:78)
+     *  at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:57)
+     *  at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+     *  at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+     *  at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+     *  at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+     *  at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+     *  at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+     *  at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+     *  at com.intellij.junit4.JUnit4IdeaTestRunner.startRunnerWithArgs(JUnit4IdeaTestRunner.java:68)
+     *  at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33)
+     *  at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:230)
+     *  at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58)
      */
     @Test
     public void requireNonNull2() {
@@ -125,9 +124,11 @@ public class ObjectsTest {
         TestHelper.println("Objects.isNull(\"Hello World\")", Objects.isNull("Hello World"));//false
     }
 
-    /***
+    /**
      * 5.boolean nonNull(@Nullable Object obj)
-     *<p>非null返回true，与isNull相反
+     *
+     * <p>
+     * 非null返回true，与isNull相反
      */
     @Test
     public void nonNull() {
@@ -136,7 +137,8 @@ public class ObjectsTest {
     }
 
     /**
-     * 6.Objects.toString(obj)      返回String类型
+     * 6.Objects.toString(obj)      返回代表对象的字符串
+     *
      * <p>
      * String toString(@Nullable Object o,String nullDefault)
      * 如果o为null,则使用默认值nullDefault
@@ -197,5 +199,12 @@ public class ObjectsTest {
     public void testHashCode(){
         TestHelper.println("hasCode(\"Hello World\")",Objects.hashCode("Hello World"));
         TestHelper.println("hasCode(null)",Objects.hashCode(null));
+        TestHelper.println("hasCode(10)",Objects.hashCode(10));
+        // int值hash code等于值
+        TestHelper.println("hasCode(345635267)",Objects.hashCode(345635267));// 345635267
+        // float、double has code不等于值
+        TestHelper.println("hasCode(10f)",Objects.hashCode(10f));// 1092616192
+        TestHelper.println("hasCode(10.1)",Objects.hashCode(10.1));// 1930887168
+
     }
 }
