@@ -8,8 +8,8 @@ import org.junit.Test;
  * @create-time: 2020/11/4 15:45
  * @description: 数据类型 + 进制 测试
  * @version: 1.0
- * @finished: false
- * @finished-time:
+ * @finished: 1
+ * @finished-time: 2020年11月4日 16:51:07
  */
 public class DataTypeTest {
 

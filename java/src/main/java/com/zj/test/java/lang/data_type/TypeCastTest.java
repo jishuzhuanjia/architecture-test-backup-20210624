@@ -5,8 +5,8 @@ package com.zj.test.java.lang.data_type;
  * @create-time: 2020/11/4 16:18
  * @description: 类型转换测试
  * @version: 1.0
- * @finished: false
- * @finished-time:
+ * @finished: 1
+ * @finished-time: 2020年11月4日 16:51:03
  */
 public class TypeCastTest {
 
