@@ -2,7 +2,6 @@
 ctrl + shift + s						全局设置
 ctrl + shift + alt + s					设置项目结构
 
-
 ## 2.代码自动化
 Ctrl + I                                实现未实现的接口方法
 Ctrl + O                                重写父类方法
@@ -19,6 +18,7 @@ CTRL + 空格                              代码提示(×)
 CTRL + SHIFT + SPACE                    自动补全代码
 CTRL + ALT + T                          Surround With: 把选中的代码放在 TRY catch{}、IF{} ELSE{}等语句里
 CTRL + ALT + I                          自动缩进代码，自动缩进光标所在行或缩进选中的行
+Ctrl + Alt + V                          提取变量
 
 fori/sout/psvm + Tab                    ×
 
@@ -31,8 +31,18 @@ CTRL + ALT + SPACE                      手动打开代码提示,提示类名、
 CTRL + P                                手动打开方法参数提示,有的方法参数多,这个命令就很重要了
 
 ## 4.重构
-Shift+F6 重构-重命名 (包、类、方法、变量、甚至注释等)
-Ctrl+Alt+V 提取变量
+Shift + F6                              重命名 (包、类、方法、变量、甚至注释等)
+Ctrl + Alt + Shift + T                  弹出重构菜单
+F6                                      移动
+F5                                      复制
+Alt + Delete                            安全删除
+Ctrl + Alt + N                          内联
+
+## 5.窗口
+alt + 1                                 Project窗口
+alt + 9                                 Git
+alt + 7                                 Structure
+alt + 2                                 Favorites
 
 3.2、查询快捷键
 Ctrl＋Shift＋Backspace可以跳转到上次编辑的地
@@ -130,7 +140,7 @@ Alt+F10，定位到断点
 15
 3.5、重构
 Ctrl+Alt+Shift+T，弹出重构菜单
-Shift+F6，重命名
+Shift+  F6，重命名
 F6，移动
 F5，复制
 Alt+Delete，安全删除
