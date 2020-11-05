@@ -166,7 +166,7 @@ public class ObjectsTest {
 
     /***
      * 7.boolean deepEquals(@Nullable Object a,@Nullable Object b
-     * 该方法除了比较对象，还会比较数组类型，只有两个数组长度相同且值都相同，才会返回true。
+     * 该方法除了能比较对象，还能比较数组类型，只有两个数组长度相同且元素都相同，才会返回true。
      */
     @Test
     public void test() {
