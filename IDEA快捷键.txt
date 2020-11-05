@@ -1,41 +1,41 @@
 ## 1.设置
-ctrl + shift + s						全局设置
-ctrl + shift + alt + s					设置项目结构
+ctrl + shift + s						全局设置✔
+ctrl + shift + alt + s					设置项目结构✔
 
 ## 2.代码自动化
-Ctrl + I                                实现未实现的接口方法
-Ctrl + O                                重写父类方法
-Alt+Insert                              生成代码(如get,set方法,构造函数等) 或者右键（Generate）
+Ctrl + I                                实现未实现的接口方法✔
+Ctrl + O                                重写父类方法✔
+Alt+Insert                              生成代码(如get,set方法,构造函数等) 或者右键（Generate）✔
 Ctrl + Alt + O                          优化导入的类和包 / 快速导入类
-ctrl + alt + l						    格式化代码，缩进对齐
-Ctrl + Alt + T                          捕获处理异常,生成try catch(或者 Alt+enter)
-Ctr + shift + U                         大小写转化
-ALT +   回车                             导入包,自动修正
-ALT + /                                 代码提示
-CTRL + J                                自动代码
-Ctrl + Shift+J                          整合多行为1行,该命令不可实现反向功能(可用ctrl + alt + L来实现)
+ctrl + alt + l						    格式化代码，缩进对齐✔
+Ctrl + Alt + T                          捕获处理异常,生成try catch(或者 Alt+enter)✔
+Ctr + shift + U                         大小写转化✔
+ALT +   回车                             导入包,自动修正✔
+ALT + /                                 代码提示✔
+CTRL + J                                自动代码✔
+Ctrl + Shift+J                          整合多行为1行,该命令不可实现反向功能(可用ctrl + alt + L来实现)✔
 CTRL + 空格                              代码提示(×)
-CTRL + SHIFT + SPACE                    自动补全代码
-CTRL + ALT + T                          Surround With: 把选中的代码放在 TRY catch{}、IF{} ELSE{}等语句里
-CTRL + ALT + I                          自动缩进代码，自动缩进光标所在行或缩进选中的行
-Ctrl + Alt + V                          提取变量
+CTRL + SHIFT + SPACE                    自动补全代码✔
+CTRL + ALT + T                          Surround With: 把选中的代码放在 TRY catch{}、IF{} ELSE{}等语句里✔
+CTRL + ALT + I                          自动缩进代码，自动缩进光标所在行或缩进选中的行✔
+Ctrl + Alt + V                          提取变量✔
 
 fori/sout/psvm + Tab                    ×
 
 ## 3.辅助命令
-CTRL + Q                                可以看到当前方法的声明
-ctrl + H                                打开Type Hierarchy, 可以查看类继承关系
-CTRL + E                                Recent Files,查看最近文件
-CTRL + SHIFT + E                        Recent Locations,可以查看最近编辑过的位置,比CTRL + E更精确，精确到行。
-CTRL + ALT + SPACE                      手动打开代码提示,提示类名、接口名、方法、关键字等...
-CTRL + P                                手动打开方法参数提示,有的方法参数多,这个命令就很重要了
+CTRL + Q                                可以看到当前方法的声明✔
+ctrl + H                                打开Type Hierarchy, 可以查看类继承关系✔
+CTRL + E                                Recent Files,查看最近文件✔
+CTRL + SHIFT + E                        Recent Locations,可以查看最近编辑过的位置,比CTRL + E更精确，精确到行。✔
+CTRL + ALT + SPACE                      手动打开代码提示,提示类名、接口名、方法、关键字等...✔
+CTRL + P                                手动打开方法参数提示,有的方法参数多,这个命令就很重要了✔
 
 ## 4.重构
-Shift + F6                              重命名 (包、类、方法、变量、甚至注释等)
-Ctrl + Alt + Shift + T                  弹出重构菜单
-F6                                      移动
-F5                                      复制
-Alt + Delete                            安全删除
+Shift + F6                              重命名 (包、类、方法、变量、甚至注释等)✔
+Ctrl + Alt + Shift + T                  弹出重构菜单✔
+F6                                      移动✔
+F5                                      复制✔
+Alt + Delete                            安全删除✔
 Ctrl + Alt + N                          内联
 
 ## 5.窗口
