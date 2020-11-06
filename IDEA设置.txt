@@ -1,0 +1,2 @@
+1.关闭代码格式化(ctrl + alt + l)时，对文档注释的格式化
+Settings -> Editor -> Code Style -> Java -> JavaDoc -> 取消Enable JavaDoc formatting。
