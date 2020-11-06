@@ -9,39 +9,38 @@ import java.util.concurrent.*;
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/5 16:31
- * @description: java线程池测试
+ * @description: java常用4类线程池测试
  * @version: 1.0
  * @finished: 1
  * @finished-time: 2020年11月6日 09:43:09
  */
 
 /**
- * 4种线程池(从线程数量和功能划分):
+ * 常用的4种线程池(从线程数量和功能上划分):
  * 1.CachedThreadPool
  * 初始核心线程数为0，会动态调整线程池中线程数量，当新任务被加入时，如果有可用的空闲线程，
  * 会复用已经存在的线程，否则创建新的线程来执行任务。当一个线程空闲时间达到60s，就会被销毁。
  *
  * 2.FixedThreadPool
- * 线程池中线程数量保持不变，当一个任务执行失败时，
- * 会创建新的线程替代失败的线程继续执行其他的任务。
+ * 线程池中线程数量保持不变，当一个任务执行失败时，会创建新的线程替代失败的线程继续执行其他的任务。
  *
  * 3.ScheduledThreadPool
- * 线程池中线程数量固定，并且能够固定延迟、周期性执行任务。
+ * 线程池中线程数量固定，并且能够固定延迟、周期性的执行任务。
  *
  * 4.SingleThreadExecutor
  * 单线程，顺序执行任务队列中的任务。
  * SingleThreadScheduledExecutor
- * 单线程，可以固定延迟、周期性执行任务队列中的所有任务。
+ * 单线程，可以固定延迟、周期性的执行任务队列中的所有任务。
  */
 public class ThreadPoolTest {
 
     /**
-     * 1.ExecutorService api
+     * 1.常用api
      *
-     * 1.1.execute(@NotNull Runnable command)
+     * 1.1.void execute(@NotNull Runnable command)
      * 执行指定的任务，不能返回数据
      *
-     * 1.2.提交一个任务到到线程池,并获取返回数据,有以下几个方法:
+     * 1.2.想要获取线程返回的数据，有以下几个方法:
      * <T> Future<T> submit(Callable<T> task);
      * 如果在指定的时间内返回,可以返回指定类型的数据，并且可以自定义返回数据。
      *
@@ -51,16 +50,15 @@ public class ThreadPoolTest {
      * <T> Future<T> submit(Runnable task, T result);
      * 如果在指定时间内返回，则返回的数据只能是调用时传递的result。因此返回数据是固定值。
      *
-     * 等待结果的过程相当于join。
+     * 利用这几个方法的返回值获取线程的返回数据的过程，需要等待，相当于线程join。
      */
 
     /**
      * 2.不同类型线程池的测试
      * 2.1.FixedThreadPool
-     * 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。
+     * 创建一个定长线程池，可控制线程最大并发数，来不及处理的任务会存放在阻塞队列中。
      *
-     * <p>
-     * 一个任务在使用线程池中线程执行时,如果没有执行完成,不会切换线程，会一直占用线程执行
+     * 在使用线程池中线程执行任务时,如果任务没有执行完成,不会为其切换线程，会一直占用当前的线程执行。
      */
     @Test
     public void fixedThreadPool() {
@@ -211,7 +209,7 @@ public class ThreadPoolTest {
 
     /**
      * author: 2025513
-     * 测试: 补充测试newFixedThreadPool线程池在线程执行失败时,是否会有新的线程替代失败的线程继续执行下一个任务
+     * 测试: 补充测试newFixedThreadPool线程池在线程执行失败时,是否会创建新的线程替代失败的线程继续执行下一个任务
      *
      * 结果:
      * 一个即将发生错误的线程,正在执行...
@@ -320,9 +318,9 @@ public class ThreadPoolTest {
      * 2.3.ScheduledThreadPool
      *
      * ScheduledExecutorService newScheduledThreadPool(int corePoolSize)
-     * 创建一个线程池，该线程池可以安排命令在给定的延迟后运行或定期执行。
+     * 创建一个线程池，该线程池可以安排任务在给定的延迟后运行或定期执行。
      *
-     * 和FixedThreadPool一样，线程数不变,即使线程是空闲的，不同的是ScheduledThreadPool可以执行延迟，定时的任务。
+     * 和FixedThreadPool一样，线程数不变,即使线程是空闲的，不同的是ScheduledThreadPool可以执行延迟，周期的任务。
      */
     @Test
     public void newScheduledThreadPool() {
