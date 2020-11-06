@@ -20,14 +20,14 @@ import java.util.concurrent.*;
  * 1.CachedThreadPool
  * 初始核心线程数为0，会动态调整线程池中线程数量，当新任务被加入时，如果有可用的空闲线程，
  * 会复用已经存在的线程，否则创建新的线程来执行任务。当一个线程空闲时间达到60s，就会被销毁。
- * <p>
+ *
  * 2.FixedThreadPool
  * 线程池中线程数量保持不变，当一个任务执行失败时，
  * 会创建新的线程替代失败的线程继续执行其他的任务。
- * <p>
+ *
  * 3.ScheduledThreadPool
  * 线程池中线程数量固定，并且能够固定延迟、周期性执行任务。
- * <p>
+ *
  * 4.SingleThreadExecutor
  * 单线程，顺序执行任务队列中的任务。
  * SingleThreadScheduledExecutor
