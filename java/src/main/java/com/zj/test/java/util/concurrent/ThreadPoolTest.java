@@ -16,22 +16,30 @@ import java.util.concurrent.*;
  */
 
 /**
- * 4种线程池:
- * 1.CachedThreadPool: 线程池中线程会动态调整，没有阻塞队列，空闲达到60s的线程将会被销毁。
- *
- * 2.FixedThreadPool: 池中线程固定数量
- *
- * 3.ScheduledThreadPool: 固定数量，并且能够周期固定延迟、周期执行任务
- *
- * 4.SingleThreadExecutor: 单线程，顺序执行任务
- * SingleThreadScheduledExecutor: 单线程，可以固定延迟、周期执行所有任务。
+ * 4种线程池(从线程数量和功能划分):
+ * 1.CachedThreadPool
+ * 初始核心线程数为0，会动态调整线程池中线程数量，当新任务被加入时，如果有可用的空闲线程，
+ * 会复用已经存在的线程，否则创建新的线程来执行任务。当一个线程空闲时间达到60s，就会被销毁。
+ * <p>
+ * 2.FixedThreadPool
+ * 线程池中线程数量保持不变，当一个任务执行失败时，
+ * 会创建新的线程替代失败的线程继续执行其他的任务。
+ * <p>
+ * 3.ScheduledThreadPool
+ * 线程池中线程数量固定，并且能够固定延迟、周期性执行任务。
+ * <p>
+ * 4.SingleThreadExecutor
+ * 单线程，顺序执行任务队列中的任务。
+ * SingleThreadScheduledExecutor
+ * 单线程，可以固定延迟、周期性执行任务队列中的所有任务。
  */
 public class ThreadPoolTest {
 
     /**
      * 1.ExecutorService api
      *
-     * 1.1.execute(@NotNull Runnable command)       执行指定的任务，不能返回数据
+     * 1.1.execute(@NotNull Runnable command)
+     * 执行指定的任务，不能返回数据
      *
      * 1.2.提交一个任务到到线程池,并获取返回数据,有以下几个方法:
      * <T> Future<T> submit(Callable<T> task);
@@ -42,6 +50,8 @@ public class ThreadPoolTest {
      *
      * <T> Future<T> submit(Runnable task, T result);
      * 如果在指定时间内返回，则返回的数据只能是调用时传递的result。因此返回数据是固定值。
+     *
+     * 等待结果的过程相当于join。
      */
 
     /**
@@ -51,10 +61,6 @@ public class ThreadPoolTest {
      *
      * <p>
      * 一个任务在使用线程池中线程执行时,如果没有执行完成,不会切换线程，会一直占用线程执行
-     * <p>
-     * <p>
-     * 也是提交一个任务到线程池，不同的是可以获取返回值。
-     * 等待结果的过程相当于join。
      */
     @Test
     public void fixedThreadPool() {
@@ -206,7 +212,7 @@ public class ThreadPoolTest {
     /**
      * author: 2025513
      * 测试: 补充测试newFixedThreadPool线程池在线程执行失败时,是否会有新的线程替代失败的线程继续执行下一个任务
-     * <p>
+     *
      * 结果:
      * 一个即将发生错误的线程,正在执行...
      * 线程名: pool-1-thread-1
@@ -218,7 +224,7 @@ public class ThreadPoolTest {
      * at java.lang.Thread.run(Thread.java:748)
      * 这是新的任务...
      * 当前处理线程名: pool-1-thread-2
-     * <p>
+     *
      * 结论:
      * newFixedThreadPool线程池任务处理失败时,会创建新的线程替代失败的线程执行新的任务。
      */
@@ -251,7 +257,7 @@ public class ThreadPoolTest {
 
     /**
      * 测试newFixedThreadPool线程阻塞队列大小是否为Integer.MAX_VALUE
-     * <p>
+     *
      * 结论:
      * 应该是的，因为我测试加入了1000W+个任务, 没有发生任何问题。因为Integer.MAX_VALUE最大值是21亿，我这里就不等待了。
      */
@@ -278,15 +284,14 @@ public class ThreadPoolTest {
 
     /**
      * 2.2.CachedThreadPool
-     * <p>
      * ExecutorService newCachedThreadPool()
      * 创建一个线程池，根据需要创建新线程，但在可用时重用之前构造的线程。这些池通常会提高执行许多短期异步任务的程序的性能。
      * 如果可用，对execute的调用将重用先前构造的线程。如果没有可用的现有线程，将创建一个新线程并添加到池中。
      * 未使用60秒的线程将被终止并从缓存中删除。因此，空闲达到60秒的线程将不会消耗任何资源。
      * 注意，可以使用ThreadPoolExecutor构造函数创建具有类似属性但细节不同(例如，超时参数)的池。
-     * <p>
+     *
      * 测试: newCachedThreadPool()是否会动态创建线程:
-     * <p>
+     *
      * 结果:
      * 是的, 添加1000个长时耗任务, 结果创建了1000个线程。
      */
@@ -313,10 +318,10 @@ public class ThreadPoolTest {
 
     /**
      * 2.3.ScheduledThreadPool
-     * <p>
+     *
      * ScheduledExecutorService newScheduledThreadPool(int corePoolSize)
      * 创建一个线程池，该线程池可以安排命令在给定的延迟后运行或定期执行。
-     * <p>
+     *
      * 和FixedThreadPool一样，线程数不变,即使线程是空闲的，不同的是ScheduledThreadPool可以执行延迟，定时的任务。
      */
     @Test
@@ -352,7 +357,7 @@ public class ThreadPoolTest {
 
     /**
      * ScheduledThreadPool周期任务demo
-     * <p>
+     *
      * scheduleAtFixedRate      固定周期执行，当任务耗时大于period时，任务周期>period
      * scheduleWithFixedDelay   固定延迟执行，每次任务执行间隔都是相等的。
      */
@@ -402,7 +407,7 @@ public class ThreadPoolTest {
 
     /**
      * 2.4.newSingleThreadExecutor
-     * <p>
+     *
      * 创建一个执行器，该执行器使用单个工作线程操作一个未绑定队列。
      * (但是请注意，如果这个线程在关闭之前由于执行失败而终止，那么在需要执行后续任务时，一个新的线程将取代它。)
      * 任务保证按顺序执行，并且在任何给定时间内活动的任务不超过一个。与等效的newFixedThreadPool(1)不同，
@@ -429,15 +434,15 @@ public class ThreadPoolTest {
 
     /**
      * SingleThreadScheduledExecutor
-     * <p>
+     *
      * public static ScheduledExecutorService newSingleThreadScheduledExecutor()
      * 创建一个单线程执行器，它可以调度命令在给定的延迟后运行或定期执行。
      * (但是请注意，如果这个线程在关闭之前由于执行失败而终止，那么在需要执行后续任务时，一个新的线程将取代它。)
      * 任务保证按顺序执行，并且在任何给定时间内活动的任务不超过一个。与newScheduledThreadPool(1)不同，
      * 返回的执行器保证不会重新配置以使用其他线程。
-     * <p>
+     *
      * 注：
-     * 使用单一线程顺序执行多个任务
+     * 使用单一线程固定延迟、周期性的顺序执行所有任务。
      */
     @Test
     public void newSingleThreadScheduledExecutor() {
