@@ -11,8 +11,20 @@ import java.util.concurrent.*;
  * @create-time: 2020/11/5 16:31
  * @description: java线程池测试
  * @version: 1.0
- * @finished: false
- * @finished-time:
+ * @finished: 1
+ * @finished-time: 2020年11月6日 09:43:09
+ */
+
+/**
+ * 4种线程池:
+ * 1.CachedThreadPool: 线程池中线程会动态调整，没有阻塞队列，空闲达到60s的线程将会被销毁。
+ *
+ * 2.FixedThreadPool: 池中线程固定数量
+ *
+ * 3.ScheduledThreadPool: 固定数量，并且能够周期固定延迟、周期执行任务
+ *
+ * 4.SingleThreadExecutor: 单线程，顺序执行任务
+ * SingleThreadScheduledExecutor: 单线程，可以固定延迟、周期执行所有任务。
  */
 public class ThreadPoolTest {
 
@@ -380,6 +392,72 @@ public class ThreadPoolTest {
 
             }
         }, 1, 2, TimeUnit.SECONDS);
+
+        try {
+            Thread.sleep(Integer.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 2.4.newSingleThreadExecutor
+     * <p>
+     * 创建一个执行器，该执行器使用单个工作线程操作一个未绑定队列。
+     * (但是请注意，如果这个线程在关闭之前由于执行失败而终止，那么在需要执行后续任务时，一个新的线程将取代它。)
+     * 任务保证按顺序执行，并且在任何给定时间内活动的任务不超过一个。与等效的newFixedThreadPool(1)不同，
+     * 返回的执行器保证在使用其他线程时不会重新配置
+     */
+    @Test
+    public void newSingleThreadExecutor() {
+        ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
+
+        // 任务会被单线程顺序执行
+        for (int i = 0; i < 100; i++) {
+            int finalI = i;
+            singleThreadExecutor.execute(() -> {
+                TestHelper.println("task " + finalI + " is processing");
+            });
+        }
+
+        try {
+            Thread.sleep(Integer.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * SingleThreadScheduledExecutor
+     * <p>
+     * public static ScheduledExecutorService newSingleThreadScheduledExecutor()
+     * 创建一个单线程执行器，它可以调度命令在给定的延迟后运行或定期执行。
+     * (但是请注意，如果这个线程在关闭之前由于执行失败而终止，那么在需要执行后续任务时，一个新的线程将取代它。)
+     * 任务保证按顺序执行，并且在任何给定时间内活动的任务不超过一个。与newScheduledThreadPool(1)不同，
+     * 返回的执行器保证不会重新配置以使用其他线程。
+     * <p>
+     * 注：
+     * 使用单一线程顺序执行多个任务
+     */
+    @Test
+    public void newSingleThreadScheduledExecutor() {
+        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+
+        for (int i = 0; i < 10; i++) {
+            int finalI = i;
+            /*
+            SingleThreadScheduledExecutor执行任务流程:
+            会顺序执行所有的任务, 当所有任务都被执行完，delay间隔后再次执行。
+             */
+            scheduledExecutorService.scheduleWithFixedDelay(() -> {
+                TestHelper.println(Thread.currentThread().getName() + ": " + "task " + finalI + " is processing");
+                /*try {
+                    Thread.sleep(250);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }*/
+            }, 1, 3, TimeUnit.SECONDS);
+        }
 
         try {
             Thread.sleep(Integer.MAX_VALUE);
