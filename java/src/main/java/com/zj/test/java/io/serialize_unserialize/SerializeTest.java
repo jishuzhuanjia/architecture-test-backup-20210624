@@ -88,7 +88,7 @@ import java.io.Serializable;
  * java.io.ObjectInputStream.readObject(ObjectInputStream.java:422) at
  * frametest.basicframe.集合.排序.序列化.main(序列化.java:156)
  */
-public class Serialize extends 父类 {
+public class SerializeTest extends 父类 {
     /***/
     private static String school = "qqhaer";
     public String name;
@@ -103,7 +103,7 @@ public class Serialize extends 父类 {
         this.count = count;
     }
 
-    public Serialize(String name, int age) {
+    public SerializeTest(String name, int age) {
         super(1);
         System.out.println("subclass constructor invoked!");
 
