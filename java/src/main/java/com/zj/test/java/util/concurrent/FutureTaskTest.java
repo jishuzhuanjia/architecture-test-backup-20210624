@@ -97,6 +97,5 @@ public class FutureTaskTest {
         while(true){
             TestHelper.println("趁他没躲好，我吃一口辣条...");
         }
-
     }
 }
