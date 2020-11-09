@@ -8,8 +8,8 @@ import org.junit.Test;
  * @create-time: 2020/11/9 15:36
  * @description: synchronized关键字测试
  * @version: 1.0
- * @finished: false
- * @finished-time:
+ * @finished: 1
+ * @finished-time: 2020年11月9日 17:45:49
  */
 public class SynchronizedTest {
 
