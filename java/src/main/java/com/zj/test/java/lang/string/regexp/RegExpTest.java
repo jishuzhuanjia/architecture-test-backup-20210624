@@ -208,12 +208,53 @@ public class RegExpTest {
      * 如果没有找到匹配的子串，则返回原字符串。
      */
     @Test
-    public void replaceAll(){
+    public void replaceAll() {
         String test = "16651622365ex15156911119ef13951998372";
 
-        TestHelper.println(test.replaceAll("[a-zA-Z]{2}",","));
+        TestHelper.println(test.replaceAll("[a-zA-Z]{2}", ","));
 
         // 不能添加'^'和'$'，否则会被当做内容进行匹配
-        TestHelper.println(test.replaceAll("^[a-zA-Z]{2}$",","));
+        TestHelper.println(test.replaceAll("^[a-zA-Z]{2}$", ","));
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 测试5: 正则表达式字符集测试
+     *
+     * 结果:
+     *
+     * 结论:
+     *  匹配空格:       " "
+     *  匹配换行:       "\n"
+     *  匹配制表符:      "\t"而不是" "(通过键盘Tab)
+     */
+    @Test
+    public void regExChar() {
+
+        // \d测试
+        // 如果省略数词，则为1
+        TestHelper.println("\"5\".matches(\"\\\\d\")", "5".matches("\\d"));
+        TestHelper.println("\"10101022920\".matches(\"\\\\d\")", "10101022920".matches("\\d"));//false
+        TestHelper.println("\"A\".matches(\"\\\\d\")", "A".matches("\\d"));//false
+
+        // \w测试
+        // 结果:匹配字母,数字,_
+        TestHelper.println("\"A\".matches(\"\\\\w\")", "A".matches("\\w"));//true
+        TestHelper.println("\"a\".matches(\"\\\\w\")", "a".matches("\\w"));//true
+        TestHelper.println("\"1\".matches(\"\\\\w\")", "1".matches("\\w"));//true
+        TestHelper.println("\"_\".matches(\"\\\\w\")", "_".matches("\\w"));//true
+        TestHelper.println("\"!\".matches(\"\\\\w\")", "!".matches("\\w"));//false
+        TestHelper.println("\"@\".matches(\"\\\\w\")", "@".matches("\\w"));//false
+        TestHelper.println("\"$\".matches(\"\\\\w\")", "$".matches("\\w"));//false
+
+        // 匹配任意字符
+        TestHelper.println("\"^\".matches(\".\")", "^".matches("."));//true
+
+        // 空白匹配 \s
+        TestHelper.println("\" \".matches(\"\\\\s\")", " ".matches("\\s"));//true
+        TestHelper.println("\"    \".matches(\"\\\\s\")", "    ".matches("\\s"));//false
+        TestHelper.println("\"\\n\".matches(\"\\\\s\")", "\n".matches("\\s"));//true
+        TestHelper.println("\"\\t\".matches(\"\\\\s\")", "\t".matches("\\s"));//true
     }
 }
