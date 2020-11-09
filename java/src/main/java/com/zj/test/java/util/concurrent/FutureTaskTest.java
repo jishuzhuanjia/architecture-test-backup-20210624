@@ -27,11 +27,15 @@ public class FutureTaskTest {
      * 然后数数的人开始寻找已经藏好的人，我们用线程来模拟该过程。
      *
      *
-     * Future模式存在的问题: 虽然不会阻塞，可以运行后面的代码，但是后续需要手动判断子线程是否已经完成，并
-     * 获取返回数据。
+     * 优点:
+     * 可以以非阻塞的方式等待其他线程执行完成并获取返回的数据。
+     *
+     * Future模式存在的问题: 获取返回结果不及时
+     * 主线程虽然不会阻塞，可以运行后面的代码，但是后续需要手动判断子线程是否已经完成，并获取返回数据。
+     * 如果我们使用while(true){futureTask.isDone()...}不断判断执行状态，会大量消耗cpu性能。
      */
     @Test
-    public void futureTask(){
+    public void futureTask() {
 
         // 计数回调
         Callable<String> countCallable = new Callable<String>() {
@@ -65,10 +69,9 @@ public class FutureTaskTest {
             e.printStackTrace();
         }
 
-        if(futureTask.isDone()){
+        if (futureTask.isDone()) {
             TestHelper.println("开始寻找");
-        }else
-        {
+        } else {
             TestHelper.println("等一下，还没躲好呢");
             /*boolean cancel = futureTask.cancel(false);
             TestHelper.println("是否取消",cancel);
@@ -82,5 +85,18 @@ public class FutureTaskTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 2.while(true)性能损耗测试
+     *
+     * cpu占用率达到了50%，非常恐怖，会造成系统的不稳定。
+     */
+    @Test
+    public void test2(){
+        while(true){
+            TestHelper.println("趁他没躲好，我吃一口辣条...");
+        }
+
     }
 }
