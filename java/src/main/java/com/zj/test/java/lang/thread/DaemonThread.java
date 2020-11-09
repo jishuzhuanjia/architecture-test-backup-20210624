@@ -21,6 +21,7 @@ public class DaemonThread {
 		daemonThread.start();
 
 
+
 		// 主线程等待一会，否则可能无法看到守护线程输出的内容
 		try {
 			Thread.sleep(1000);
