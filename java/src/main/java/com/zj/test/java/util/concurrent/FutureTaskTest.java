@@ -4,6 +4,7 @@ import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 /* @author: zhoujian
@@ -48,7 +49,7 @@ public class FutureTaskTest {
                     // 为了缩短程序执行时间，50ms视为1S
                     Thread.sleep(50);
                 }
-                return "时间到了...";
+                return "时间到了...你可以找我啦~";
             }
         };
 
@@ -69,21 +70,38 @@ public class FutureTaskTest {
             e.printStackTrace();
         }
 
-        if (futureTask.isDone()) {
-            TestHelper.println("开始寻找");
-        } else {
+        // 可以执行其他的代码
+
+        while (true) {
+            if (futureTask.isDone()) {
+                try {
+                    // 不能尝试获取被取消任务的返回结果,否则:
+                    // CancellationException
+                    TestHelper.println("小伙伴喊道", futureTask.get());
+                    break;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                TestHelper.println("开始寻找");
+            } else {
+
+            /*
             TestHelper.println("等一下，还没躲好呢");
+            mayInterruptIfRunning:
+            false: 允许运行中的线程执行完成。
+            true: 立即中断执行。
+            */
+                TestHelper.println("等一下，还没躲好呢");
+                //TestHelper.println(futureTask.cancel(false));
+                // 对于cancel(true)和cancel(false),都返回了true。
+                //TestHelper.println(futureTask.isDone());// true
             /*boolean cancel = futureTask.cancel(false);
             TestHelper.println("是否取消",cancel);
             TestHelper.println(futureTask.isCancelled());*/
-        }
+            }
 
-        TestHelper.println("趁他没躲好，我吃一口辣条...");
-
-        try {
-            Thread.sleep(Integer.MAX_VALUE);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -93,8 +111,8 @@ public class FutureTaskTest {
      * cpu占用率达到了50%，非常恐怖，会造成系统的不稳定。
      */
     @Test
-    public void test2(){
-        while(true){
+    public void test2() {
+        while (true) {
             TestHelper.println("趁他没躲好，我吃一口辣条...");
         }
     }
