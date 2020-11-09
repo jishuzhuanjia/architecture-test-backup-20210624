@@ -21,11 +21,11 @@ public class ReentrantLockTest {
      * 两者都是独占锁，都可重入，加锁和解锁的过程自动进行
      * 区别：
      * 1.ReentrantLock不易操作，非常灵活。而synchronized易于操作，但是不够灵活。具体表现在
-     * ReentrantLock加锁和解锁需要手动进行且次数需一致，否则其他线程无法获取锁。
+     * ReentrantLock加锁和解锁需要手动进行且次数需一致，否则其他线程无法获取锁。          // 易用性
      *
-     * 2.ReentrantLock可以响应中断，而synchronized不可响应中断，一个线程获取不到锁就一致等待。
+     * 2.ReentrantLock可以响应中断，而synchronized不可响应中断，一个线程获取不到锁就会一直等待。   //
      *
-     * 3。ReentrantLock还可以实现公平锁机制: 等待时间长的线程将获取锁的使用权。
+     * 3。ReentrantLock还可以实现公平锁机制: 等待时间长的线程将获取锁的使用权。 //功能
      */
     static int count = 0;
     Lock lock = new ReentrantLock();
