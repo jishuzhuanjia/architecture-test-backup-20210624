@@ -7,8 +7,8 @@ import com.zj.test.util.TestHelper;
  * @create-time: 2020/11/9 9:34
  * @description: Thread Main测试: 主线程结束，子线程是否会继续运行?
  * @version: 1.0
- * @finished: false
- * @finished-time:
+ * @finished: 1
+ * @finished-time: 2020年11月9日 10:33:34
  */
 public class ThreadMainTest {
     /**
