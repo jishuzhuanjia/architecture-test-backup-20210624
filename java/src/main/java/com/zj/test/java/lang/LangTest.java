@@ -96,4 +96,66 @@ public class LangTest {
         // 1101 ^ 10001 -> 11100(28)
         TestHelper.println("13^17", 13 ^ 17); // 28
     }
+
+    // 可克隆的类
+    public static class User{
+        String username;
+        String password;
+        int age;
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            if(!(this instanceof Cloneable)){
+                throw new CloneNotSupportedException("类必须实现Cloneable接口");
+            }
+
+            User newUser = new User();
+            newUser.username = this.username;
+            newUser.password = this.password;
+            newUser.age = this.age;
+            return newUser;
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "username='" + username + '\'' +
+                    ", password='" + password + '\'' +
+                    ", age=" + age +
+                    '}';
+        }
+    }
+
+    /**
+      * author: 2025513
+      *
+      * 3.克隆(clone)测试
+      *
+      * 结果:
+      *
+      * 结论:
+     * 想要实现克隆，需要重写Object的clone方法，默认情况下clone方法是protected修饰的。
+     * 如果有需要，可以改成public修饰。
+     *
+     * 注意：
+     * 没有实现Cloneable接口不会抛出CloneNotSupportedException,
+     * 需要我们重写clone()方法的时候抛出,否则不会抛出
+      */
+    @Test
+    public void test3(){
+        TestHelper.startTest("对象clone测试");
+        User user = new User();
+        user.username = "zhoujian";
+        user.password="123456";
+        user.age=25;
+        TestHelper.println("被克隆的对象",user);
+
+        try {
+            Object clone = user.clone();
+            TestHelper.println("克隆得到的对象",user);
+            TestHelper.println("是否为同一引用",clone==user);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
 }
