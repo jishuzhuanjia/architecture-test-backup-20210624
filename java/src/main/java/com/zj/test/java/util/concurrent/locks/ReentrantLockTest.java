@@ -26,6 +26,7 @@ public class ReentrantLockTest {
      * 区别：
      * 1.ReentrantLock不易操作，非常灵活。而synchronized易于操作，但是不够灵活。具体表现在
      * ReentrantLock加锁和解锁需要手动进行且次数需一致，否则其他线程无法获取锁。          // 易用性
+     * lock和unlock次数必须一致。
      *
      * 2.ReentrantLock可以响应中断，而synchronized不可响应中断，一个线程获取不到锁就会一直等待。   //
      *
@@ -38,7 +39,7 @@ public class ReentrantLockTest {
         int c = 0;
         try {
             lock.lock();
-            //lock.lock();
+            lock.lock();
             ++count;
             c = count;
         } catch (Exception e) {
@@ -46,15 +47,17 @@ public class ReentrantLockTest {
         } finally {
             lock.unlock();
             /*
-            lock和unlock要成对出现，数量要箱等
-            lock多: 其他线程将得不到锁
-            unlock多: 报异常:
+            可重入锁可以多次调用lock()和unlock(),必须保证占用锁和释放锁调用次数一致,否则:
+            lock次数大于unlock -> 会导致其他线程得不到锁。更为致命的问题是java中每个线程都会占用一定的线程栈,
+            如果它们一直都无法得到锁，任务无法结束, 则会一直占用内存空间, 严重时直接导致jvm内存耗尽。
+
+            unlock次数大于lock -> 报异常:
             Exception in thread "Thread-81438" java.lang.IllegalMonitorStateException
             at java.util.concurrent.locks.ReentrantLock$Sync.tryRelease(ReentrantLock.java:151)
             at java.util.concurrent.locks.AbstractQueuedSynchronizer.release(AbstractQueuedSynchronizer.java:1261)
             at java.util.concurrent.locks.ReentrantLock.unlock(ReentrantLock.java:457)
             */
-            lock.unlock();
+            //lock.unlock();
         }
         return c;
     }
@@ -67,12 +70,20 @@ public class ReentrantLockTest {
      * 结果: 最后输出20W
      *
      * 结论:
-     * 达到了同步的效果
+     * 1.达到了同步的效果。
+     *
+     *
      */
     @Test
     public void test1() {
-        for (int i = 0; i < 200000; i++) {
+        for (int i = 0; i < 140000; i++) {
             new Thread(() -> TestHelper.println(addAndGet())).start();
+        }
+
+        try {
+            Thread.sleep(Integer.MAX_VALUE);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
