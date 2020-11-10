@@ -3,6 +3,7 @@ package com.zj.test.java.util.concurrent.locks;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
+import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,6 +18,9 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ReentrantLockTest {
 
     /**
+     *
+     * 可重入锁: 也叫做递归锁，指的是同一线程 外层函数获得锁之后 ，内层递归函数仍然有获取该锁的代码，但不受影响。
+     *
      * 1.ReentrantLock和synchronized
      * 两者都是独占锁，都可重入，加锁和解锁的过程自动进行
      * 区别：
@@ -34,11 +38,22 @@ public class ReentrantLockTest {
         int c = 0;
         try {
             lock.lock();
+            //lock.lock();
             ++count;
             c = count;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            lock.unlock();
+            /*
+            lock和unlock要成对出现，数量要箱等
+            lock多: 其他线程将得不到锁
+            unlock多: 报异常:
+            Exception in thread "Thread-81438" java.lang.IllegalMonitorStateException
+            at java.util.concurrent.locks.ReentrantLock$Sync.tryRelease(ReentrantLock.java:151)
+            at java.util.concurrent.locks.AbstractQueuedSynchronizer.release(AbstractQueuedSynchronizer.java:1261)
+            at java.util.concurrent.locks.ReentrantLock.unlock(ReentrantLock.java:457)
+            */
             lock.unlock();
         }
         return c;
