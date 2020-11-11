@@ -30,6 +30,7 @@ CTRL + E                                Recent Files,查看最近文件✔
 CTRL + SHIFT + E                        Recent Locations,可以查看最近编辑过的位置,比CTRL + E更精确，精确到行。✔
 CTRL + ALT + SPACE                      手动打开代码提示,提示类名、接口名、方法、关键字等...✔
 CTRL + P                                手动打开方法参数提示,有的方法参数多,这个命令就很重要了✔
+alt + F7                                Find Usages: 查找类/接口等在哪些地方被使用过
 
 ## 4.重构
 Shift + F6                              重命名 (包、类、方法、变量、甚至注释等)✔
