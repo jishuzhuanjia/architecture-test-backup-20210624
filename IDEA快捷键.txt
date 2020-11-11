@@ -19,6 +19,7 @@ CTRL + SHIFT + SPACE                    自动补全代码✔,没有ALT + /给�
 CTRL + ALT + T                          Surround With: 把选中的代码放在 TRY catch{}、IF{} ELSE{}等语句里✔
 CTRL + ALT + I                          自动缩进代码，自动缩进光标所在行或缩进选中的行✔
 Ctrl + Alt + V                          提取变量✔
+ctrl + shift + T                        快速构建单元测试✔
 
 fori/sout/psvm + Tab                    ×
 
