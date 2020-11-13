@@ -127,35 +127,136 @@ public class LangTest {
     }
 
     /**
-      * author: 2025513
-      *
-      * 3.克隆(clone)测试
-      *
-      * 结果:
-      *
-      * 结论:
+     * author: 2025513
+     *
+     * 3.克隆(clone)测试
+     *
+     * 结果:
+     *
+     * 结论:
      * 想要实现克隆，需要重写Object的clone方法，默认情况下clone方法是protected修饰的。
      * 如果有需要，可以改成public修饰。
      *
      * 注意：
      * 没有实现Cloneable接口不会抛出CloneNotSupportedException,
      * 需要我们重写clone()方法的时候抛出,否则不会抛出
-      */
+     */
     @Test
-    public void test3(){
+    public void test3() {
         TestHelper.startTest("对象clone测试");
         User user = new User();
         user.username = "zhoujian";
-        user.password="123456";
-        user.age=25;
-        TestHelper.println("被克隆的对象",user);
+        user.password = "123456";
+        user.age = 25;
+        TestHelper.println("被克隆的对象", user);
 
         try {
             Object clone = user.clone();
-            TestHelper.println("克隆得到的对象",user);
-            TestHelper.println("是否为同一引用",clone==user);
+            TestHelper.println("克隆得到的对象", user);
+            TestHelper.println("是否为同一引用", clone == user);
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 4.测试System.out.println()耗时
+     *
+     * 测试思路:
+     *
+     * 结果:
+     * 79481573388100
+     * 耗时: 1.3774ms
+     * 79482577135900
+     * 耗时: 0.0694ms
+     * 79483577454300
+     * 耗时: 0.1062ms
+     * 79484577791000
+     * 耗时: 0.0657ms
+     * 79485578031000
+     * 耗时: 0.0883ms
+     * 79486578485800
+     * 耗时: 0.0646ms
+     * 79487578676800
+     * 耗时: 0.0784ms
+     * 79488578957200
+     * 耗时: 0.0777ms
+     * 79489579505000
+     * 耗时: 0.0873ms
+     * 79490580032900
+     * 耗时: 0.0666ms
+     * 79491580349900
+     * 耗时: 0.0722ms
+     * 79492580536900
+     * 耗时: 0.0629ms
+     * 79493581283300
+     * 耗时: 0.0674ms
+     * 79494581598800
+     * 耗时: 0.0781ms
+     * 79495581658100
+     * 耗时: 0.0806ms
+     * 79496581834600
+     * 耗时: 0.0693ms
+     * 79497582650100
+     * 耗时: 0.0714ms
+     *
+     * 结论: 打印不是非常耗时，10^-2 ~ 10^0 ms级别
+     */
+    @Test
+    public void test4() {
+        while (true) {
+            long start = System.nanoTime();
+            TestHelper.println(start);
+            long end = System.nanoTime();
+            TestHelper.println("耗时: " + (end - start) / 1000000d + "ms");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 5.测试: System.currentTimeMillis()和System.nanoTime()区别
+     *
+     * public static long nanoTime()
+     * 此方法只能用于测量经过的时间，与任何其他系统或壁钟时间概念无关。
+     * 返回的值表示某一固定但任意的起始时间(可能是将来，因此值可能是负的)之后的纳秒。
+     * Java虚拟机实例中对该方法的所有调用都使用相同的原点;其他虚拟机实例可能使用不同的源。
+     *
+     * public static long currentTimeMillis()
+     * 当前时间与UTC 1970年1月1日午夜之间的差值(以毫秒计)。
+     *
+     * 测试思路:
+     *
+     * 结果:
+     *
+     * 结论:
+     * 1.nanoTime的计时起点是随机的，不同的虚拟机实例可能使用不同的起点。
+     *
+     * 2.currentTimeMillis在不同的机器、虚拟机实例上，都是相同的起点，单位是ms。
+     */
+    @Test
+    public void test5() {
+        while (true) {
+            // 1605078568067        1605078569068
+            long currentTimeMillis = System.currentTimeMillis();
+            // 79862073337300       79863074030000
+            long nanoTime = System.nanoTime();
+
+            TestHelper.println("System.currentTimeMillis()", currentTimeMillis);
+            TestHelper.println("System.nanoTime()", nanoTime);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
