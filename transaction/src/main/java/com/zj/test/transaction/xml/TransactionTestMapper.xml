@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.test.transaction.mapper.TransactionTestMapper">
+
+	<select id="initTestEnvironment" resultType="Object">
+		create table if not exists user(
+		uid int not null primary key,
+		username varchar(18) not null,
+		password varchar(18) not null,
+		age tinyint,
+		money double)Engine=InnoDB default charset utf8;
+
+
+	</select>
+
+	<update id="addMoneyBy1000">
+		update user set money = money +  1000 where uid=10000;
+	</update>
+</mapper>
