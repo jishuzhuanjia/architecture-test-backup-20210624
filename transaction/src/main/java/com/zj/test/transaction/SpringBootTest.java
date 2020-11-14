@@ -10,6 +10,7 @@ package com.zj.test.transaction;
  */
 
 import com.zj.test.TransactionTestApplication;
+import com.zj.test.transaction.exception.TransactionTestException;
 import com.zj.test.transaction.impl.TransactionTestServiceImpl;
 import com.zj.test.transaction.mapper.TransactionTestMapper;
 import com.zj.test.transaction.service.TransactionTestService;
@@ -17,6 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
+import sun.net.TelnetInputStream;
+
+import java.io.IOException;
 
 @org.springframework.boot.test.context.SpringBootTest(classes = TransactionTestApplication.class)
 @RunWith(SpringRunner.class)
@@ -63,6 +67,18 @@ public class SpringBootTest {
         transactionTestService.atomicityTest();
 
     }
+
+    @Test
+    public void exceptionTypetTest() throws TransactionTestException, IOException {
+        transactionTestService.exceptionTypetTest();
+    }
+
+    @Test
+    public void changeExceptionTypeTest() throws IOException, ClassNotFoundException {
+        transactionTestService.changeExceptionTypeTest();
+
+    }
+
 
 
 }

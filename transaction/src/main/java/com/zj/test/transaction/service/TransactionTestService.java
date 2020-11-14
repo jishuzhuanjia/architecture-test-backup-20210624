@@ -1,6 +1,9 @@
 package com.zj.test.transaction.service;
 
+import com.zj.test.transaction.exception.TransactionTestException;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -17,5 +20,12 @@ public interface TransactionTestService {
       */
 
     public void atomicityTest();
+
+    /**
+     * @Transaction注解作用的异常种类测试
+     */
+    public void exceptionTypetTest() throws TransactionTestException, IOException;
+
+    public void changeExceptionTypeTest() throws IOException, ClassNotFoundException;
 
 }
