@@ -32,10 +32,10 @@ public class NotifyTest {
     /**
      * author: 2025513
      *
-     * 1.测试：调用notify()后，线程是否立即放弃cpu资源
+     * 1.测试：调用notify()/notifyAll()后，线程是否会立即放弃cpu资源?
      *
-     * 结论:
-     * 1.线程调用notify()不会释放锁，会继续执行。
+     * 结论: 不会
+     * 1.线程调用调用notify()/notifyAll()后不会释放锁，会继续执行。
      *
      * 2.线程调用wait()会立即释放锁并释放cup资源。
      *
