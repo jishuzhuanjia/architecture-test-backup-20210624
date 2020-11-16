@@ -8,8 +8,8 @@ import org.junit.Test;
  * @create-time: 2020/11/16 16:06
  * @description: object.notify()测试
  * @version: 1.0
- * @finished: false
- * @finished-time:
+ * @finished: 1
+ * @finished-time: 2020年11月16日 21:12:23
  */
 public class NotifyTest {
 
