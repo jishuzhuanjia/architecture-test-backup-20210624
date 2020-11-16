@@ -42,8 +42,13 @@ public class DbcpTest {
 
         try {
             Connection connection = basicDataSource.getConnection();
+            /*
+            1.设置是否自动提交，默认false
+            当设置为true时，意味着开启事务，需要手动commit才会提交更改
+            */
+            connection.setAutoCommit(false);
             TestHelper.println("connection==null", Objects.isNull(connection));
-
+            TestHelper.println("getInitialSize()",basicDataSource.getInitialSize());
             PreparedStatement preparedStatement = connection.prepareStatement("insert into tb5 values (?)");
             preparedStatement.setInt(1,111111);
             preparedStatement.executeUpdate();
@@ -51,8 +56,5 @@ public class DbcpTest {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-
     }
-
-
 }

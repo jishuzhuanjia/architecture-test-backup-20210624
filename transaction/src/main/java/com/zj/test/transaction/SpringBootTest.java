@@ -78,7 +78,4 @@ public class SpringBootTest {
         transactionTestService.changeExceptionTypeTest();
 
     }
-
-
-
 }
