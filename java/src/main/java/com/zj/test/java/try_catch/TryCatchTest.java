@@ -22,7 +22,8 @@ public class TryCatchTest {
         if (null == content) {
             throw new NullPointerException("content can not null");
             /**
-             * 1.throw语句后的代码执行不到
+             * 1.抛出异常后，如果未处理，则代码终止执行。
+             * throw语句后的代码执行不到
              * 方法一旦执行了throw语句，该方法后的所有代码都不会执行。调用者也会中断执行,
              * 因为代码出现了错误，已经走上了错误的道路，所以必须终止
              *
@@ -39,14 +40,14 @@ public class TryCatchTest {
     }
 
     /**
-     * 2.throws
+     * 2.异常处理方式之throws
      * 方法中抛出throw Exception，会要求处理异常，此时我们可以将处理异常的工作交给调用者。就是通过throws关键字，
      *
      * 如果多种异常是父子关系，只需要写父类即可，但是这不便于调用者对异常的原因进行细分。
      *
      * 注意：
      * T extens RuntimeException: 运行时异常不用添加throws关键字，就算添加了，调用者调用时也不会提醒。
-     * 运行时异常意味着编程出现了错误，不应该处理异常，需要检查代码。
+     * 运行时异常往往意味着编程出现了错误，不应该处理异常，需要检查代码。
      */
     public static void findFile(String path) throws FileNotFoundException, SocketException {
         if (StringUtils.isBlank(path))
