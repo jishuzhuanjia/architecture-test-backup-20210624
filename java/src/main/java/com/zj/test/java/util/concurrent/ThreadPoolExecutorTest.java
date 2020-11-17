@@ -146,7 +146,6 @@ public class ThreadPoolExecutorTest {
      * 当keepAliveTime为0，线程一旦空闲，立即销毁。
      * 如果是其他值，达到指定的时间后，会被销毁。
      */
-
     @Test
     public void keepAliveTime() {
         ThreadPoolExecutor threadPoolExecutor =
@@ -198,11 +197,15 @@ public class ThreadPoolExecutorTest {
         }
     }
 
-
     /**
      * author: 2025513
      *
-     * 5.测试：ThreadPoolExecutor初始线程池线程数量 + 是否会使用核心池空闲线程来执行新的任务 + 默认情况下核心池线程是否会过期销毁
+     * 5.测试：
+     * 1.ThreadPoolExecutor完成构造时线程池线程数量
+     *
+     * 2.是否会使用核心池空闲线程来执行新的任务
+     *
+     * 3.默认情况下核心池线程是否会过期销毁
      * 【作用】
      *
      * 【测试结果】
@@ -210,11 +213,12 @@ public class ThreadPoolExecutorTest {
      * 【结论】
      * 1、ThreadPoolExecutor被创建后且没有执行任务时，池中线程数量为0。
      * 每次执行新的任务时，不管核心池是否已经有空闲线程，都会创建新的线程来执行新任务，直到corePoolSize。
+     * 默认情况下，核心池中corePoolSize个线程不会超时销毁，会一直存在。
      *
      * 2.public int getPoolSize()
      * 获取当前线程池中的线程数量
      *
-     * 3.默认情况下核心池线程过期不会销毁。
+     * 3.默认情况下核心池线程空闲超时不会销毁。
      *
      * 【优点】
      * 【缺点】
@@ -344,7 +348,7 @@ public class ThreadPoolExecutorTest {
     /**
      * author: 2025513
      *
-     * 7.使用allowsCoreThreadTimeOut(true)让核心池超时销毁
+     * 7.使用allowsCoreThreadTimeOut(true)让核心池线程空闲超时销毁
      * 【作用】
      *
      * 【测试结果】
