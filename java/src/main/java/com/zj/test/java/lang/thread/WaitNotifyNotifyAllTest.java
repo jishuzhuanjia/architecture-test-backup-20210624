@@ -6,7 +6,7 @@ import com.zj.test.util.TestHelper;
  * author: zhoujian
  * corporation: none
  * create-time: 2020年8月25日 下午12:15:35
- * description: object.wait()测试
+ * description: object.wait(),notify(),notifyAll()测试
  * finished: 0
  */
 // 车票池
