@@ -4,10 +4,7 @@ import com.zj.test.util.TestHelper;
 import org.junit.Test;
 import org.junit.runner.Runner;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -28,12 +25,19 @@ public class ThreadPoolExecutorTest {
      * ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
      */
 
-    /**1.
-     public ThreadPoolExecutor(int corePoolSize,
+    /**
+     1.public ThreadPoolExecutor(int corePoolSize,
      int maximumPoolSize,
      long keepAliveTime,
      TimeUnit unit,
      BlockingQueue<Runnable> workQueue)
+
+     参数说明：
+     corePoolSize：线程池核心池线程数量。
+     maximumPoolSize：线程池最大线程数量。
+     keepAliveTime：线程最大空闲时间，到达空闲时间线程会被销毁，默认指的是corePoolSize外的线程。
+     unit: keepAliveTime参数的时间单位。
+     workQueue：任务队列。
 
      缺点：
      该线程池构造方法有个缺陷：
@@ -76,11 +80,14 @@ public class ThreadPoolExecutorTest {
      *                               BlockingQueue<Runnable> workQueue,
      *                               RejectedExecutionHandler handler)
      *
+     * 参数说明：
+     * RejectedExecutionHandler：拒绝策略，定义在ThreadPoolExecutor中。
+     *
      * 测试: 线程池线程数量增加的时机
      *
      * 结论：
      * 线程池线程数量增加的时机:
-     * corePoolSize没有可用的线程，并且阻塞队列已满
+     * corePoolSize没有可用的线程，并且任务队列已满。
      */
     @Test
     public void ThreadPoolExecutor2() {
@@ -107,7 +114,7 @@ public class ThreadPoolExecutorTest {
 
     /**
      * 3.其他构造函数
-     * 主要参数已经在前面涉及，不再测试
+     * 主要参数已经在前面涉及，不再说明
      *
      * public ThreadPoolExecutor(int corePoolSize,
      *                               int maximumPoolSize,
@@ -142,7 +149,12 @@ public class ThreadPoolExecutorTest {
 
     @Test
     public void keepAliveTime() {
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(1));
+        ThreadPoolExecutor threadPoolExecutor =
+                new ThreadPoolExecutor(10,
+                        20,
+                        0,
+                        TimeUnit.MILLISECONDS,
+                        new LinkedBlockingQueue<Runnable>(1));
 
         // 占用核心部分线程
         for (int i = 0; i < 10; i++) {
@@ -160,7 +172,7 @@ public class ThreadPoolExecutorTest {
             TestHelper.println(Thread.currentThread().getName() + ": 队列中的任务,正在被处理");
         });
 
-        //接下来的任务会创建新线程
+        // 接下来的任务会创建新线程
         threadPoolExecutor.execute(() -> {
             TestHelper.println("创建新线程: " + Thread.currentThread().getName() + ": 正在执行任务");
         });
@@ -173,17 +185,208 @@ public class ThreadPoolExecutorTest {
         }*/
 
         for (int i = 0; i < 2; i++) {
-            //接下来的任务会创建新线程，看是否是上一个
+            // 接下来的任务会创建新线程，看是否是上一个
             threadPoolExecutor.execute(() -> {
                 TestHelper.println("线程是否挂掉: " + Thread.currentThread().getName() + " 正在执行任务");
             });
         }
-
 
         try {
             Thread.sleep(Integer.MAX_VALUE);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * author: 2025513
+     *
+     * 5.测试：ThreadPoolExecutor初始线程池线程数量 + 是否会使用核心池空闲线程来执行新的任务 + 默认情况下核心池线程是否会过期销毁
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 1、ThreadPoolExecutor被创建后且没有执行任务时，池中线程数量为0。
+     * 每次执行新的任务时，不管核心池是否已经有空闲线程，都会创建新的线程来执行新任务，直到corePoolSize。
+     *
+     * 2.public int getPoolSize()
+     * 获取当前线程池中的线程数量
+     *
+     * 3.默认情况下核心池线程过期不会销毁。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void allowsCoreThreadTimeOut() {
+        // 设置线程空闲销毁时间为1s
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        // 0
+        TestHelper.println("threadPoolExecutor.getPoolSize()", threadPoolExecutor.getPoolSize());
+
+        for (int i = 0; i < 10; i++) {
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+            });
+
+            /*
+            睡眠一会，等待核心池线程空闲，用来测试是否会使用核心池中空闲线程来执行新任务。
+            结果：不会。会创建新的核心池线程来执行新任务。
+            */
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 等待线程池10个线程都空闲超时
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 10
+        TestHelper.println("threadPoolExecutor.getPoolSize()", threadPoolExecutor.getPoolSize());
+
+        //threadPoolExecutor.allowCoreThreadTimeOut(true);
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 6.public int getActiveCount()测试
+     * 【作用】
+     * 返回正在执行任务的线程数。
+     *
+     * 【测试结果】
+     * 当前正在执行任务的线程数: 10
+     * 当前正在执行任务的线程数: 10
+     * 当前正在执行任务的线程数: 10
+     * 当前正在执行任务的线程数: 9
+     * 当前正在执行任务的线程数: 9
+     * 当前正在执行任务的线程数: 9
+     * 当前正在执行任务的线程数: 8
+     * 当前正在执行任务的线程数: 8
+     * 当前正在执行任务的线程数: 8
+     * 当前正在执行任务的线程数: 7
+     * 当前正在执行任务的线程数: 7
+     * 当前正在执行任务的线程数: 7
+     * 当前正在执行任务的线程数: 6
+     * 当前正在执行任务的线程数: 6
+     * 当前正在执行任务的线程数: 6
+     * 当前正在执行任务的线程数: 5
+     * 当前正在执行任务的线程数: 5
+     * 当前正在执行任务的线程数: 5
+     * 当前正在执行任务的线程数: 4
+     * 当前正在执行任务的线程数: 4
+     * 当前正在执行任务的线程数: 4
+     * 当前正在执行任务的线程数: 3
+     * 当前正在执行任务的线程数: 3
+     * 当前正在执行任务的线程数: 3
+     * 当前正在执行任务的线程数: 2
+     * 当前正在执行任务的线程数: 2
+     * 当前正在执行任务的线程数: 2
+     * 当前正在执行任务的线程数: 1
+     * 当前正在执行任务的线程数: 1
+     * 当前正在执行任务的线程数: 1
+     * 当前正在执行任务的线程数: 0
+     * 当前正在执行任务的线程数: 0
+     * 当前正在执行任务的线程数: 0
+     *
+     * 【结论】
+     * public int getActiveCount()
+     * 返回正在执行任务的线程数。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void getActiveCount() {
+        // 设置线程空闲销毁时间为1s
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        for (int i = 1; i <= 10; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                try {
+                    Thread.sleep(finalI * 1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // 打印当前正在运行的线程
+        while (true) {
+            TestHelper.println("当前正在执行任务的线程数", threadPoolExecutor.getActiveCount());
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 7.使用allowsCoreThreadTimeOut(true)让核心池超时销毁
+     * 【作用】
+     *
+     * 【测试结果】
+     * pool-1-thread-1: is running
+     * pool-1-thread-2: is running
+     * pool-1-thread-5: is running
+     * pool-1-thread-6: is running
+     * pool-1-thread-10: is running
+     * pool-1-thread-9: is running
+     * pool-1-thread-3: is running
+     * pool-1-thread-4: is running
+     * pool-1-thread-7: is running
+     * pool-1-thread-8: is running
+     * 线程池中剩余线程: 0
+     *
+     * 【结论】
+     * 1.调用threadPoolExecutor.allowCoreThreadTimeOut(true)后，核心线程也可以超时销毁。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void allowsCoreThreadTimeOut2() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        // 设置核心池线程超时过期
+        threadPoolExecutor.allowCoreThreadTimeOut(true);
+
+        for (int i = 1; i <= 10; i++) {
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName(), "is running");
+            });
+        }
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 0
+        TestHelper.println("线程池中剩余线程",threadPoolExecutor.getPoolSize());
     }
 }
