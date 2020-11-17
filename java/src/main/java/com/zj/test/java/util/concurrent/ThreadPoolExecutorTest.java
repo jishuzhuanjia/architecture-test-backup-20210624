@@ -392,5 +392,95 @@ public class ThreadPoolExecutorTest {
 
         // 0
         TestHelper.println("线程池中剩余线程",threadPoolExecutor.getPoolSize());
+
+
+    }
+
+    /**
+     * author: 2025513 2020年11月17日 23:02:18
+     *
+     * 8.api测试: public long getCompletedTaskCount()
+     *
+     * 【作用】
+     * 返回已完成执行的任务的大致总数。因为任务和线程的状态可能在计算期间动态变化，
+     * 所以返回值只是一个近似值，但在连续调用时值不会减少。
+     *
+     * 【测试结果】
+     * 当前已经完成的任务数: 0
+     * 当前已经完成的任务数: 0
+     * 当前已经完成的任务数: 0
+     * 当前已经完成的任务数: 1
+     * 当前已经完成的任务数: 1
+     * 当前已经完成的任务数: 1
+     * 当前已经完成的任务数: 2
+     * 当前已经完成的任务数: 2
+     * 当前已经完成的任务数: 2
+     * 当前已经完成的任务数: 3
+     * 当前已经完成的任务数: 3
+     * 当前已经完成的任务数: 3
+     * 当前已经完成的任务数: 4
+     * 当前已经完成的任务数: 4
+     * 当前已经完成的任务数: 4
+     * 当前已经完成的任务数: 5
+     * 当前已经完成的任务数: 5
+     * 当前已经完成的任务数: 5
+     * 当前已经完成的任务数: 6
+     * 当前已经完成的任务数: 6
+     * 当前已经完成的任务数: 6
+     * 当前已经完成的任务数: 7
+     * 当前已经完成的任务数: 7
+     * 当前已经完成的任务数: 7
+     * 当前已经完成的任务数: 8
+     * 当前已经完成的任务数: 8
+     * 当前已经完成的任务数: 8
+     * 当前已经完成的任务数: 9
+     * 当前已经完成的任务数: 9
+     * 当前已经完成的任务数: 9
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     * 当前已经完成的任务数: 10
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void getCompletedTaskCount(){
+        // 设置线程空闲销毁时间为1s
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        for (int i = 1; i <= 10; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                try {
+                    Thread.sleep(finalI * 1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // 打印当前已经完成的任务数
+        while (true) {
+            TestHelper.println("当前已经完成的任务数", threadPoolExecutor.getCompletedTaskCount());
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }
