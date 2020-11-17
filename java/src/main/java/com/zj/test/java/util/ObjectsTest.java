@@ -169,7 +169,7 @@ public class ObjectsTest {
      * 该方法除了能比较对象，还能比较数组类型，只有两个数组长度相同且元素都相同，才会返回true。
      */
     @Test
-    public void test() {
+    public void deepEquals() {
         int[] b1 = new int[1];
         b1[0] = 1;
 
@@ -196,7 +196,7 @@ public class ObjectsTest {
      * @return 如果o为null，返回0，否则返回0.hasCode()
      */
     @Test
-    public void testHashCode(){
+    public void hasCode(){
         TestHelper.println("hasCode(\"Hello World\")",Objects.hashCode("Hello World"));
         TestHelper.println("hasCode(null)",Objects.hashCode(null));
         TestHelper.println("hasCode(10)",Objects.hashCode(10));
@@ -205,6 +205,5 @@ public class ObjectsTest {
         // float、double has code不等于值
         TestHelper.println("hasCode(10f)",Objects.hashCode(10f));// 1092616192
         TestHelper.println("hasCode(10.1)",Objects.hashCode(10.1));// 1930887168
-
     }
 }
