@@ -391,7 +391,7 @@ public class ThreadPoolExecutorTest {
         }
 
         // 0
-        TestHelper.println("线程池中剩余线程",threadPoolExecutor.getPoolSize());
+        TestHelper.println("线程池中剩余线程", threadPoolExecutor.getPoolSize());
 
 
     }
@@ -455,7 +455,7 @@ public class ThreadPoolExecutorTest {
      * 【缺点】
      */
     @Test
-    public void getCompletedTaskCount(){
+    public void getCompletedTaskCount() {
         // 设置线程空闲销毁时间为1s
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
                 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
@@ -471,6 +471,7 @@ public class ThreadPoolExecutorTest {
             });
         }
 
+
         // 打印当前已经完成的任务数
         while (true) {
             TestHelper.println("当前已经完成的任务数", threadPoolExecutor.getCompletedTaskCount());
@@ -481,6 +482,58 @@ public class ThreadPoolExecutorTest {
                 e.printStackTrace();
             }
         }
+
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 9.api测试
+     * public int getCorePoolSize()
+     *
+     * 【作用】
+     * 返回corePoolSize,与核心池中存在的线程数无关，值等于构造ThreadPoolExecutor时的corePoolSize参数。
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void getCorePoolSize() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        // 10
+        TestHelper.println("getCorePoolSize()",threadPoolExecutor.getCorePoolSize());
+
+        for (int i = 0; i < 15; i++) {
+
+            threadPoolExecutor.execute(()->{
+                try {
+                    new CountDownLatch(1).await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            });
+
+        }
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 10
+        TestHelper.println("getPoolSize()",threadPoolExecutor.getPoolSize());
+        // 10
+        TestHelper.println("getCorePoolSize()",threadPoolExecutor.getCorePoolSize());
+
+
 
     }
 }
