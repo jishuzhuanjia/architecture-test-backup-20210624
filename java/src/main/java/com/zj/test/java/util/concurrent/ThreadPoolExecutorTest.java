@@ -3,6 +3,7 @@ package com.zj.test.java.util.concurrent;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.concurrent.*;
 
 /* @author: zhoujian
@@ -697,6 +698,8 @@ public class ThreadPoolExecutorTest {
         threadPoolExecutor.shutdown();
         threadPoolExecutor.shutdown();
 
+        threadPoolExecutor.shutdownNow();
+
         TestHelper.println("当前线程池是否已经关闭", threadPoolExecutor.isShutdown());
 
         try {
@@ -743,7 +746,7 @@ public class ThreadPoolExecutorTest {
      * 【缺点】
      */
     @Test
-    public void awaitTermination(){
+    public void awaitTermination() {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
                 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
@@ -774,5 +777,101 @@ public class ThreadPoolExecutorTest {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 14.api测试
+     * public boolean isTerminated()
+     * 线程池关闭后，所有任务都完成，则返回true。否则返回false。
+     *
+     * 注意：
+     * 如果没有调用shutdown()或shotdownNow()，isTerminated永远是false，
+     *
+     * 【作用】
+     * 用来实时检测调用线程池关闭方法后，任务是否完成。
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void isTerminated() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        for (int i = 0; i < 10; i++) {
+            threadPoolExecutor.execute(() -> {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+            });
+        }
+
+        threadPoolExecutor.shutdown();
+
+        while (true) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            TestHelper.println("threadPoolExecutor.isTerminated()", threadPoolExecutor.isTerminated());
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 15.api测试
+     * public java.util.List<Runnable> shutdownNow()
+     *
+     * 【作用】
+     * 不再接受新的任务，会等待已经开始处理的任务执行完成，队列中还没有开始执行的任务不再处理，会被移除并返回。
+     *
+     * 该方法会立即返回，如果想要等待已经开始处理的任务执行完毕，使用awaitTermination(..)
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     *
+     * 【优点】
+     *
+     *
+     * 【缺点】
+     */
+    @Test
+    public void shutdownNow() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        for (int i = 0; i < 30; i++) {
+            threadPoolExecutor.execute(() -> {
+                while (true){
+                    TestHelper.println(Thread.currentThread().getName()+" is running...");
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        List<Runnable> runnables = threadPoolExecutor.shutdownNow();
+        TestHelper.println("剩余未处理的任务个数",runnables.size());
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
