@@ -1,5 +1,8 @@
 package com.zj.test.mybatis.controller.zj.dynamicsql.po;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
 /* @author: zhoujian
@@ -10,6 +13,8 @@ import java.util.Date;
  * @finished: false
  * @finished-time:
  */
+@Setter
+@Getter
 public class BookPO {
     private Integer bId;
     private String bookName;

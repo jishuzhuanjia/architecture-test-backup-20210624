@@ -1,6 +1,7 @@
 package com.zj.test.mybatis.mapper.zj;
 
 import com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,4 +20,9 @@ public interface DynamicSqlTestMapper {
 
     /*2.foreach标签 + in测试*/
     public List<BookPO> selectWithForeach(List<String> booknameList);
+
+    /**
+     * 3.choose + when + otherwise测试
+     */
+    public List<BookPO> selectByWhereAndChoose(@Param("bookName") String bookName, @Param("bId")Integer bId);
 }
