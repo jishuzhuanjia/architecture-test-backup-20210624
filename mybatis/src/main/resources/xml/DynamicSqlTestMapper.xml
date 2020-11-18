@@ -54,7 +54,9 @@
 	when按照书写的顺序进行判断
 	otherwise标签必须写在when的后面，且至多只有一个。
 
-	场景：通过bId或book_name查找书籍
+	测试场景：
+	通过bId或book_name查找书籍,如果bId和book_name参数同时存在，则通过bId查询,
+	如果bId和book_name参数都没有，则默认返回书名为价值的书。
 	-->
 	<select id="selectByWhereAndChoose" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
 		select bId,book_name as bookName,author_name as authorName,create_time from <include refid="table_name"/>
@@ -68,11 +70,8 @@
 					and book_name = #{bookName}
 				</when>
 
-
-
 				<!--如果没有传递参数，默认返回书名为价值的书
-				由于xml限制，otherwise标签必须在最后
-				-->
+				由于xml限制，otherwise标签必须在when后面，且最多只有一个。-->
 				<otherwise>
 					and book_name='价值'
 				</otherwise>

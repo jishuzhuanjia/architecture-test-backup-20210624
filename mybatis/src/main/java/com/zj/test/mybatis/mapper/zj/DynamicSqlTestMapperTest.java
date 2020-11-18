@@ -20,6 +20,27 @@ class DynamicSqlTestMapperTest {
     @Autowired
     DynamicSqlTestMapper mapper;
 
+    /**
+     * author: 2025513
+     *
+     * 1.测试
+     * choose + when  + otherwise测试
+     *
+     * 【作用】
+     * 相当于java中的switch + case + default
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 1.常用where标签包围choose，以避免关键字多余语法报错。
+     *
+     * 2.会按照书写的顺序来判断when标签，当找到test为true的when时停止，或者没有匹配的则使用otherwise中的语句。
+     *
+     * 3.otherwise标签至多只有一个，且必须放在when标签后面。
+     *
+     * 【优点】
+     * 【缺点】
+     */
     @Test
     void selectByWhereAndChoose() {
         /*
