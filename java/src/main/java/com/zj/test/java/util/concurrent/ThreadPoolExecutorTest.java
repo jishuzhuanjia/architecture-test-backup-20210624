@@ -384,6 +384,7 @@ public class ThreadPoolExecutorTest {
             });
         }
 
+        // 睡眠5s，等待核心池线程空闲超时
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
@@ -532,8 +533,5 @@ public class ThreadPoolExecutorTest {
         TestHelper.println("getPoolSize()",threadPoolExecutor.getPoolSize());
         // 10
         TestHelper.println("getCorePoolSize()",threadPoolExecutor.getCorePoolSize());
-
-
-
     }
 }
