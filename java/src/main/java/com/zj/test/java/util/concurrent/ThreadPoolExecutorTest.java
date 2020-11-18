@@ -1,9 +1,11 @@
 package com.zj.test.java.util.concurrent;
 
 import com.zj.test.util.TestHelper;
+import com.zj.test.util.ZJSwingUtilities;
 import org.junit.Test;
 import org.junit.runner.Runner;
 
+import javax.swing.*;
 import java.util.concurrent.*;
 
 /* @author: zhoujian
@@ -655,5 +657,128 @@ public class ThreadPoolExecutorTest {
         }
 
         TestHelper.println("当前线程池线程数量", threadPoolExecutor.getPoolSize());
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 12.api测试
+     * public void shutdown()
+     *
+     * 1.调用shutdown()后，是否会完成之前已经提交的任务？
+     *
+     * 【作用】
+     * 关闭线程池，不再接受新的任务，已经接受的任务会执行完成。
+     * 该方法会立即返回，不会等待已经接受的任务执行完成。
+     * 如果想要等待已经接受的任务执行完成，使用awaitTerminate(..)
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 1.是，会将已提交的任务执行完成。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void shutdown() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        for (int i = 0; i < 10; i++) {
+            threadPoolExecutor.execute(() -> {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+            });
+        }
+
+        threadPoolExecutor.shutdown();
+        threadPoolExecutor.shutdown();
+        threadPoolExecutor.shutdown();
+
+        TestHelper.println("当前线程池是否已经关闭", threadPoolExecutor.isShutdown());
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 13.api测试
+     * public boolean awaitTermination(long timeout,
+     *                                 java.util.concurrent.TimeUnit unit)
+     *
+     * 【作用】
+     * 会阻塞等待已经调用shutdown()的线程池执行完所有的任务，如果在指定的时间内完成，返回true，否则返回false。
+     * 如果timeout设置为0，则该方法会立即返回。
+     *
+     * 注意：需要和shotdown()一起使用，因为awaitTermination不会关闭线程池。
+     * 如果单独使用，不管线程池中任务是否完成，总是阻塞等到timeout才会返回。
+     *
+     * 【测试结果】
+     * pool-1-thread-7 is running...
+     * pool-1-thread-3 is running...
+     * pool-1-thread-5 is running...
+     * pool-1-thread-1 is running...
+     * pool-1-thread-10 is running...
+     * pool-1-thread-9 is running...
+     * pool-1-thread-2 is running...
+     * pool-1-thread-6 is running...
+     * pool-1-thread-4 is running...
+     * pool-1-thread-8 is running...
+     * 已提交任务是否完成: true
+     * 当前线程池是否已经关闭: true
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void awaitTermination(){
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        for (int i = 0; i < 10; i++) {
+            threadPoolExecutor.execute(() -> {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+            });
+        }
+
+        threadPoolExecutor.shutdown();
+
+        try {
+            boolean b = threadPoolExecutor.awaitTermination(6, TimeUnit.SECONDS);
+            TestHelper.println("已提交任务是否完成",b);
+            TestHelper.println("当前线程池是否已经关闭", threadPoolExecutor.isShutdown());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void main(String[] args) {
+        JFrame hello = ZJSwingUtilities.createTestJFrame("hello", 500, 800);
+        hello.setVisible(true);
     }
 }
