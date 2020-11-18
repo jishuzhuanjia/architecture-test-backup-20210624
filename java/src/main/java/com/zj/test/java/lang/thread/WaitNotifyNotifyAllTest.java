@@ -121,12 +121,14 @@ class TicketPool implements Runnable {
                              * 优点：
                              * 1.弥补synchronized无法手动释放锁、分配锁的缺陷。
                              *
-                             * 2.控制synchronized代码块的执行进度：
-                             * synchronized碎片化，synchronized块作为一个整体,当某个线程获取锁后，会将synchronized块整个执行一遍。而wait的使用可中断synchronized块中代码的执行。
-                             * 控制synchronized块的执行进程。如暂停，Thread.sleep()虽然可以达到效果，但是会一直占用锁，其他线程无法继续获取锁。而wait()则可以解决此问题，但是需要在合适的地方调用
-                             * notify/notifyAll来恢复线程的执行。
+                             * 2.控制synchronized代码块的执行进程：
+                             * synchronized碎片化：synchronized块作为一个整体,当某个线程获取锁后，会将synchronized块整个执行一遍。
+                             * 而wait的使用可以中断synchronized块中代码的执行，控制synchronized块的执行进程。
+                             * 虽然Thread.sleep()可以达到效果，但是会一直占用锁，其他线程无法获取锁。而wait()则可以解决此问题，
+                             * 但是需要在合适的地方调用notify/notifyAll来恢复线程的执行。
                              *
-                             * 3.增强对锁获取的控制: wait,notify,notifyAll的组合使用，可用来指定哪些线程能够获取锁，哪些线程不能。
+                             * 3.加强对锁的管理:
+                             * wait,notify,notifyAll的组合使用，可用来指定哪些线程能够获取锁，哪些线程不能。
                              *
                              * 缺点： 1.使用不当会导致同步问题。
                              */
