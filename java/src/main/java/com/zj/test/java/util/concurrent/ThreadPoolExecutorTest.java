@@ -540,5 +540,120 @@ public class ThreadPoolExecutorTest {
         TestHelper.println("getPoolSize()", threadPoolExecutor.getPoolSize());
         // 10
         TestHelper.println("getCorePoolSize()", threadPoolExecutor.getCorePoolSize());
+
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 10.api测试
+     * public void setCorePoolSize(int corePoolSize)
+     *
+     * 1.验证：新corePoolSize如果比当前corePoolSize小，当核心线程空闲时，是否会从当前核心线程中销毁多余的线程。
+     *
+     * 【作用】
+     * 设置线程的核心数量。这将覆盖构造函数中设置的任何值。如果新值小于当前值，多余的现有线程将在下一次空闲时终止。
+     * 如果较大，则需要启动新线程来执行任何排队的任务。
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 1.新corePoolSize如果比当前corePoolSize小，当核心线程空闲时，会从当前核心线程中销毁多余的线程。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void setCorePoolSize() {
+
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        // 提交任务，让ThreadPoolExecutor创建corePoolSize个线程。
+        for (int i = 0; i < 10; i++) {
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + "当前线程池线程数量", threadPoolExecutor.getPoolSize());
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+            });
+
+        }
+
+        TestHelper.println("当前线程池线程数量", threadPoolExecutor.getPoolSize());
+
+        TestHelper.println("将corePoolSize设置为8.");
+        // 8
+        threadPoolExecutor.setCorePoolSize(8);
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        TestHelper.println("当前线程池线程数量", threadPoolExecutor.getPoolSize());
+
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 11.api测试
+     * public void setCorePoolSize(int corePoolSize)
+     *
+     * 1.验证：新corePoolSize如果比当前corePoolSize大，队列未满时，是否会创建核心线程来执行队列任务？
+     *
+     * 【作用】
+     * 设置线程的核心数量。这将覆盖构造函数中设置的任何值。如果新值小于当前值，多余的现有线程将在下一次空闲时终止。
+     * 如果较大，则需要启动新线程来执行任何排队的任务。
+     *
+     * 【测试结果】
+     * 当前线程池线程数量: 10
+     * 将corePoolSize设置为12.
+     * 当前线程池线程数量: 12
+     *
+     * 【结论】
+     * 1.新corePoolSize如果比当前corePoolSize大，
+     * 如果队列中有任务，则会创建核心池线程来执行队列中的任务。
+     * 如果提交新的任务，则会创建核心池线程来执行新的任务。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void setCorePoolSize2() {
+
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
+                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+
+        // 提交任务,10个任务占用corePoolSize
+        for (int i = 0; i < 10; i++) {
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+                try {
+                    new CountDownLatch(1).await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        TestHelper.println("当前线程池线程数量", threadPoolExecutor.getPoolSize());
+
+        TestHelper.println("将corePoolSize设置为12.");
+        threadPoolExecutor.setCorePoolSize(12);
+
+        for (int i = 0; i < 2; i++) {
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+            });
+        }
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        TestHelper.println("当前线程池线程数量", threadPoolExecutor.getPoolSize());
     }
 }
