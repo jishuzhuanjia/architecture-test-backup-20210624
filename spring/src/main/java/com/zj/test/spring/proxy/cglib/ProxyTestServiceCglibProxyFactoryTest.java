@@ -10,7 +10,7 @@ public class ProxyTestServiceCglibProxyFactoryTest {
 
         ProxyTestServiceCglibProxyFactory proxyTestServiceCglibProxyFactory = new ProxyTestServiceCglibProxyFactory();
 
-        ProxyTestService proxyTestService = proxyTestServiceCglibProxyFactory.getProxyTestService();
+        ProxyTestService proxyTestService = proxyTestServiceCglibProxyFactory.getProxyTestServiceProxy();
 
         proxyTestService.insert();
         proxyTestService.delete();
