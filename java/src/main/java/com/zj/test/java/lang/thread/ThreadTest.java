@@ -1,5 +1,8 @@
 package com.zj.test.java.lang.thread;
 
+
+import com.zj.test.util.TestHelper.ResultEnum;
+
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/18 16:45
@@ -9,4 +12,6 @@ package com.zj.test.java.lang.thread;
  * @finished-time:
  */
 public class ThreadTest {
+    public static void main(String[] args) {
+    }
 }
