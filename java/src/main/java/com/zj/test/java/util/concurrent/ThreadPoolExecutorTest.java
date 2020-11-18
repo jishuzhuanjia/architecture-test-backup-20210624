@@ -37,7 +37,7 @@ public class ThreadPoolExecutorTest {
      maximumPoolSize：线程池最大线程数量。
      keepAliveTime：线程最大空闲时间，到达空闲时间线程会被销毁，默认指的是corePoolSize外的线程。
      unit: keepAliveTime参数的时间单位。
-     workQueue：任务队列。
+     workQueue：存储任务的队列。
 
      缺点：
      该线程池构造方法有个缺陷：
@@ -73,7 +73,10 @@ public class ThreadPoolExecutorTest {
     }
 
     /**
-     * 2.ThreadPoolExecutor(int corePoolSize,
+     * 2.测试
+     * 线程池线程数量增加的时机
+     *
+     * ThreadPoolExecutor(int corePoolSize,
      *                               int maximumPoolSize,
      *                               long keepAliveTime,
      *                               TimeUnit unit,
@@ -83,11 +86,11 @@ public class ThreadPoolExecutorTest {
      * 参数说明：
      * RejectedExecutionHandler：拒绝策略，定义在ThreadPoolExecutor中。
      *
-     * 测试: 线程池线程数量增加的时机
      *
-     * 结论：
+     *
+     * 【结论】
      * 线程池线程数量增加的时机:
-     * corePoolSize没有可用的线程，并且任务队列已满。
+     * corePoolSize中没有可用的空闲线程，并且任务队列已满时。
      */
     @Test
     public void ThreadPoolExecutor2() {
@@ -134,17 +137,17 @@ public class ThreadPoolExecutorTest {
      */
 
     /**
-     * 4.keepAliveTime参数为0测试
+     * 4.keepAliveTime参数为0时效果测试
      *
-     * 测试结果：
+     * 【测试结果】
      * 新线程: pool-1-thread-11 正在执行任务
      * 线程是否挂掉: pool-1-thread-12 正在执行任务
      * 线程是否挂掉: pool-1-thread-13 正在执行任务
      * pool-1-thread-11: 队列中的任务,正在被处理
      *
-     * 结果:
+     * 【结论】
      * 当keepAliveTime为0，线程一旦空闲，立即销毁。
-     * 如果是其他值，达到指定的时间后，会被销毁。
+     * 如果keepAliveTime是其他非0值，达到指定的时间后，会被销毁。
      */
     @Test
     public void keepAliveTime() {
@@ -201,24 +204,28 @@ public class ThreadPoolExecutorTest {
      * author: 2025513
      *
      * 5.测试：
-     * 1.ThreadPoolExecutor完成构造时线程池线程数量
+     * 1.ThreadPoolExecutor完成构造时线程池线程数量?
      *
-     * 2.是否会使用核心池空闲线程来执行新的任务
+     * 2.核心池线程数是如何增长的?
      *
-     * 3.默认情况下核心池线程是否会过期销毁
+     * 3.默认情况下核心池线程是否会过期销毁?
+     *
+     * 4.如何获取线程池中线程的数量?
      * 【作用】
      *
      * 【测试结果】
      *
      * 【结论】
-     * 1、ThreadPoolExecutor被创建后且没有执行任务时，池中线程数量为0。
-     * 每次执行新的任务时，不管核心池是否已经有空闲线程，都会创建新的线程来执行新任务，直到corePoolSize。
+     * 1、ThreadPoolExecutor对象在完成构造，且还没有开始执行任务时，线程池中线程数量为0。
+     *
+     * 2.当有新的任务到达时，且线程池线程数 < corePoolSize，不管核心池是否有空闲线程，都会创建新的线程来执行新任务，
+     * 直到corePoolSize。
      * 默认情况下，核心池中corePoolSize个线程不会超时销毁，会一直存在。
      *
-     * 2.public int getPoolSize()
-     * 获取当前线程池中的线程数量
-     *
      * 3.默认情况下核心池线程空闲超时不会销毁。
+     *
+     * 4.public int getPoolSize()
+     * 获取当前线程池中的线程数量
      *
      * 【优点】
      * 【缺点】
@@ -272,7 +279,7 @@ public class ThreadPoolExecutorTest {
      *
      * 6.public int getActiveCount()测试
      * 【作用】
-     * 返回正在执行任务的线程数。
+     * 返回正在执行任务的线程大致数量。
      *
      * 【测试结果】
      * 当前正在执行任务的线程数: 10
@@ -311,7 +318,7 @@ public class ThreadPoolExecutorTest {
      *
      * 【结论】
      * public int getActiveCount()
-     * 返回正在执行任务的线程数。
+     * 返回正在执行任务的线程大致数量。
      *
      * 【优点】
      * 【缺点】
@@ -365,7 +372,7 @@ public class ThreadPoolExecutorTest {
      * 线程池中剩余线程: 0
      *
      * 【结论】
-     * 1.调用threadPoolExecutor.allowCoreThreadTimeOut(true)后，核心线程也可以超时销毁。
+     * 1.调用threadPoolExecutor.allowCoreThreadTimeOut(true)后，核心线程空闲超时也会被销毁。
      *
      * 【优点】
      * 【缺点】
@@ -375,7 +382,7 @@ public class ThreadPoolExecutorTest {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
                 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
-        // 设置核心池线程超时过期
+        // 设置允许核心池线程超时过期
         threadPoolExecutor.allowCoreThreadTimeOut(true);
 
         for (int i = 1; i <= 10; i++) {
@@ -403,7 +410,7 @@ public class ThreadPoolExecutorTest {
      * 8.api测试: public long getCompletedTaskCount()
      *
      * 【作用】
-     * 返回已完成执行的任务的大致总数。因为任务和线程的状态可能在计算期间动态变化，
+     * 返回已完成执行的任务的大致总数。那是因为任务和线程的状态可能在计算期间动态变化，
      * 所以返回值只是一个近似值，但在连续调用时值不会减少。
      *
      * 【测试结果】
@@ -493,7 +500,7 @@ public class ThreadPoolExecutorTest {
      * public int getCorePoolSize()
      *
      * 【作用】
-     * 返回corePoolSize,与核心池中存在的线程数无关，值等于构造ThreadPoolExecutor时的corePoolSize参数。
+     * 返回corePoolSize参数,与核心池中实际存在的线程数无关，值等于构造ThreadPoolExecutor对象时传递的corePoolSize参数。
      *
      * 【测试结果】
      *
@@ -508,11 +515,11 @@ public class ThreadPoolExecutorTest {
                 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
         // 10
-        TestHelper.println("getCorePoolSize()",threadPoolExecutor.getCorePoolSize());
+        TestHelper.println("getCorePoolSize()", threadPoolExecutor.getCorePoolSize());
 
         for (int i = 0; i < 15; i++) {
 
-            threadPoolExecutor.execute(()->{
+            threadPoolExecutor.execute(() -> {
                 try {
                     new CountDownLatch(1).await();
                 } catch (InterruptedException e) {
@@ -530,8 +537,8 @@ public class ThreadPoolExecutorTest {
         }
 
         // 10
-        TestHelper.println("getPoolSize()",threadPoolExecutor.getPoolSize());
+        TestHelper.println("getPoolSize()", threadPoolExecutor.getPoolSize());
         // 10
-        TestHelper.println("getCorePoolSize()",threadPoolExecutor.getCorePoolSize());
+        TestHelper.println("getCorePoolSize()", threadPoolExecutor.getCorePoolSize());
     }
 }
