@@ -1,11 +1,8 @@
 package com.zj.test.java.util.concurrent;
 
 import com.zj.test.util.TestHelper;
-import com.zj.test.util.ZJSwingUtilities;
 import org.junit.Test;
-import org.junit.runner.Runner;
 
-import javax.swing.*;
 import java.util.concurrent.*;
 
 /* @author: zhoujian
@@ -721,8 +718,9 @@ public class ThreadPoolExecutorTest {
      * 会阻塞等待已经调用shutdown()的线程池执行完所有的任务，如果在指定的时间内完成，返回true，否则返回false。
      * 如果timeout设置为0，则该方法会立即返回。
      *
-     * 注意：需要和shotdown()一起使用，因为awaitTermination不会关闭线程池。
-     * 如果单独使用，不管线程池中任务是否完成，总是阻塞等到timeout才会返回。
+     * 注意：
+     * 1.需要和shotdown()一起使用，因为awaitTermination不会关闭线程池。
+     * 如果单独使用，不管线程池中任务是否完成，总是阻塞timeout才会返回。
      *
      * 【测试结果】
      * pool-1-thread-7 is running...
@@ -739,6 +737,7 @@ public class ThreadPoolExecutorTest {
      * 当前线程池是否已经关闭: true
      *
      * 【结论】
+     * 需要和shotdown()一起使用
      *
      * 【优点】
      * 【缺点】
@@ -762,8 +761,8 @@ public class ThreadPoolExecutorTest {
         threadPoolExecutor.shutdown();
 
         try {
-            boolean b = threadPoolExecutor.awaitTermination(6, TimeUnit.SECONDS);
-            TestHelper.println("已提交任务是否完成",b);
+            boolean taskFinished = threadPoolExecutor.awaitTermination(6, TimeUnit.SECONDS);
+            TestHelper.println("已提交任务是否完成", taskFinished);
             TestHelper.println("当前线程池是否已经关闭", threadPoolExecutor.isShutdown());
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -775,10 +774,5 @@ public class ThreadPoolExecutorTest {
             e.printStackTrace();
         }
 
-    }
-
-    public static void main(String[] args) {
-        JFrame hello = ZJSwingUtilities.createTestJFrame("hello", 500, 800);
-        hello.setVisible(true);
     }
 }
