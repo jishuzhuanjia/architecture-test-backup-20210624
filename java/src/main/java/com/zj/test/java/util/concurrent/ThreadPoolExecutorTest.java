@@ -841,6 +841,8 @@ public class ThreadPoolExecutorTest {
      * 【测试结果】
      *
      * 【结论】
+     * 1.public int getLargestPoolSize()
+     * 获取线程池中历史最大线程数
      *
      * 【优点】
      *
@@ -867,6 +869,10 @@ public class ThreadPoolExecutorTest {
 
         List<Runnable> runnables = threadPoolExecutor.shutdownNow();
         TestHelper.println("剩余未处理的任务个数",runnables.size());
+
+        TestHelper.println("线程池历史最大线程数",threadPoolExecutor.getLargestPoolSize());
+
+        threadPoolExecutor.isTerminating();
 
         try {
             new CountDownLatch(1).await();
