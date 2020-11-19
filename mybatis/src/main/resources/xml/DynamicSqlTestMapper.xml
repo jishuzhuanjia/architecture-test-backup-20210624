@@ -36,7 +36,8 @@
 	item: 指定collection中元素的引用名
 	open,close: 字符串拼接开始、结束字符串
 	separator: 分隔符
-	005.应在<foreach></foreach>之间添加值引用表达式
+
+	应在<foreach></foreach>之间添加值引用表达式
 	-->
 	<select id="selectWithForeach" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
 		select * from <include refid="table_name"/>
@@ -60,6 +61,7 @@
 	-->
 	<select id="selectByWhereAndChoose" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
 		select bId,book_name as bookName,author_name as authorName,create_time from <include refid="table_name"/>
+
 		<where>
 			<choose>
 				<when test="bId!=null">
@@ -77,6 +79,5 @@
 				</otherwise>
 			</choose>
 		</where>
-
 	</select>
 </mapper>
