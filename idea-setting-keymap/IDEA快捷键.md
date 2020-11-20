@@ -126,7 +126,7 @@ F5，复制
 Alt+Delete，安全删除
 Ctrl+Alt+N，内联
 
-## 自定义快捷键
+## 自定义快捷键(需要导入IDEA设置)
 alt + shift + 1                     新建类
 alt + shitft + 2                    新建文件
 alt + shift + 3                     新建模块(Module)
