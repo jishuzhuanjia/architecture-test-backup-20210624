@@ -31,6 +31,7 @@ CTRL + SHIFT + E                        Recent Locations,可以查看最近编�
 CTRL + ALT + SPACE                      手动打开代码提示,提示类名、接口名、方法、关键字等...✔
 CTRL + P                                手动打开方法参数提示,有的方法参数多,这个命令就很重要了✔
 alt + F7                                Find Usages: 查找类/接口等在哪些地方被使用过
+alt+ shift + F                          将当前文件位置添加到favorites中，会保留行位置、选中内容、光标位置。
 
 ## 4.重构
 Shift + F6                              重命名 (包、类、方法、变量、甚至注释等)✔
@@ -45,6 +46,12 @@ alt + 1                                 Project窗口
 alt + 9                                 Git
 alt + 7                                 Structure
 alt + 2                                 Favorites
+alt +  0                                Messages
+alt+ 4                                  Run
+alt + ←                                 选择上一个文件标签
+alt + →                                 选择下一个文件标签
+
+################################## 以上为开发中常用 ##################################    
 
 3.2、查询快捷键
 Ctrl＋Shift＋Backspace可以跳转到上次编辑的地
@@ -130,3 +137,6 @@ Ctrl+Alt+N，内联
 alt + shift + 1                     新建类
 alt + shitft + 2                    新建文件
 alt + shift + 3                     新建模块(Module)
+
+ctrl  + shift + Backspace           回到上一个光标位置，可能不会切换文件。
+
