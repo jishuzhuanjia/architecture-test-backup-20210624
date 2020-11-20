@@ -721,6 +721,7 @@ public class RBTree<T extends Comparable<T>> {
 
             // "被删除节点"是"它的后继节点的父节点"
             if (parent == node) {
+                // 用于后续修正
                 parent = replace;
             } else {
                 // child不为空
