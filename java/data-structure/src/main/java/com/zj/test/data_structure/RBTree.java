@@ -465,7 +465,8 @@ public class RBTree<T extends Comparable<T>> {
     private void insertFixUp(RBTNode<T> node) {
         RBTNode<T> parent, gparent;
 
-        // 若“父节点存在，并且父节点的颜色是红色”
+        // 1.循环修正：父节点存在，并且父节点的颜色是红色，
+        // 因为如果父节点为红色，就破坏了红黑树红色节点子节点必须为红的特性。
         while (((parent = parentOf(node)) != null) && isRed(parent)) {
             gparent = parentOf(parent);
 
@@ -483,8 +484,8 @@ public class RBTree<T extends Comparable<T>> {
 
                 // Case 2条件：叔叔是黑色，且当前节点是右孩子
                 if (parent.right == node) {
-                    RBTNode<T> tmp;
                     leftRotate(parent);
+                    RBTNode<T> tmp;
                     tmp = parent;
                     parent = node;
                     node = tmp;
@@ -507,8 +508,8 @@ public class RBTree<T extends Comparable<T>> {
 
                 // Case 2条件：叔叔是黑色，且当前节点是左孩子
                 if (parent.left == node) {
-                    RBTNode<T> tmp;
                     rightRotate(parent);
+                    RBTNode<T> tmp;
                     tmp = parent;
                     parent = node;
                     node = tmp;
@@ -527,6 +528,12 @@ public class RBTree<T extends Comparable<T>> {
 
     /*
      * 将结点插入到红黑树中
+     * 将红黑树当作一颗二叉查找树，将节点添加到二叉查找树中。
+     *
+     * 1.查找应该插入的位置，并为插入节点设置父节点。
+     * 2.为父节点设置子节点，需要考虑到树是否有根。
+     * 3.设置插入节点的颜色为红色。
+     * 4.修正红黑树，使其维持特性。
      *
      * 参数说明：
      *     node 插入的结点        // 对应《算法导论》中的node
@@ -536,8 +543,10 @@ public class RBTree<T extends Comparable<T>> {
         RBTNode<T> y = null;
         RBTNode<T> x = this.mRoot;
 
-        // 1. 将红黑树当作一颗二叉查找树，将节点添加到二叉查找树中。
+        // 1.查找应该插入的位置，并为插入节点设置父节点。
+        // 将红黑树当作一颗二叉查找树，将节点添加到二叉查找树中。
         while (x != null) {
+            // 用来保存最后一个查找的非空节点，如果没有树根，也可能为null
             y = x;
             cmp = node.key.compareTo(x.key);
             if (cmp < 0)
@@ -546,21 +555,25 @@ public class RBTree<T extends Comparable<T>> {
                 x = x.right;
         }
 
+        // 父亲y可能为null
         node.parent = y;
+        // 2.为父节点设置子节点，需要考虑到树是否有根。。
+        // 父亲不为null(说明当前树一定有根)，判断是左儿子还是右儿子
         if (y != null) {
             cmp = node.key.compareTo(y.key);
             if (cmp < 0)
                 y.left = node;
-            else
+            else // NOTE: !!!!!!!!!!!!这里没有考虑到key值相等的情况
                 y.right = node;
         } else {
+            // 父亲为null(说明当前树无树根)，则将插入元素作为树根节点
             this.mRoot = node;
         }
 
-        // 2. 设置节点的颜色为红色
+        // 3. 设置插入节点的颜色为红色
         node.color = RED;
 
-        // 3. 将它重新修正为一颗二叉查找树
+        // 4. 修正红黑树，使其维持特性。
         insertFixUp(node);
     }
 
@@ -571,6 +584,7 @@ public class RBTree<T extends Comparable<T>> {
      *     key 插入结点的键值
      */
     public void insert(T key) {
+        // 默认创建黑色节点
         RBTNode<T> node = new RBTNode<T>(key, BLACK, null, null, null);
 
         // 如果新建结点失败，则返回。
@@ -592,12 +606,16 @@ public class RBTree<T extends Comparable<T>> {
         RBTNode<T> other;
 
         while ((node == null || isBlack(node)) && (node != this.mRoot)) {
+            // 节点是父节点的左节点
             if (parent.left == node) {
                 other = parent.right;
+                // Case 1: x的兄弟w是红色的
                 if (isRed(other)) {
-                    // Case 1: x的兄弟w是红色的
+                    //将兄弟设置为黑色
                     setBlack(other);
+                    // 将父亲设置为红色
                     setRed(parent);
+                    // 对父节点左旋
                     leftRotate(parent);
                     other = parent.right;
                 }
@@ -625,7 +643,8 @@ public class RBTree<T extends Comparable<T>> {
                     node = this.mRoot;
                     break;
                 }
-            } else {
+            }
+            else {
 
                 other = parent.left;
                 if (isRed(other)) {
@@ -679,27 +698,32 @@ public class RBTree<T extends Comparable<T>> {
      * 1.被删除节点有2个孩子(左右孩子都不为空的情况)。
      *      1.1.查找替代节点replace：查找被删除节点右子树中最小的节点。该节点可能有右子节点。
      *
-     *      1.2.对被删除节点是否是根节点进行讨论。
-     *      如果是根节点，将根节点设置为替代节点replace。
-     *      如果不是根节点，如果被删除节点是左孩子节点，则设置被删除节点父节点的左孩子为被删除节点，否则设置为右孩子节点。
-     *      判断替代节点是否是被删除节点的子节点：
+     *      1.2.为被删除节点父节点设置子节点：
+     *      对被删除节点是否是根节点进行讨论：
+     *      1.2.1.如果是根节点，将根节点设置为替代节点replace。
+     *      1.2.2.如果不是根节点，如果被删除节点是左孩子节点，则设置被删除节点父节点的左孩子为被删除节点，否则设置为右孩子节点。
+     *
+     *      1.3.判断替代节点是否是被删除节点的直接子节点：
      *          1.是,保存修正父指针。
-     *          2.不是:
-     *          将替代节点父节点的左孩子设置为替代节点右孩子
+     *          2.不是:需要为替代节点右孩子设置新的父节点(右孩子可能为null)：
+     *          如果右孩子不为null，设置右孩子父节点为删除节点父节点。
+     *          将被删除节点左孩子设置为右孩子
      *          将代替节点的右子孩子设置为被移除节点的右子孩子。
      *          设置替代节点的父亲为被删除节点的父亲
      *          设置替代节点的颜色为被删除节点的颜色
+     *
      *          替代节点的left位置为被删除节点的left，设置被删除节点左孩子父亲为替代节点
      *          如果替代元素为黑色，还需要修正。修正方法child和parent是隔代或间隔一代。
      *
      * 2.被删除节点只有一个孩子或没有孩子。
      * 代码逻辑：
      * 2.1.如果孩子存在，将孩子父亲设置为被删除节点的父亲。
-     *
      * 2.2.对被删除节点是否是根节点进行讨论：
      * 2.2.1.如果是根节点(通过是否有父亲节点来判断，没有则为根节点)，则将孩子设置为树根节点。如果被删除的节点为黑色，还需要修正树。
      * 2.2.2.如果不是根节点，如果被删除节点是左孩子节点，则设置被删除节点父节点的左孩子为被删除节点，否则设置为右孩子节点。
      * 如果被删除的节点为黑色，还需要修正树。
+     *
+     * 算法参考：https://www.cnblogs.com/rainple/p/9983786.html
      */
     private void remove(RBTNode<T> node) {
         RBTNode<T> child, parent;
