@@ -9,45 +9,46 @@ import java.util.concurrent.*;
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/6 10:15
- * @description: ThreadPoolExecutor构造函数测试
+ * @description: ThreadPoolExecutor测试
  * @version: 1.0
  * @finished: false
  * @finished-time:
  */
+/**
+ * 1.【ThreadPoolExecutor拒绝策略】
+ *
+ * 当线程池的任务缓存队列已满并且没有空闲线程时，此时如果还有任务到来就会采取拒绝策略，通常有以下四种策略：
+ * ThreadPoolExecutor.AbortPolicy：丢弃任务并抛出RejectedExecutionException异常。
+ * ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常，不会影响已经提交的任务。
+ * ThreadPoolExecutor.DiscardOldestPolicy：丢弃最先提交的任务，然后重新提交被拒绝的任务
+ * ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
+ */
+
+/**
+ 1.public ThreadPoolExecutor(int corePoolSize,
+ int maximumPoolSize,
+ long keepAliveTime,
+ TimeUnit unit,
+ BlockingQueue<Runnable> workQueue)
+
+ 参数说明：
+ corePoolSize：线程池核心池线程数量。
+ maximumPoolSize：线程池最大线程数量。
+ keepAliveTime：线程最大空闲时间，到达空闲时间线程会被销毁，默认指的是corePoolSize外的线程。
+ unit: keepAliveTime参数的时间单位。
+ workQueue：存储任务的队列。
+
+ 缺点：
+ 该线程池构造方法有个缺陷：
+ 必须队列满，然后有新的任务提交并被接受，才会创建新的线程，否则线程数一直是corePoolSize，
+ 而又因为该构造方法使用的默认拒绝策略为new AbortPolicy();即队列满之后不再接受任何任务。
+ 因此线程数永远是corePoolSize
+
+ 如果想要解决线程池不变的情况，需要修改拒绝策略，并将阻塞队列长度设定一个合理的值。
+ 因为默认阻塞队列长度Integer.MAX_VALUE,那样将太难填满了。
+ */
 public class ThreadPoolExecutorTest {
-    /**
-     * 拒绝策略
-     *
-     * 当线程池的任务缓存队列已满并且线程池中的线程数目达到maximumPoolSize时，如果还有任务到来就会采取任务拒绝策略，通常有以下四种策略：
-     * ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。
-     * ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常。
-     * ThreadPoolExecutor.DiscardOldestPolicy：丢弃队列最前面的任务，然后重新提交被拒绝的任务
-     * ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
-     */
 
-    /**
-     1.public ThreadPoolExecutor(int corePoolSize,
-     int maximumPoolSize,
-     long keepAliveTime,
-     TimeUnit unit,
-     BlockingQueue<Runnable> workQueue)
-
-     参数说明：
-     corePoolSize：线程池核心池线程数量。
-     maximumPoolSize：线程池最大线程数量。
-     keepAliveTime：线程最大空闲时间，到达空闲时间线程会被销毁，默认指的是corePoolSize外的线程。
-     unit: keepAliveTime参数的时间单位。
-     workQueue：存储任务的队列。
-
-     缺点：
-     该线程池构造方法有个缺陷：
-     必须队列满，然后有新的任务提交并被接受，才会创建新的线程，否则线程数一直是corePoolSize，
-     而又因为该构造方法使用的默认拒绝策略为new AbortPolicy();即队列满之后不再接受任何任务。
-     因此线程数永远是corePoolSize
-
-     如果想要解决线程池不变的情况，需要修改拒绝策略，并将阻塞队列长度设定一个合理的值。
-     因为默认阻塞队列长度Integer.MAX_VALUE,那样将太难填满了。
-     */
     @Test
     public void threadPoolExecutor1() {
         // FixedThreadPool阻塞队列也是LinkedBlockingQueue
@@ -846,7 +847,6 @@ public class ThreadPoolExecutorTest {
      *
      * 【优点】
      *
-     *
      * 【缺点】
      */
     @Test
@@ -856,8 +856,8 @@ public class ThreadPoolExecutorTest {
 
         for (int i = 0; i < 30; i++) {
             threadPoolExecutor.execute(() -> {
-                while (true){
-                    TestHelper.println(Thread.currentThread().getName()+" is running...");
+                while (true) {
+                    TestHelper.println(Thread.currentThread().getName() + " is running...");
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
@@ -868,9 +868,9 @@ public class ThreadPoolExecutorTest {
         }
 
         List<Runnable> runnables = threadPoolExecutor.shutdownNow();
-        TestHelper.println("剩余未处理的任务个数",runnables.size());
+        TestHelper.println("剩余未处理的任务个数", runnables.size());
 
-        TestHelper.println("线程池历史最大线程数",threadPoolExecutor.getLargestPoolSize());
+        TestHelper.println("线程池历史最大线程数", threadPoolExecutor.getLargestPoolSize());
 
         threadPoolExecutor.isTerminating();
 
@@ -879,5 +879,246 @@ public class ThreadPoolExecutorTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 16.测试
+     * ThreadPoolExecutor.CallerRunsPolicy拒绝策略是否会由调用者执行任务。
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *  main: 我是个被拒绝的任务，但是我执行了
+     * 【结论】
+     * 会，当没有空闲线程并且队列满时
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void callerRunsPolicyTest() {
+
+
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 1, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(5), new ThreadPoolExecutor.CallerRunsPolicy());
+
+        // 15个任务可以占用所有线程和队列,继续添加时才会使用拒绝策略。
+        for (int i = 0; i < 15; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + "task-" + (finalI + 1) + " is running...");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        TestHelper.println(Thread.currentThread().getName(), "添加一个被拒绝的任务...");
+        threadPoolExecutor.execute(() -> {
+            TestHelper.println("我是个被拒绝的任务，我由调用线程" + Thread.currentThread().getName() + "执行了");
+        });
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 17.测试
+     * ThreadPoolExecutors.DiscardOldestPolicy策略测试：
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     * 结果1
+     * pool-1-thread-1: task-1 is running...
+     * pool-1-thread-5: task-5 is running...
+     * pool-1-thread-3: task-3 is running...
+     * pool-1-thread-2: task-2 is running...
+     * pool-1-thread-4: task-4 is running...
+     * pool-1-thread-7: task-7 is running...
+     * pool-1-thread-6: task-6 is running...
+     * pool-1-thread-9: task-9 is running...
+     * pool-1-thread-10: task-10 is running...
+     * pool-1-thread-8: task-8 is running...
+     * 我是个被拒绝的任务，我由调用线程pool-1-thread-4执行了
+     * 我是个被拒绝的任务，我由调用线程pool-1-thread-2执行了
+     * pool-1-thread-5: task-13 is running...
+     * pool-1-thread-1: task-14 is running...
+     * pool-1-thread-3: task-15 is running...
+     *
+     * 可以看出11,12任务被替换了。
+     *
+     * 【结论】
+     * 1.注意：不是抛弃正在执行的任务，而是抛弃任务队列中最早添加的任务。
+     *
+     * 2.注意：会用新任务替代最早添加的任务，因此，一旦有空闲线程，新任务会首先执行。
+     *
+     * 3.队列满且没有空闲线程时，新任务替代的策略：
+     * 任务队列(长度10):
+     * task1  task2  task3  task4  task5  task6  task7  task8  task9  task10
+     *  ↑      ↑
+     * task11 task12
+     *
+     * 此时有空闲线程,最终任务执行顺序:
+     * 11 12 3 4 5 6 7 8 9 10
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void discardOldestPolicyTest() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 1, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(5), new ThreadPoolExecutor.DiscardOldestPolicy());
+
+        // 15个任务可以占用所有线程和队列,继续添加时才会使用拒绝策略。
+        for (int i = 0; i < 10; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + ": task-" + (finalI + 1) + " is running...");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // 这5个任务用来测试队列中任务顺序
+        for (int i = 0; i < 5; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                try {
+                    Thread.sleep(finalI * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                TestHelper.println(Thread.currentThread().getName() + ": task-" + (finalI + 1 + 10) + " is running...");
+
+            });
+        }
+
+        // 此时添加一个任务，看15个任务中哪个任务没有执行。就知道抛弃了哪个任务。
+
+        threadPoolExecutor.execute(() -> {
+            TestHelper.println("我是个被拒绝的任务，我由调用线程" + Thread.currentThread().getName() + "执行了");
+        });
+
+        threadPoolExecutor.execute(() -> {
+            TestHelper.println("我是个被拒绝的任务，我由调用线程" + Thread.currentThread().getName() + "执行了");
+        });
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 18.Discard拒绝策略测试
+     *
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 直接抛弃提交的新任务，不会影响已经提交的任务。不会抛出异常。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void discardTest() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 1, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(5), new ThreadPoolExecutor.DiscardPolicy());
+
+        // 15个任务可以占用所有线程和队列,继续添加时才会使用拒绝策略。
+        for (int i = 0; i < 15; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + ": task-" + (finalI + 1) + " is running...");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        threadPoolExecutor.execute(() -> {
+            TestHelper.println("我是被拒绝的任务,我永远都不会执行555555!");
+        });
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 19.api测试
+     * public int prestartAllCoreThreads()
+     *
+     * public boolean prestartCoreThread()
+     *
+     * 【作用】
+     * public int prestartAllCoreThreads()
+     * 预启动所有核心线程，使它们空闲地等待工作。这将覆盖只有在执行新任务时才启动核心线程的默认策略。
+     *
+     * public boolean prestartCoreThread()
+     * 启动一个核心线程，使其无所事事地等待工作。这将覆盖只有在执行新任务时才启动核心线程的默认策略。
+     * 如果所有核心线程都已经启动，此方法将返回false。
+     *
+     * 【测试结果】
+     * 没有调用prestartAllCoreThreads时，线程池线程数: 0
+     * threadPoolExecutor.prestartCoreThread(): true
+     * 调用threadPoolExecutor.prestartCoreThread()后，线程池线程数: 1
+     * 调用prestartAllCoreThreads后，线程池线程数: 10
+     * threadPoolExecutor.prestartCoreThread(): false
+     *
+     * 【结论】
+     * public int prestartAllCoreThreads()
+     * 当即创建所有核心线程，使他们空闲的等待新的任务。
+     *
+     * public boolean prestartCoreThread()
+     * 创建1个核心线程，如果所有核心线程都已创建，返回false，否则返回true。
+     *
+     * 【优点】
+     *
+     * 【缺点】
+     *
+     * 19
+     */
+    @Test
+    public void prestartAllCoreThreads(){
+
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 1, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(5), new ThreadPoolExecutor.DiscardPolicy());
+
+        TestHelper.println("没有调用prestartAllCoreThreads时，线程池线程数",threadPoolExecutor.getPoolSize());
+
+        TestHelper.println("threadPoolExecutor.prestartCoreThread()",threadPoolExecutor.prestartCoreThread());
+        TestHelper.println("调用threadPoolExecutor.prestartCoreThread()后，线程池线程数",threadPoolExecutor.getPoolSize());
+        threadPoolExecutor.prestartAllCoreThreads();
+
+        TestHelper.println("调用prestartAllCoreThreads后，线程池线程数",threadPoolExecutor.getPoolSize());
+
+        // 启动一个核心线程，使其无所事事地等待工作。这将覆盖只有在执行新任务时才启动核心线程的默认策略。如果所有核心线程都已经启动，此方法将返回false。
+        TestHelper.println("threadPoolExecutor.prestartCoreThread()",threadPoolExecutor.prestartCoreThread()); //false
     }
 }
