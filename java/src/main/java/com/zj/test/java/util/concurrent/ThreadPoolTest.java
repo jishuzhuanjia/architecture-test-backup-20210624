@@ -21,16 +21,54 @@ import java.util.concurrent.*;
  * 初始核心线程数为0，会动态调整线程池中线程数量，当新任务被加入时，如果有可用的空闲线程，
  * 会复用已经存在的线程，否则创建新的线程来执行任务。当一个线程空闲时间达到60s，就会被销毁。
  *
+ * 核心参数：
+ * corePoolSize: 0
+ * maxPoolSize: Integer.MAX_VALUE
+ * keepAliveTime: 60s
+ * 任务队列： SynchronousQueue
+ *
+ * 缺点：可以无限创建线程，容易造成OOM。
+ *
  * 2.FixedThreadPool
  * 线程池中线程数量保持不变，当一个任务执行失败时，会创建新的线程替代失败的线程继续执行其他的任务。
+ * 核心参数：
+ * corePoolSize==maxPoolSize
+ * keepAliveTime: 0ms
+ * 任务队列： LinkedBlockingQueue
  *
- * 3.ScheduledThreadPool
+ * 缺点：可以无限存储任务，容易造成OOM。
+ *
+ * 3.
+ * 3.1.ScheduledThreadPool
  * 线程池中线程数量固定，并且能够固定延迟、周期性的执行任务。
+ * 核心参数：
+ * corePoolSize：参数传递
+ * maxPoolSize: Integer.MAX_VALUE
+ * keepAliveTime: 0ns
+ * 任务队列： DelayedWorkQueue
+ * 缺点：可以无限创建线程，从而导致OOM。
+ *
+ * 3.2.SingleThreadScheduledExecutor
+ * corePoolSize: 1
+ * maxPoolSize: Integer.MAX_VALUE
+ * keepAliveTime: 0ns
+ * 任务队列：DelayedWorkQueue
+ * 缺点：可以无限创建线程，从而导致OOM。
  *
  * 4.SingleThreadExecutor
  * 单线程，顺序执行任务队列中的任务。
- * SingleThreadScheduledExecutor
+ *
+ * super(corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
+ *               new DelayedWorkQueue());
+ *
  * 单线程，可以固定延迟、周期性的执行任务队列中的所有任务。
+ * corePoolSize: 1
+ * maxPoolSize: 1
+ * keepAliveTime: 0ms
+ * LinkedBlockingQueue
+ * 缺点： 可以堆积无限的任务请求，导致OOM。
+ *
+ * 综上： 4种线程池都可能导致OOM。
  */
 public class ThreadPoolTest {
 
