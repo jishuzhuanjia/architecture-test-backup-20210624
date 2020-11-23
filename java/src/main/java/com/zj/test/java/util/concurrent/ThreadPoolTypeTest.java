@@ -9,18 +9,18 @@ import java.util.concurrent.*;
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/5 16:31
- * @description: java常用4类线程池测试
+ * @description: Executors的4类线程池及缺点
  * @version: 1.0
  * @finished: 1
  * @finished-time: 2020年11月6日 09:43:09
  */
 
 /**
- * --------------------------------常用的4种线程池(从线程数量和功能上划分)-----------------------
+ * --------------------------------Executors的4种线程池(从线程数量和功能上划分)-----------------------
  *
  * 1.CachedThreadPool(会根据任务数，动态调整线程池线程数量)。
  * 初始核心线程数为0，当新任务被加入时，如果有可用的空闲线程，
- * 会复用已经存在的线程，否则创建新的线程来执行任务，
+ * 会复用空闲线程，否则创建新的线程来执行任务新的任务，
  * 当一个线程空闲时间达到60s，会被销毁。
  *
  * 【核心参数值】
@@ -30,7 +30,7 @@ import java.util.concurrent.*;
  * 任务队列类型：SynchronousQueue
  *
  * 【缺点】
- * 可以无限创建线程，可能导致OOM。
+ * 最大支持创建Integer.MAX_VALUE个线程，可能导致OOM。
  *
  * 2.FixedThreadPool
  * 线程池中线程数量保持不变，当一个任务执行失败时，会创建新的线程替代失败的线程继续执行其他的任务。
@@ -55,7 +55,7 @@ import java.util.concurrent.*;
  * 任务队列类型： DelayedWorkQueue
  *
  * 【缺点】
- * 可以无限创建线程，可能导致OOM。
+ * 最大支持创建Integer.MAX_VALUE个线程，可能导致OOM。
  *
  * 3.2.SingleThreadScheduledExecutor
  * 单线程
@@ -81,29 +81,26 @@ import java.util.concurrent.*;
  * 【缺点】
  * 可以堆积无限的任务请求，导致OOM。
  *
- *
- *
- * 综上： 4种线程池都可能导致OOM。
+ * 综上： Executors提供的4种线程池，都可能会导致OOM。
  * ------------------------------------------------------------------------------------------
  */
 public class ThreadPoolTypeTest {
 
     /**
-     * 1.常用api
+     * 1.线程池常用api
      *
      * 1.1.void execute(@NotNull Runnable command)
      * 执行指定的任务，不能返回数据
      *
      * 1.2.想要获取线程返回的数据，有以下几个方法:
      * <T> Future<T> submit(Callable<T> task);
-     * 如果在指定的时间内返回,可以返回指定类型的数据，并且可以自定义返回数据。
+     * Future如果在指定的时间内返回,可以返回指定类型的数据，并且可以自定义返回数据。
      *
      * Future<?> submit(Runnable task);
-     * 如果在指定时间内返回，则返回的数据只能是null
+     * Future如果在指定时间内返回，则返回的null。
      *
      * <T> Future<T> submit(Runnable task, T result);
-     * 如果在指定时间内返回，则返回的数据只能是调用时传递的result。因此返回数据是固定值。
-     *
+     * Future如果在指定时间内返回，则返回的数据只能是调用时传递的result，因此返回数据是固定值。
      * 利用这几个方法的返回值获取线程的返回数据的过程，需要等待，相当于线程join。
      */
 
@@ -112,6 +109,13 @@ public class ThreadPoolTypeTest {
      * 2.1.FixedThreadPool
      * 创建一个定长线程池，可控制线程最大并发数，来不及处理的任务会存放在阻塞队列中。
      *
+     * 【优点】
+     * 最大并发数可控。
+     *
+     * 【缺点】
+     * 由于支持最多提交Integer.MAX_VALUE个任务到LinkedBlockQueue，因此可能导致OOM。
+     *
+     * 【注】
      * 在使用线程池中线程执行任务时,如果任务没有执行完成,不会为其切换线程，会一直占用当前的线程执行。
      */
     @Test
@@ -134,7 +138,7 @@ public class ThreadPoolTypeTest {
         */
 
         int[] count = {0};
-        //使用内部类来为线程指定带有序号的线程名
+        // 使用内部类来为线程指定带有序号的线程名
         ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10, new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
