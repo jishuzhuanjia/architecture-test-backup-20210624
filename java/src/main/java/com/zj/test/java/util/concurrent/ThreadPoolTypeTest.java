@@ -190,8 +190,9 @@ public class ThreadPoolTypeTest {
             // 无参,永久等待
             //TestHelper.println("线程返回值: " + submit.get());
 
-            // 到达timeout时间, 线程没有返回值, 会打断等待状态, 继续执行后面的代码
+            // 到达timeout时间, 线程没有返回值, 会打断等待状态, 抛出java.util.concurrent.TimeoutException,继续执行后面的代码
             // 0: 立即打断,执行后面的代码
+
             TestHelper.println("线程1返回值: " + submit.get(0, TimeUnit.SECONDS));
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -349,7 +350,7 @@ public class ThreadPoolTypeTest {
      * 测试: newCachedThreadPool()是否会动态创建线程:
      *
      * 结果:
-     * 是的, 添加1000个长时耗任务, 结果创建了1000个线程。
+     * 会, 添加1000个长时耗任务, 结果创建了1000个线程。
      */
     @Test
     public void newCachedThreadPool() {
@@ -378,7 +379,8 @@ public class ThreadPoolTypeTest {
      * ScheduledExecutorService newScheduledThreadPool(int corePoolSize)
      * 创建一个线程池，该线程池可以安排任务在给定的延迟后运行或定期执行。
      *
-     * 和FixedThreadPool一样，线程数不变,即使线程是空闲的，不同的是ScheduledThreadPool可以执行延迟，周期的任务。
+     * 构造时指定核心池，maxPoolSize为Integer.MAX_VALUE
+     * 可以固定延迟或周期的执行任务。
      */
     @Test
     public void newScheduledThreadPool() {
