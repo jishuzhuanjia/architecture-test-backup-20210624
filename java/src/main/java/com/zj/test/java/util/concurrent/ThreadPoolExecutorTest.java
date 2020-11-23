@@ -1093,6 +1093,7 @@ public class ThreadPoolExecutorTest {
      * 【作用】
      * public int prestartAllCoreThreads()
      * 预启动所有核心线程，使它们空闲地等待工作。这将覆盖只有在执行新任务时才启动核心线程的默认策略。
+     * 返回值：corePoolSize - 当前的核心线程数
      *
      * public boolean prestartCoreThread()
      * 启动一个核心线程，使其无所事事地等待工作。这将覆盖只有在执行新任务时才启动核心线程的默认策略。
@@ -1128,7 +1129,7 @@ public class ThreadPoolExecutorTest {
 
         TestHelper.println("threadPoolExecutor.prestartCoreThread()",threadPoolExecutor.prestartCoreThread());
         TestHelper.println("调用threadPoolExecutor.prestartCoreThread()后，线程池线程数",threadPoolExecutor.getPoolSize());
-        threadPoolExecutor.prestartAllCoreThreads();
+        TestHelper.println("threadPoolExecutor.prestartAllCoreThreads()",threadPoolExecutor.prestartAllCoreThreads());
 
         TestHelper.println("调用prestartAllCoreThreads后，线程池线程数",threadPoolExecutor.getPoolSize());
 
