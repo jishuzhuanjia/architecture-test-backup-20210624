@@ -86,7 +86,7 @@ import java.util.concurrent.*;
  * 综上： 4种线程池都可能导致OOM。
  * ------------------------------------------------------------------------------------------
  */
-public class ThreadPoolTest {
+public class ThreadPoolTypeTest {
 
     /**
      * 1.常用api
