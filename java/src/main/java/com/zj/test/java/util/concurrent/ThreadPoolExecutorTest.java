@@ -848,6 +848,7 @@ public class ThreadPoolExecutorTest {
 
         threadPoolExecutor.shutdown();
 
+
         while (true) {
             try {
                 Thread.sleep(200);
@@ -1136,27 +1137,94 @@ public class ThreadPoolExecutorTest {
      * 19
      */
     @Test
-    public void prestartAllCoreThreads(){
+    public void prestartAllCoreThreads() {
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 10, 1, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(5), new ThreadPoolExecutor.DiscardPolicy());
 
-        TestHelper.println("没有调用prestartAllCoreThreads时，线程池线程数",threadPoolExecutor.getPoolSize());
+        TestHelper.println("没有调用prestartAllCoreThreads时，线程池线程数", threadPoolExecutor.getPoolSize());
 
-        TestHelper.println("threadPoolExecutor.prestartCoreThread()",threadPoolExecutor.prestartCoreThread());
-        TestHelper.println("调用threadPoolExecutor.prestartCoreThread()后，线程池线程数",threadPoolExecutor.getPoolSize());
-        TestHelper.println("threadPoolExecutor.prestartAllCoreThreads()",threadPoolExecutor.prestartAllCoreThreads());
+        TestHelper.println("threadPoolExecutor.prestartCoreThread()", threadPoolExecutor.prestartCoreThread());
+        TestHelper.println("调用threadPoolExecutor.prestartCoreThread()后，线程池线程数", threadPoolExecutor.getPoolSize());
+        TestHelper.println("threadPoolExecutor.prestartAllCoreThreads()", threadPoolExecutor.prestartAllCoreThreads());
 
-        TestHelper.println("调用prestartAllCoreThreads后，线程池线程数",threadPoolExecutor.getPoolSize());
+        TestHelper.println("调用prestartAllCoreThreads后，线程池线程数", threadPoolExecutor.getPoolSize());
 
         // 启动一个核心线程，使其无所事事地等待工作。这将覆盖只有在执行新任务时才启动核心线程的默认策略。如果所有核心线程都已经启动，此方法将返回false。
-        TestHelper.println("threadPoolExecutor.prestartCoreThread()",threadPoolExecutor.prestartCoreThread()); //false
+        TestHelper.println("threadPoolExecutor.prestartCoreThread()", threadPoolExecutor.prestartCoreThread()); //false
     }
 
     /**
      * author: 2025513
      *
-     * 20.线程池阻塞队列种类
+     * 20.api测试
+     * public boolean remove(Runnable task)
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 如果任务还在任务队列中，没有执行，则会从队列中删除任务，返回true
+     * 否则返回false
+     *
+     *
+     *
+     * 【优点】
+     * 【缺点】
+     * 不能用来移除已经开始执行的任务。
+     *
+     * 20
+     */
+    @Test
+    public void remove() {
+
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(2, 2, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+
+        for (int i = 0; i < 2; i++) {
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName() + " is running...");
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        Runnable removeableRunanble = () -> {
+            while (true) {
+                TestHelper.println("removeable is running...");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        threadPoolExecutor.execute(removeableRunanble);
+
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //false
+        TestHelper.println("threadPoolExecutor.remove(removeableRunanble)",threadPoolExecutor.remove(removeableRunanble));
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * author: 2025513
+     *
+     * 21.
+     *
      *
      * 【作用】
      *
@@ -1169,6 +1237,30 @@ public class ThreadPoolExecutorTest {
      */
     @Test
     public void test1(){
+
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+
+        Future<?> future = threadPoolExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                while (true){
+                    TestHelper.println(Thread.currentThread().getName()+" is running");
+                }
+            }
+        });
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        future.cancel(false);
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 }
