@@ -19,7 +19,7 @@ public class CollectionStreamTest {
     // Collection.stream()测试PO
     /*@Setter
     @Getter*/
-    class ListStreamTestUserPO {
+    public class ListStreamTestUserPO {
         public String getUsername() {
             return username;
         }
