@@ -1,10 +1,6 @@
-package com.zj.test.java.collection;
+package com.zj.test.java.util.collection.list;
 
-import com.zj.test.util.TestHelper;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /* @author: zhoujian
  * @qq: 2025513

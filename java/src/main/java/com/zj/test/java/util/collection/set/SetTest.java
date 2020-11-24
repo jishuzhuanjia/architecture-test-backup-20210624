@@ -1,4 +1,4 @@
-package com.zj.test.java.util;
+package com.zj.test.java.util.collection.set;
 
 /* @author: zhoujian
  * @qq: 2025513
