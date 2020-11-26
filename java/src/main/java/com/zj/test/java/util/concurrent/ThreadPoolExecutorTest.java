@@ -41,9 +41,11 @@ import java.util.concurrent.*;
  * 3.ThreadPoolExecutor.DiscardOldestPolicy：丢弃最先提交的任务，然后重新提交被拒绝的任务。
  * 4.ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务。
  *
+ * -------------------------------------------------------------------------
  * 2.【核心池的默认创建策略】
  * 当有新任务提交时，才开始创建核心线程，并且每次提交的任务会创建新的核心线程来执行，直到核心线程数达到corePoolSize才开始复用。
  *
+ * ----------------------------------------------------------------------
  * 3.【ThredPoolExecutor存在的缺陷】
  * ThreadPoolExecutor存在的缺陷：
  * 1.线程数一直是corePoolSize
@@ -59,6 +61,7 @@ import java.util.concurrent.*;
  */
 
 /**
+ 构造函数
  1.public ThreadPoolExecutor(int corePoolSize,
  int maximumPoolSize,
  long keepAliveTime,
@@ -108,8 +111,7 @@ public class ThreadPoolExecutorTest {
     }
 
     /**
-     * 2.测试
-     * 线程池线程数量增加的时机
+     * 2.测试：线程池线程数量增加的时机
      *
      * ThreadPoolExecutor(int corePoolSize,
      *                               int maximumPoolSize,
@@ -121,11 +123,9 @@ public class ThreadPoolExecutorTest {
      * 参数说明：
      * RejectedExecutionHandler：拒绝策略，定义在ThreadPoolExecutor中。
      *
-     *
-     *
      * 【结论】
-     * 线程池线程数量增加的时机:
-     * corePoolSize中没有可用的空闲线程，并且任务队列已满时。
+     * 1.线程池线程数量增加的时机:
+     * 核心池corePoolSize中没有空闲线程，并且任务队列已满，接受新任务时。
      */
     @Test
     public void ThreadPoolExecutor2() {
@@ -172,7 +172,7 @@ public class ThreadPoolExecutorTest {
      */
 
     /**
-     * 4.keepAliveTime参数为0时效果测试
+     * 4.测试：keepAliveTime参数为0时效果测试
      *
      * 【测试结果】
      * 新线程: pool-1-thread-11 正在执行任务
@@ -1216,7 +1216,7 @@ public class ThreadPoolExecutorTest {
         }
 
         //false
-        TestHelper.println("threadPoolExecutor.remove(removeableRunanble)",threadPoolExecutor.remove(removeableRunanble));
+        TestHelper.println("threadPoolExecutor.remove(removeableRunanble)", threadPoolExecutor.remove(removeableRunanble));
         try {
             new CountDownLatch(1).await();
         } catch (InterruptedException e) {
@@ -1240,15 +1240,15 @@ public class ThreadPoolExecutorTest {
      * 【缺点】
      */
     @Test
-    public void test1(){
+    public void test1() {
 
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 
         Future<?> future = threadPoolExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                while (true){
-                    TestHelper.println(Thread.currentThread().getName()+" is running");
+                while (true) {
+                    TestHelper.println(Thread.currentThread().getName() + " is running");
                 }
             }
         });
@@ -1265,6 +1265,70 @@ public class ThreadPoolExecutorTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
     }
+
+    /**
+     * author: jishuzhuanjia
+     * qq: 2025513
+     *
+     * 22.测试：当队列满且没有空闲线程时，并且线程数<maxPoolSize，此时添加的任务和队列中已有任务的执行顺序？
+     *
+     *
+     *
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 1.会创建新线程首先执行新添加的任务，第二个执行的任务都有可能。
+     *
+     * 【优点】
+     * 【缺点】
+     * 这对于队列中的任务不公平。
+     */
+    @Test
+    public void test22() {
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1, 3, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(2));
+
+        // 占用完核心池
+        threadPoolExecutor.execute(() -> {
+            TestHelper.println(Thread.currentThread().getName(), "核心池已经被占用...");
+            try {
+                new CountDownLatch(1).await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // 填满队列
+        threadPoolExecutor.execute(() -> {
+            TestHelper.println(Thread.currentThread().getName(), "队列中的任务1...");
+        });
+        threadPoolExecutor.execute(() -> {
+            TestHelper.println(Thread.currentThread().getName(), "队列中的任务2...");
+        });
+
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 此时提交任务，查看新任务和队列中任务的执行顺序
+
+        for (int i = 0; i < 10; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println(Thread.currentThread().getName(), " 新加入的任务" + (finalI + 1));
+            });
+        }
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
