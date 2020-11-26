@@ -34,24 +34,28 @@ import java.util.concurrent.*;
  *
  * 1.【ThreadPoolExecutor拒绝策略】
  *
- * 当线程池的任务缓存队列已满并且没有空闲线程时，此时如果还有任务到来就会采取拒绝策略，通常有以下四种策略：
- * ThreadPoolExecutor.AbortPolicy(默认)：丢弃任务并抛出RejectedExecutionException异常。
- * ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常，不会影响已经提交的任务。
- * ThreadPoolExecutor.DiscardOldestPolicy：丢弃最先提交的任务，然后重新提交被拒绝的任务
- * ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务
+ * 【拒绝策略作用】
+ * 当线程池的任务缓存队列已满并且没有空闲线程时，此时如果还有任务到来时采取的策略，通常有以下四种策略：
+ * 1，ThreadPoolExecutor.AbortPolicy(默认)：丢弃任务并抛出RejectedExecutionException异常。
+ * 2.ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常，不会影响已经提交的任务。
+ * 3.ThreadPoolExecutor.DiscardOldestPolicy：丢弃最先提交的任务，然后重新提交被拒绝的任务。
+ * 4.ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务。
  *
  * 2.【核心池的默认创建策略】
- * 当有新任务提交时，才开始创建核心线程，并且每次提交的任务会创建新的核心线程来执行，
- * 直到核心线程数达到corePoolSize才开始复用。
+ * 当有新任务提交时，才开始创建核心线程，并且每次提交的任务会创建新的核心线程来执行，直到核心线程数达到corePoolSize才开始复用。
  *
  * 3.【ThredPoolExecutor存在的缺陷】
- * 该线程池构造方法有个缺陷：
- *  必须队列满，然后有新的任务提交并被接受，才会创建新的线程，否则线程数一直是corePoolSize，
- *  而又因为该构造方法使用的默认拒绝策略为new AbortPolicy();即队列满之后不再接受任何任务。
- *  因此线程数永远是corePoolSize
+ * ThreadPoolExecutor存在的缺陷：
+ * 1.线程数一直是corePoolSize
+ * 因为只有当没有空闲线程且队列满，然后有新的任务提交并被接受时，才会创建新的线程，否则线程数一直是corePoolSize。
  *
- *  如果想要解决线程池不变的情况，需要修改拒绝策略，并将阻塞队列长度设定一个合理的值。
- *  因为默认阻塞队列长度Integer.MAX_VALUE,那样将太难填满了。
+ * 而又因为ThreadPoolExecutor使用的默认拒绝策略为new AbortPolicy();即队列满之后不再接受任何任务。
+ * 因此线程数永远是corePoolSize。
+ *
+ * 解决线程数一直是corePoolSize的情况：
+ * 1.需要修改拒绝策略。
+ * 2.并将阻塞队列长度设定一个合理的值。
+ * 因为默认阻塞队列长度Integer.MAX_VALUE,将其填满几乎不可能。
  */
 
 /**
