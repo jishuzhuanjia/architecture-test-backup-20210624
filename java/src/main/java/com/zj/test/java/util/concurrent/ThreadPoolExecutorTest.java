@@ -1274,8 +1274,6 @@ public class ThreadPoolExecutorTest {
      * 22.测试：当队列满且没有空闲线程时，并且线程数<maxPoolSize，此时添加的任务和队列中已有任务的执行顺序？
      *
      *
-     *
-     *
      * 【作用】
      *
      * 【测试结果】
@@ -1285,7 +1283,7 @@ public class ThreadPoolExecutorTest {
      *
      * 【优点】
      * 【缺点】
-     * 这对于队列中的任务不公平。
+     * 对于队列中的任务不公平。
      */
     @Test
     public void test22() {
