@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 继承关系：HashMap -> AbstractMap
+ * 继承关系：HashMap(Class) -> AbstractMap(Class)
  *
  * HashMap实现了Map<K,V>接口
  *
