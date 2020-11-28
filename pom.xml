@@ -24,6 +24,7 @@
         <module>redis</module>
         <module>transaction</module>
         <module>dbcp</module>
+        <module>interview-question</module>
     </modules>
     <!--end-->
 
