@@ -8,7 +8,7 @@ package com.zj.question.internet;
  * @finished: false
  * @finished-time:
  */
-public class InternetQuestion {
+public class Collection_Map {
     /*
     ################################ 1.Java集合框架面试题 #####################################
 
@@ -17,7 +17,7 @@ public class InternetQuestion {
     HashMap是map接口的实现类，是将键映射到值的对象，其中键和值都是对象，并且不能包含重复键，
     但可以包含重复值。HashMap 允许 nullkey和 null value，而 HashTable 不允许。
 
-    HashTable是线程安全Collection。
+    Hashtable是线程安全Map。
     HashMap 是 HashTable 的轻量级实现，他们都完成了Map 接口，
     主要区别在于HashMap 允许null key和 null value,由于非线程安全，效率上可能高于Hashtable。
 
@@ -63,8 +63,13 @@ public class InternetQuestion {
     ----------------------------------------------------------------------------------------
 
     4.ArrayList和Vector的区别是什么？
+    Vector是线程安全的，ArrayList是线程不安全的。
 
-
+    NOTE:
+    Hahtable 和 Vector
+    两者都是从1.0就开始提供了，是Java一开始就有的，是线程安全的。
+    HashMap 和 ArrayList
+    从java 1.2开始提供的， 是线程不安全的。
     ----------------------------------------------------------------------------------------
 
     5.Array和ArrayList的区别？
