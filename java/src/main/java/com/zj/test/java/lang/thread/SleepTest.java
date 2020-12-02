@@ -7,7 +7,7 @@ import org.junit.Test;
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/5 15:01
- * @description: 测试打断正在阻塞状态如sleep状态的线程、阻塞的条件测试
+ * @description:
  * @version: 1.0
  * @finished: false
  * @finished-time:
@@ -15,32 +15,40 @@ import org.junit.Test;
 @Slf4j
 public class SleepTest {
 
-    /**
+    /*
      * 1.测试打断正在阻塞状态如sleep状态的线程
-     * <p>
-     * 结果:
+     *
+     * 【结果】
      * 会抛出打断异常
      * java.lang.InterruptedException: sleep interrupted
      * at java.lang.Thread.sleep(Native Method)
      * at com.zj.test.java.lang.thread.SleepTest.lambda$sleep1$0(SleepTest.java:30)
      * at java.lang.Thread.run(Thread.java:748)
+     *
+     * 【结论】
+     * 1.线程睡眠状态被打断，会将打断标记置为false。
+     * 此时catch语句中,thread.isInterrupted()返回false。
      */
     @Test
-    public void sleep1() {
+    public void interruptSleepStatus() {
         Thread thread = new Thread(() -> {
-            TestHelper.println("thread" + Thread.currentThread().getName() + " is going to sleep...");
+            TestHelper.println("thread" + Thread.currentThread().getName() + " is going to sleep for 10s");
 
             try {
                 Thread.sleep(10000);
             } catch (InterruptedException e) {
+                /*
+                被打断进入catch后，线程打断状态将置为false。
+                */
+                TestHelper.println("interrupt status in catch", Thread.interrupted());
                 e.printStackTrace();
             }
+
             TestHelper.println("code after sleep");
-            TestHelper.println("Thread.interrupted()", Thread.interrupted());
         });
         thread.start();
 
-        //保证线程已经开始睡眠
+        // 保证线程已经开始睡眠
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -59,12 +67,12 @@ public class SleepTest {
     }
 
     /**
-     * 2.测试调用sleep的线程，是否前提是没有被打断?
+     * 2.测试：调用sleep的线程，是否前提需要打断状态为false?
      * author : 2025513
-     * <p>
+     *
      * 测试:
      * 主线程首先打断自己，然后尝试sleep
-     * <p>
+     *
      * 结果: isInterrupted()为true的线程在调用sleep()等阻塞方法时,会直接抛出异常:
      * java.lang.InterruptedException: sleep interrupted
      * at java.lang.Thread.sleep(Native Method)
@@ -91,10 +99,11 @@ public class SleepTest {
      * at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33)
      * at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:230)
      * at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58)
-     * <p>
+     *
      * 结论:
-     * 线程调用sleep等阻塞方法之前，需要清除打断标记，否则无法阻塞。
-     * 并且阻塞状态的线程在被打断之后，打断标记将被置为false。
+     * 是
+     * 1.线程调用sleep方法时，如果当前线程是打断状态，则sleep会立即被打断。
+     * 因此线程调用 sleep 等阻塞方法之前，需要清除打断标记，否则无法阻塞。
      */
     @Test
     public void sleep2() {
