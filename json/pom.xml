@@ -169,6 +169,12 @@
 			<version>4.12</version>
 			<scope>compile</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.zj.util</groupId>
+            <artifactId>test-util</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 	
 </project>

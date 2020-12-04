@@ -2,8 +2,10 @@ package test.frame;
 
 import java.io.IOException;
 
+import com.zj.test.util.TestHelper;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
+import org.junit.Test;
 
 /**
  * @time：2019年12月27日 下午11:52:06
@@ -14,7 +16,29 @@ import org.apache.commons.io.IOCase;
  */
 public class FilenameUtilsTest {
 
-    public static void main(String[] args) {
+    /**
+     * author: jishuzhuanjia
+     * qq: 2025513
+     *
+     * 1.public static String concat(String basePath, String fullFilenameToAdd)
+     *
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 1.windows下会将'/'替换成'\'，而linux下会将'\'替换成'/'。
+     *
+     * 2.如果参数2以 / 或 // 开头，直接返回参数2。
+     *
+     * 3.如果参数1或参数2超过2个分隔符，则返回null。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void concat() {
         // apache commons-io包已经有文件相关api
         // 以下提取常用api
 
@@ -23,32 +47,54 @@ public class FilenameUtilsTest {
          * 除了分隔符，对于windows和uninx输出是一样的。
          * 注意：参数中的/或 \会被命令行分隔符替换，如windows下使用\，所有的/会被转换成\
          * 注意：参数2应该是相对路径，不能以分隔符开头，可以是文件或目录，如果参数2以分隔符/或\开头，则返回等于参数2
-         * 注意：参数可以不以分隔符结尾，如果没有，api会自动添加。
+         * 注意：参数1可以不以分隔符结尾，如果没有，api会自动添加。
          * 注意：这两个参数开头不能连续超过2个分隔符，否则方法返回null，如果开头是两个分隔符，则保留两个分隔符，除开头位置，其他位置的连续分隔符只会保留一个。
          * 注意：结果不会为参数1开头部分添加分隔符，调用者需要注意。
+         */
+        /*
+        c\b\x\dsa
+
+        windwos下，会用'\'替换'/'
+        参数1尾部和参数2头部没有分隔符，会自动在参数1和2之间添加分隔符。
          */
         System.out.println(FilenameUtils.concat("c/////b", "x/dsa"));
 
         // a\b\x\dsa
         System.out.println(FilenameUtils.concat("a/b", "x/dsa"));
-        // \x\dsa
-        System.out.println(FilenameUtils.concat("a/b", "\\x/dsa"));
+        // \\x\dsa
+        // 参数2以1或2个分隔符开头，则直接返回参数2
+        // 超过2个分隔符，返回null。
+        System.out.println(FilenameUtils.concat("a/b", "\\\\x/dsa"));
         // a\b\x\dsa
         System.out.println(FilenameUtils.concat("a/b", "x/dsa"));
         // a\b\x\dsa
         System.out.println(FilenameUtils.concat("a/b/", "x/dsa"));
 
-        // null :这两个参数开头不能超过2个分隔符，否则返回null
-        System.out.println(FilenameUtils.concat("///a/b/", "x//////dsa"));
+        // null: 第一个参数开头也不能超过2个分隔符,否则返回null
+        System.out.println(FilenameUtils.concat("///a/b/", "x//dsa"));
 
-        // \\x\\dsa\
-        System.out.println(FilenameUtils.concat("//a/b////", "//x///////dsa/"));
+        // \\x\\dsa\：如果参数2以/或//开头，直接返回参数2，分隔符最多保留2个
+        System.out.println("1: " + FilenameUtils.concat("//a/b////", "//x///////dsa/"));
 
-        System.err.println(FilenameUtils.concat("//a", "b/c//v"));
+        // \a\b\c\v
+        System.err.println(FilenameUtils.concat("/a", "b/c//v"));
 
-        // null
-        System.out.println(FilenameUtils.concat("///a/b//", "x///////dsa"));
+        TestHelper.println("FilenameUtils.concat(\"a/b/c//\",\"d/e\")", FilenameUtils.concat("a/b/c//", "d/e"));
+        // a\b\c\d\e
+        TestHelper.println("FilenameUtils.concat(\"a/b/c//\",\"d//e\")", FilenameUtils.concat("a/b/c//", "d//e"));
+        // a\b\c\d\e
+        TestHelper.println("FilenameUtils.concat(\"a/b/c//\",\"d////e\")", FilenameUtils.concat("a/b/c//", "d////e"));
+        //  \\a\b\c\d
+        TestHelper.println("FilenameUtils.concat(\"//a/b\",\"c/d\")", FilenameUtils.concat("//a/b", "c/d"));
 
+        // \\c\d
+        TestHelper.println("FilenameUtils.concat(\"//a/b\",\"//c/d\")", FilenameUtils.concat("//a/b", "//c/d"));
+
+        TestHelper.println("FilenameUtils.concat(\"///a/b\", \"/c/d\")", FilenameUtils.concat("///a/b", "c/d"));
+
+    }
+
+    public static void main(String[] args) {
         /**
          * 2.1.比较文件名 - 默认情况下，大小写敏感的 就是简单的比较两个字符串,但是对于空指针也会正确进行比较。是String.equals的改进版。 注意：
          * equals(null,null) //true
