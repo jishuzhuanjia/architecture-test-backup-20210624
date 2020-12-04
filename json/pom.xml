@@ -1,0 +1,174 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- 包路径 -->
+	<groupId>com.one</groupId>
+	<artifactId>json</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>json</name>
+	<description>create SSM develpment enviroment quickly!</description>
+
+	<!-- 以下一步一步演示ssm开发环境的搭建 -->
+	
+	<!-- 1.整合springmvc和spring -->
+
+	<dependencies>
+		<!-- tomcat运行库:不能解决问题，应该导入整个Server运行库 -->
+		<!-- 
+		<dependency> 
+			<groupId>javax.servlet</groupId> 
+			<artifactId>servlet-api</artifactId> 
+			<version>2.5</version> 
+		</dependency> -->
+		<dependency>
+			<!-- 1.1.导入spring-web 4.3.24,相关依赖自动导入 @RequestAttribute在spring-web下，从4.3开始引入的注解。 -->
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>4.3.24.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+			<!-- 1.1.导入spring-web 4.3.24,相关依赖自动导入 @RequestAttribute在spring-web下，从4.3开始引入的注解。 -->
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>4.3.24.RELEASE</version>
+		</dependency>
+		
+		<!-- 处理事务的包。需要单独导入
+		java.lang.NoClassDefFoundError: org/springframework/dao/support/DaoSupport -->
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-tx</artifactId>
+    		<version>4.3.24.RELEASE</version>
+		</dependency>
+		
+		<!-- 虽然已经有spring-aop包，还需要导入其他包
+		如通知相关类：JoinPoint
+		 -->
+		<dependency>
+    		<groupId>org.aspectj</groupId>
+    		<artifactId>aspectjrt</artifactId>
+    		<version>1.9.2</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.aspectj</groupId>
+    		<artifactId>aspectjweaver</artifactId>
+    		<version>1.9.2</version>
+		</dependency>
+		
+		<!-- Caused by: java.lang.ClassNotFoundException: Cannot find class: com.github.pagehelper.PageInterceptor 
+		跟xml，mapper动态代理有关
+		-->
+		<dependency>
+    		<groupId>com.github.pagehelper</groupId>
+    		<artifactId>pagehelper</artifactId>
+    		<version>5.0.0</version>
+		</dependency>
+		
+		<!-- spring jdbc:包括AbstractRoutingDataSource -->
+		<dependency>
+    		<groupId>org.springframework</groupId>
+    		<artifactId>spring-jdbc</artifactId>
+    		<version>4.3.24.RELEASE</version>
+		</dependency>
+
+		<!-- DispatcherServlet所在包 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>4.3.2.RELEASE</version>
+		</dependency>
+
+		<!-- 支持multipart文件上传 -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+		
+		<!-- springmvc支持json的三个包，只需要在pom.xml中添加jackson-databind就能自动导入这三个包 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.10.0</version>
+		</dependency>
+
+		<!-- StringUtils -->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>org.mybatis</groupId>
+    		<artifactId>mybatis</artifactId>
+    		<version>3.2.2</version>
+		</dependency>
+		
+		<!-- BasicDataSource
+		<dependency>
+   			<groupId>commons-dbcp</groupId>
+    		<artifactId>commons-dbcp</artifactId>
+    		<version>1.4</version>
+		</dependency> -->
+		
+		<!-- mybatis整合spring 
+		MapperScannerConfigurer,SqlSessionFactoryBean -->
+		<dependency>
+   			<groupId>org.mybatis</groupId>
+    		<artifactId>mybatis-spring</artifactId>
+    		<version>1.3.1</version>
+		</dependency>
+		
+		<dependency>
+   	 		<groupId>com.alibaba</groupId>
+    		<artifactId>druid</artifactId>
+    		<version>1.1.21</version>
+		</dependency>
+
+        <!--  Google JSON:如果需要可以添加 -->
+		<dependency>	
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.8.5</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.8</version> 
+		</dependency>
+		<!-- 日志打印，Druid数据库监控 -->
+		<dependency>
+    			<groupId>log4j</groupId>
+    			<artifactId>log4j</artifactId>
+    			<version>1.2.17</version>
+		</dependency>
+		
+		<!-- removable
+		alibaba fastjson-引入为了测试
+		 -->
+		<dependency>
+        	<groupId>com.alibaba</groupId>
+       		<artifactId>fastjson</artifactId>
+      		<version>1.1.23</version>
+ 		</dependency>
+ 		
+ 		<!-- apache FilenameUtils -->
+ 		<dependency>
+    		<groupId>commons-io</groupId>
+    		<artifactId>commons-io</artifactId>
+    		<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>compile</scope>
+		</dependency>
+	</dependencies>
+	
+</project>

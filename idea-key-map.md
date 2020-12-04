@@ -1,3 +1,5 @@
+# 以下为idea自带快捷键
+
 ## 1.设置
 Ctrl + Shift + s						全局设置✔
 Ctrl + Shift + Alt + s					设置项目结构✔
@@ -140,10 +142,4 @@ F5，复制
 Alt+Delete，安全删除
 Ctrl+Alt+N，内联
 
-## 自定义快捷键(需要导入IDEA设置)
-Alt + Shift + 1                     新建类
-Alt + shitft + 2                    新建文件
-Alt + Shift + 3                     新建模块(Module)
-
-Ctrl  + Shift + Backspace           回到上一个光标位置，可能不会切换文件。
 

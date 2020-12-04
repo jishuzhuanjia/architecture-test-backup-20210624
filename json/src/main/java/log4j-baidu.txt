@@ -1,0 +1,12 @@
+log4j.logger.druid.sql=WARN,druid
+log4j.logger.druid.sql.DataSource=WARN,druid
+log4j.logger.druid.sql.Connection=WARN,druid
+log4j.logger.druid.sql.Statement=WARN,druid
+
+log4j.appender.druid=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.druid.layout=org.apache.log4j.PatternLayout
+log4j.appender.druid.layout.ConversionPattern= [%d{HH\:mm\:ss}] %c{1} - %m%n
+log4j.appender.druid.datePattern='.'yyyy-MM-dd
+log4j.appender.druid.Threshold = WARN
+log4j.appender.druid.append=true
+log4j.appender.druid.File=D:/druid-slow-sql.log
