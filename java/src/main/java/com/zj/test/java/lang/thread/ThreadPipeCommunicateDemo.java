@@ -112,7 +112,7 @@ public class ThreadPipeCommunicateDemo {
      * java.io.IOException: Already connected
      *
      * 【优点】
-     * 1.管道输入流PipeInputStream的读取方法是阻塞的，比起while轮训，性能会好很多。
+     * 1.管道输入流PipeInputStream的读取方法是阻塞的，比起while轮询，性能会好很多。
      */
     @Test
     public void test1() {
