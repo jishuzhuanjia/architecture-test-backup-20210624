@@ -11,7 +11,7 @@ import java.util.concurrent.FutureTask;
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/9 14:34
- * @description: java线程的Future模式
+ * @description: 可以有返回值的异步任务FutureTask测试
  * @version: 1.0
  * @finished: true
  * @finished-time: 2020年11月9日 15:00:44
