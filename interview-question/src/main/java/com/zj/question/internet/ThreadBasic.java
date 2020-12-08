@@ -10,10 +10,16 @@ package com.zj.question.internet;
  */
 public class ThreadBasic {
     /*
+    ######################### 1.线程基础面试题 ##################################################3
+
     1.线程间通信方式
-    a.同步synchronized
-    b.while轮询
-    c.wait/notify机制
-    d.管道通信
+    1.1.同步synchronized
+    1.2.while轮询
+    1.3.wait/notify机制
+    1.4.管道通信: PipedInputStream 和 PipedOutputStream
+
+    --------------------
+
+
      */
 }

@@ -2,11 +2,9 @@ package com.zj.test.java.lang.thread;
 
 
 import com.zj.test.util.TestHelper;
-import com.zj.test.util.TestHelper.ResultEnum;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -94,13 +92,13 @@ public class ThreadTest {
 
             while (true) {
                 // 没有被打断才会执行
-                if (!isInterrupted()){
+                if (!isInterrupted()) {
                     TestHelper.println(Thread.currentThread().getName() + " is running");
                     // 打断自己
                     this.interrupt();
-                }else{
+                } else {
                     // Thread.interrupted()只能用来打断本线程，不用用来打断别的线程。
-                    TestHelper.println("Thread.interrupted()之前的线程打断状态",Thread.interrupted());// true
+                    TestHelper.println("Thread.interrupted()之前的线程打断状态", Thread.interrupted());// true
                 }
 
             }

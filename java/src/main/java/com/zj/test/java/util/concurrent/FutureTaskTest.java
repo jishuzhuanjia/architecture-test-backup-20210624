@@ -4,6 +4,7 @@ import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -56,7 +57,7 @@ public class FutureTaskTest {
         FutureTask futureTask = new FutureTask<String>(countCallable);
 
         // 如果此时取消，后续不会被执行
-        // futureTask.cancel(false);
+        //futureTask.cancel(false);
 
         // 计数线程
         // FutureTask泛型表示的是返回数据类型,而不是Callable的类型
@@ -114,6 +115,130 @@ public class FutureTaskTest {
     public void test2() {
         while (true) {
             TestHelper.println("趁他没躲好，我吃一口辣条...");
+        }
+    }
+
+    /**
+     * author: jishuzhuanjia
+     * qq: 2025513
+     *
+     * 3.构造函数测试
+     * public FutureTask(Callable<V> callable)
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void FutureTask1() {
+
+        Callable<String> callable = () -> {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return Thread.currentThread().getName() + ": finished";
+        };
+
+        FutureTask<String> futureTask = new FutureTask(callable);
+
+        new Thread(futureTask).start();
+
+        // 监听任务是否完成
+        while (true) {
+
+            // 判断任务是否执行完成
+            if (futureTask.isDone()) {
+                try {
+                    TestHelper.println(futureTask.get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                break;
+            } else {
+                TestHelper.println("任务还没执行完成");
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * author: jishuzhuanjia
+     * qq: 2025513
+     *
+     * 4.构造方法测试
+     * public FutureTask(Runnable runnable, V result)
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     * 1.public FutureTask(Runnable runnable, V result)
+     * 参数指定任务 runnable 和 返回结果result。
+     * result: 任务完成后会返回result。可通过get()方法获取。
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void FutureTask2(){
+        Runnable runnable = () -> {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+
+        /*
+        作为任务执行完成后的返回值, 可以为null , 通过 futureTask.get() 获取。
+         */
+        String result = "runnable finished...";
+        FutureTask<String> futureTask = new FutureTask<String>(runnable,result);
+
+        new Thread(futureTask).start();
+
+        while(true){
+
+            if(futureTask.isDone()){
+                try {
+                    TestHelper.println(futureTask.get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            }else
+            {
+                TestHelper.println("任务还没执行完成");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
