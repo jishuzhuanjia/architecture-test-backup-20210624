@@ -28,9 +28,9 @@ public class ReentrantLockTest {
      * ReentrantLock加锁和解锁需要手动进行且次数需一致，否则其他线程无法获取锁。          // 易用性
      * lock和unlock次数必须一致。
      *
-     * 2.ReentrantLock可以响应中断，而synchronized不可响应中断，一个线程获取不到锁就会一直等待。   //
+     * 2.ReentrantLock可以响应中断，而synchronized不可响应中断，一个线程获取不到锁就会一直等待。   // 特性
      *
-     * 3。ReentrantLock还可以实现公平锁机制: 等待时间长的线程将获取锁的使用权。 //功能
+     * 3。ReentrantLock还可以实现公平锁机制: 等待时间长的线程将获取锁的使用权。 // 功能
      */
     static int count = 0;
     Lock lock = new ReentrantLock();
@@ -51,13 +51,13 @@ public class ReentrantLockTest {
             lock次数大于unlock -> 会导致其他线程得不到锁。更为致命的问题是java中每个线程都会占用一定的线程栈,
             如果它们一直都无法得到锁，任务无法结束, 则会一直占用内存空间, 严重时直接导致jvm内存耗尽。
 
-            unlock次数大于lock -> 报异常:
+            如果unlock次数大于lock -> 报异常:
             Exception in thread "Thread-81438" java.lang.IllegalMonitorStateException
             at java.util.concurrent.locks.ReentrantLock$Sync.tryRelease(ReentrantLock.java:151)
             at java.util.concurrent.locks.AbstractQueuedSynchronizer.release(AbstractQueuedSynchronizer.java:1261)
             at java.util.concurrent.locks.ReentrantLock.unlock(ReentrantLock.java:457)
             */
-            //lock.unlock();
+            lock.unlock();
         }
         return c;
     }
@@ -106,9 +106,9 @@ public class ReentrantLockTest {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                fairLock.lock();
                 TestHelper.println("线程" + Thread.currentThread().getName() + "获取了锁");
 
-                fairLock.lock();
             }, "thread" + (i + 1)).start();
         }
 
