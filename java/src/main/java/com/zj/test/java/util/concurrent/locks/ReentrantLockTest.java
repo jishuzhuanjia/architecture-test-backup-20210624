@@ -87,27 +87,27 @@ public class ReentrantLockTest {
         }
     }
 
-    /**
-     * 3.ReentrantLock实现公平锁
-     *
-     * 等待时间长的先获取锁
-     */
+
     // 公平锁,默认构造函数是不公平锁
     Lock fairLock = new ReentrantLock(true);
 
+    /**
+     * 3.ReentrantLock实现公平锁
+     *
+     * 【结论】
+     * 1.等待时间长的先获取锁，即最先调用lock()的线程优先获取锁。
+     * 2.thread.start()调用的顺序不一定等于获取锁的顺序，锁的获取顺序与实际调用lock方法的顺序有关。
+     * 3.不要忘记释放锁，否则其他线程获取不到锁。
+     */
     @Test
     public void test2() {
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 30; i++) {
             int finalI = i;
             new Thread(() -> {
-                try {
-                    Thread.sleep(10 * finalI);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 fairLock.lock();
                 TestHelper.println("线程" + Thread.currentThread().getName() + "获取了锁");
+                fairLock.unlock();
 
             }, "thread" + (i + 1)).start();
         }
