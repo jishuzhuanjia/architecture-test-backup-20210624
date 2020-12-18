@@ -14,6 +14,12 @@ import java.util.concurrent.atomic.AtomicReference;
  * @finished: false
  * @finished-time:
  */
+
+/**
+ * 好处：
+ * 1.使得多线程可以共享数据.
+ * 2.对数据的操作是相互隔离的，不会互相影响。
+ * */
 public class ThreadLocalTest {
 
     /**

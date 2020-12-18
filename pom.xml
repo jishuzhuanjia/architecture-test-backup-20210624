@@ -25,6 +25,7 @@
         <module>transaction</module>
         <module>dbcp</module>
         <module>interview-question</module>
+        <module>jvm</module>
     </modules>
     <!--end-->
 

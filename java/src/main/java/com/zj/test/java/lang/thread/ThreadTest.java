@@ -134,4 +134,58 @@ public class ThreadTest {
             e.printStackTrace();
         }
     }
+
+    /**
+     * author: jishuzhuanjia
+     * qq: 2025513
+     *
+     * 3.api测试
+     *
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void getId(){
+        for (int i = 0; i <5 ; i++) {
+            Thread aThread = createAThread();
+            aThread.start();
+            TestHelper.println("thread is running, id: " + aThread.getId() +", name: " + aThread.getName());
+        }
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * author: jishuzhuanjia
+     * qq: 2025513
+     *
+     * 4.测试: 默认优先级别
+     *
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     * aThread.getPriority().: 5
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void getPriority(){
+        Thread aThread = createAThread();
+        TestHelper.println("aThread.getPriority()",aThread.getPriority());
+    }
 }

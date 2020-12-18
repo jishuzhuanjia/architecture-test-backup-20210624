@@ -259,4 +259,25 @@ public class LangTest {
             }
         }
     }
+
+    /**
+     * author: jishuzhuanjia
+     * qq: 2025513
+     *
+     * 6.测试数组的最大维度
+     *
+     * 【作用】
+     *
+     * 【测试结果】
+     * 暂停测试
+     *
+     * 【结论】
+     *
+     * 【优点】
+     * 【缺点】
+     */
+    @Test
+    public void array_weidu(){
+        int[][][][][][][] arr = new int[1][1][1][1][1][1][1];
+    }
 }
