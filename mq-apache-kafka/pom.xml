@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>apache-mq-kafka</artifactId>
+    <artifactId>mq-apache-kafka</artifactId>
 
 
 </project>

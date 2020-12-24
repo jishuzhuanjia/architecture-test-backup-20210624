@@ -23,10 +23,10 @@
         <module>transaction</module>
         <module>interview-question</module>
         <module>jvm</module>
-        <module>apache-mq-kafka</module>
-        <module>apache-mq-activemq</module>
-        <module>commons-datasource-dbcp</module>
-        <module>org/mybatis</module>
+        <module>mq-apache-kafka</module>
+        <module>mq-apache-activemq</module>
+        <module>datasource-commons-dbcp</module>
+        <module>model-mybatis</module>
     </modules>
     <!--end-->
 
