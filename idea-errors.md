@@ -19,3 +19,7 @@
     2.Tomcat deployment没有exploded解决：
     先导入模块 -> 然后打开Project Structure -> Artifact -> + -> web application: exploded -> from module
     即可创建exploded，然后tomcat中配置Deployment即可。
+    
+# 3.解决Module名和pom中artifactId不一致
+    删除Module下的iml文件 -> Maven reimport即可
+    备注：被导入的Maven Module下会生成iml文件。

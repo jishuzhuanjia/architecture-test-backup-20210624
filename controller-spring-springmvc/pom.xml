@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>springmvc</artifactId>
+    <artifactId>controller-spring-springmvc</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.zj.util</groupId>

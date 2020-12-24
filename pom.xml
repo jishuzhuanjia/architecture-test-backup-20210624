@@ -14,7 +14,7 @@
     <modules>
         <module>debuge-run</module>
         <module>spring</module>
-        <module>springmvc</module>
+        <module>controller-spring-springmvc</module>
         <module>java</module>
         <module>lombok</module>
         <module>junit</module>
