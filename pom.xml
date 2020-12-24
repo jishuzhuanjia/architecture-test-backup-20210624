@@ -12,20 +12,21 @@
     <!--Sub Modules-->
     <!--start-->
     <modules>
-        <module>mybatis</module>
         <module>debuge-run</module>
         <module>spring</module>
         <module>springmvc</module>
         <module>java</module>
         <module>lombok</module>
         <module>junit</module>
-        <module>active-mq</module>
         <module>elastic-search</module>
         <module>redis</module>
         <module>transaction</module>
-        <module>dbcp</module>
         <module>interview-question</module>
         <module>jvm</module>
+        <module>apache/kafka</module>
+        <module>apache/activemq</module>
+        <module>commons/dbcp</module>
+        <module>org/mybatis</module>
     </modules>
     <!--end-->
 
