@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zj.test</groupId>
-    <artifactId>dobbo-customer</artifactId>
+    <artifactId>rpc-alibaba-customer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dobbo-customer</name>
     <description>dobbo-customer</description>
