@@ -23,9 +23,9 @@
         <module>transaction</module>
         <module>interview-question</module>
         <module>jvm</module>
-        <module>apache/kafka</module>
-        <module>apache/activemq</module>
-        <module>commons/dbcp</module>
+        <module>apache-mq-kafka</module>
+        <module>apache-mq-activemq</module>
+        <module>commons-datasource-dbcp</module>
         <module>org/mybatis</module>
     </modules>
     <!--end-->
