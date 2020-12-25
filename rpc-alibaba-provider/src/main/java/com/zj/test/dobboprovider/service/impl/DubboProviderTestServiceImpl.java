@@ -2,6 +2,7 @@ package com.zj.test.dobboprovider.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.zj.test.dobboprovider.service.DubboProviderTestService;
+import com.zj.test.util.TestHelper;
 
 import java.util.Date;
 
@@ -13,31 +14,46 @@ import java.util.Date;
  * @finished: false
  * @finished-time:
  */
-@Service(timeout = 4000,retries = 4)
+@Service(timeout = 2000,retries = 4)
 public class DubboProviderTestServiceImpl implements DubboProviderTestService {
+
+    /**
+     * 1.测试: provider服务是否有效检测方法实现
+     *
+     * 【测试工具】
+     * jemter
+     *
+     * 【测试结果】
+     * 调用成功
+     */
     @Override
-    public String repeat(String content, int count) {
-        for(int i=0;i<count;i++){
-            System.out.println(content);
-        }
-        return "method repeat invoked success";
+    public String helloDubbo() {
+        TestHelper.println("Hello Dubbo!");
+        return "Hello Dubbo!";
     }
 
     /***
-     * 1.timeout参数测试
+     * 2.测试: timeout参数测试
      *
-     * 假设service timeout为2000ms，而方法调用超过2000ms,测试结果
+     * 【测试过程】
+     * 设置service timeout为2000ms，而方法调用耗时3000+ms
+     * jmeter timeout设置5000，测试timeout参数是否有效
+     *
+     * 【结论】
+     * 使用jmeter测试时，@Service timeout没有起作用。
      */
     @Override
     public String timeoutTest() {
-        System.out.println("provider method timeoutTest invoking..." + new Date());
+        TestHelper.startTest("timeoutTest");
+        Date date = new Date();
+        TestHelper.println("time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
+        TestHelper.println("timeoutTest() is invoking...");
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("method timeoutTest invoked success");
-
-        return "method timeoutTest invoked success";
+        TestHelper.println("timeoutTest() invoked success");
+        return "timeoutTest() invoked success";
     }
 }

@@ -10,7 +10,7 @@ package com.zj.test.dubbocustomer.service;
  */
 public interface DubboCustomerTestService {
 
-    public void invokeRepeat();
+    public void helloDubboTest();
 
-    public void testTimeout();
+    public void timeoutTest();
 }

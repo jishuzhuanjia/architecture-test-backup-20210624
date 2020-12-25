@@ -19,7 +19,7 @@
         <module>lombok</module>
         <module>junit</module>
         <module>elastic-search</module>
-        <module>redis</module>
+        <module>nosql-redis</module>
         <module>transaction</module>
         <module>interview-question</module>
         <module>jvm</module>

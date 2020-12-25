@@ -20,7 +20,7 @@ public class DubboCustomerTestController {
     DubboCustomerTestService dubboCustomerTestService;
     @RequestMapping("test1")
     public String test1(){
-        dubboCustomerTestService.invokeRepeat();
+        dubboCustomerTestService.helloDubboTest();
         return "调用成功";
     }
 
@@ -111,7 +111,7 @@ public class DubboCustomerTestController {
     public String test2(){
 
         try {
-            dubboCustomerTestService.testTimeout();
+            dubboCustomerTestService.timeoutTest();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("调用接口超时");

@@ -61,12 +61,12 @@ public class DubboProviderTestServiceImpl implements DubboCustomerTestService {
     DubboProviderTestService dubboProviderTestService;
 
     @Override
-    public void invokeRepeat() {
-        dubboProviderTestService.repeat("customer invoking",100);
+    public void helloDubboTest() {
+        dubboProviderTestService.helloDubbo();
     }
 
     @Override
-    public void testTimeout() {
+    public void timeoutTest() {
         dubboProviderTestService.timeoutTest();
     }
 }

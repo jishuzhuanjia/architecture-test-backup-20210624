@@ -5,13 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.6.RELEASE</version>
+        <version>2.2.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.zj.test</groupId>
     <artifactId>rpc-alibaba-provider</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>dobbo-provider</name>
+    <name>rpc-alibaba-provider</name>
     <description>dobbo-provider</description>
 
     <properties>
@@ -47,6 +48,12 @@
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
             <version>0.7</version>
+        </dependency>
+        <dependency>
+            <groupId>com.zj.test</groupId>
+            <artifactId>model-mybatis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency><!--end-->
     </dependencies>
 

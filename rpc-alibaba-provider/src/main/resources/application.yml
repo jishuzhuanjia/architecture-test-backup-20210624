@@ -1,8 +1,11 @@
 # 仅仅作为dubbo接口的工程,不需要配置tomcat端口
 # server:
 # port: 8087 #Tomcat端口
+
+## dubbo配置
 spring:
   dubbo:
+
     application:
       name: springboot-dubbo-provider #应用名
     registry:
@@ -13,3 +16,4 @@ spring:
       port: 20890 #dubbo服务暴露的端口
     scan: com.zj.test.dobboprovider.service.impl #扫描的包名
     timeout: 3000
+

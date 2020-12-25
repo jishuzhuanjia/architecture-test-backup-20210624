@@ -1,5 +1,6 @@
 server:
   port: 8091 #Tomcat端口
+
 spring:
   dubbo:
     # dubbo服务是否对外提供接口,默认true
