@@ -12,5 +12,5 @@ public interface DubboCustomerTestService {
 
     public void helloDubboTest();
 
-    public void timeoutTest();
+    public String timeoutTest();
 }

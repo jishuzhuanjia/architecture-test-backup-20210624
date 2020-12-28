@@ -1,12 +1,12 @@
 server:
-  port: 8091 #Tomcat端口
+  port: 22222 #Tomcat端口，如果不配置默认8080，如果yml和properties文件都配置了，properties中的配置生效。
 
 spring:
   dubbo:
     # dubbo服务是否对外提供接口,默认true
     # 消费者也可以是提供者,也可以设置true
     # 为了测试消费者也可以是提供者, 设置为true
-    server: true
+    #server: false
     application:
       # 注册到zookeeper的应用名
       name: springboot-dubbo-customer #应用名
@@ -22,7 +22,7 @@ spring:
       # 对外提供服务所用协议
       name: dubbo
       # 对外提供服务所用端口,默认20880
-      # port: 20890
+      port: 20890
 
       # scan的配置:
       # 1.对于提供者,dubbo的@Service注解注解的类必须在此包下
@@ -32,3 +32,5 @@ spring:
     scan: com.zj.test.dubbocustomer.service.impl #会扫描bean中的@Reference注解的接口。会订阅并实例化接口
     # 该参数是否真实有效未测试
     timeout: 3000
+  datasource:
+    url: jdbc:mysql://localhost

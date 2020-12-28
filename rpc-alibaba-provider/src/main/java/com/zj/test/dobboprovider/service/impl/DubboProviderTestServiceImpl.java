@@ -14,7 +14,7 @@ import java.util.Date;
  * @finished: false
  * @finished-time:
  */
-@Service(timeout = 2000,retries = 4)
+@Service(timeout = 2000,retries = 2)
 public class DubboProviderTestServiceImpl implements DubboProviderTestService {
 
     /**
@@ -49,7 +49,7 @@ public class DubboProviderTestServiceImpl implements DubboProviderTestService {
         TestHelper.println("time: " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds());
         TestHelper.println("timeoutTest() is invoking...");
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
