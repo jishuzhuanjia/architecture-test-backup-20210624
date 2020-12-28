@@ -6,8 +6,6 @@ import com.zj.test.dobboprovider.service.DubboProviderTestService;
 import com.zj.test.dubbocustomer.service.DubboCustomerTestService;
 import com.zj.test.util.TestHelper;
 
-import java.io.FileInputStream;
-
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/10/21 10:45
@@ -74,7 +72,7 @@ public class DubboProviderTestServiceImpl implements DubboCustomerTestService {
      * 越后面的线程等待的时间越久。因此任务还没有执行就已经浪费了很多的启动时间，这种重试方式实现的多线程可用在对速度要求不是很高的场景下，并且它在
      * 一定程度上降低主机的压力。
      * */
-    @Reference(timeout = -1,retries = 1)
+    @Reference(timeout = -1,retries = 1,check = false)
     DubboProviderTestService dubboProviderTestService;
 
     @Override
