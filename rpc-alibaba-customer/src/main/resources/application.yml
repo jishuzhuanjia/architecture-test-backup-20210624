@@ -3,6 +3,8 @@ server:
 
 spring:
   dubbo:
+    consumer:
+      check: "false"
     # dubbo服务是否对外提供接口,默认true
     # 消费者也可以是提供者,也可以设置true
     # 为了测试消费者也可以是提供者, 设置为true
@@ -32,5 +34,6 @@ spring:
     scan: com.zj.test.dubbocustomer.service.impl #会扫描bean中的@Reference注解的接口。会订阅并实例化接口
     # 该参数是否真实有效未测试
     timeout: 3000
+
   datasource:
     url: jdbc:mysql://localhost
