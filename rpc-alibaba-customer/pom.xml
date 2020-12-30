@@ -15,7 +15,7 @@
     <description>dobbo-customer</description>
 
     <properties>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
@@ -48,7 +48,7 @@
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
             <!--0.7 -> 0.10-->
-            <version>0.10</version>
+            <version>0.7</version>
         </dependency>
         <dependency>
             <groupId>com.zj.test</groupId>

@@ -27,7 +27,6 @@
         <module>mq-apache-activemq</module>
         <module>datasource-commons-dbcp</module>
         <module>model-mybatis</module>
-        <module>PsMessageSystem-kafka</module>
     </modules>
     <!--end-->
 
