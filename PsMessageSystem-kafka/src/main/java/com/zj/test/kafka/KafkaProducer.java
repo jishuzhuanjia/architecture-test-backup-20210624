@@ -33,14 +33,11 @@ public class KafkaProducer {
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
 
-    //自定义topic
-    // /*topic不存在启动会报错*/
+    /** 自定义topic */
     public static final String TOPIC_TEST = "topic.test";
 
-    //
     public static final String TOPIC_GROUP1 = "topic.group1";
 
-    //
     public static final String TOPIC_GROUP2 = "topic.group2";
 
     public void send(Object obj) {
@@ -48,6 +45,7 @@ public class KafkaProducer {
         log.info("准备发送消息为：{}", obj2String);
         //发送消息
         ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send(TOPIC_TEST, obj);
+        // 消息发送回调, 可以在send(..)发送后设置
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -61,7 +59,5 @@ public class KafkaProducer {
                 log.info(TOPIC_TEST + " - 生产者 发送消息成功：" + stringObjectSendResult.toString());
             }
         });
-
-
     }
 }

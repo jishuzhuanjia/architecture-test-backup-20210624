@@ -1,6 +1,9 @@
 spring:
   kafka:
-    bootstrap-servers: 172.101.203.33:9092
+    # 这里必须配合成kafka服务地址
+    # 在将consumer配置移动到代码中之后，发现此配置有没有没有区别
+    # 也有可能默认将localhost:9092添加到了服务列表中
+    # bootstrap-servers: localhost:9092
     producer:
       # 发生错误后，消息重发的次数。
       retries: 0
@@ -16,6 +19,7 @@ spring:
       # acks=1 ： 只要集群的首领节点收到消息，生产者就会收到一个来自服务器成功响应。
       # acks=all ：只有当所有参与复制的节点全部收到消息时，生产者才会收到一个来自服务器的成功响应。
       acks: 1
+    # consumer配置移动到代码中
     consumer:
       # 自动提交的时间间隔 在spring boot 2.X 版本中这里采用的是值的类型为Duration 需要符合特定的格式，如1S,1M,2H,5D
       auto-commit-interval: 1S
@@ -29,9 +33,9 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       # 值的反序列化方式
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#    listener:
-#      # 在侦听器容器中运行的线程数。
-#      concurrency: 5
-#      #listner负责ack，每调用一次，就立即commit
-#      missing-topics-fatal: false
-#      ack-mode: manual_immediate
+    listener:
+      # 在侦听器容器中运行的线程数。
+      concurrency: 5
+      #listner负责ack，每调用一次，就立即commit
+      missing-topics-fatal: false
+      ack-mode: manual_immediate
