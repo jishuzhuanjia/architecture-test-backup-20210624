@@ -5,7 +5,6 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.zj.test.dobboprovider.service.DubboProviderTestService;
 import com.zj.test.dubbocustomer.service.DubboCustomerTestService;
 import com.zj.test.util.TestHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /* @author: zhoujian
  * @qq: 2025513
