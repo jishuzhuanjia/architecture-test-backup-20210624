@@ -41,15 +41,34 @@
             <groupId>io.dubbo.springboot</groupId>
             <artifactId>spring-boot-starter-dubbo</artifactId>
             <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dubbo</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--@Reference注解check属性无效:dubbo2.5.4的一个bug，在2.5.6版本修复了-->
+       <!-- <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.6.7</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.5.6</version>
         </dependency>
 
         <!-- zookeeper客户端 -->
-        <dependency>
+        <!--<dependency>
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
-            <!--0.7 -> 0.10-->
+            &lt;!&ndash;0.7 -> 0.10&ndash;&gt;
             <version>0.10</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>com.zj.test</groupId>
             <artifactId>rpc-alibaba-provider</artifactId>

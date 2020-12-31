@@ -72,6 +72,33 @@ public class DubboProviderTestServiceImpl implements DubboCustomerTestService {
      * 修改的是不同的内容，可以适当增加retries、并降低tomeout值来达到一个多线程的效果。需要注意的是这种方式后续的重试线程都会等待至少一个timeout，
      * 越后面的线程等待的时间越久。因此任务还没有执行就已经浪费了很多的启动时间，这种重试方式实现的多线程可用在对速度要求不是很高的场景下，并且它在
      * 一定程度上降低主机的压力。
+     *
+     * 5.check,默认true
+     * 【作用】
+     * 启动时是否检测指定的provider服务是否存在，如果不存在，则会将代理对象设置为null来表示服务处理错误的状态,
+     * 即使后来privider服务启动并注册了，代理对象也将一直为null。
+     *
+     * 如果为false,启动时不会检测侧指定的provider是否存在，并且注入的是代理对象，不为空。
+     * 实际调用的过程中，如果provider不存在,会抛出异常:
+     * om.alibaba.dubbo.rpc.RpcException: No provider available from registry localhost:2181 for service com.zj.test.dobboprovider.service.DubboProviderTestService on consumer 172.16.200.122 use dubbo version 2.5.6, may be providers disabled or not registered ?
+     * 	at com.alibaba.dubbo.registry.integration.RegistryDirectory.doList(RegistryDirectory.java:573) ~[dubbo-2.5.6.jar:2.5.6]
+     * 	at com.alibaba.dubbo.rpc.cluster.directory.AbstractDirectory.list(AbstractDirectory.java:73) ~[dubbo-2.5.6.jar:2.5.6]
+     *
+     * 【报错】
+     * 1.check=true,会在启动的时候检查是否存在对应的provider服务,如果没有，会报错：
+     * java.lang.IllegalStateException: Failed to check the status of the service com.zj.test.dobboprovider.service.DubboProviderTestService. No provider available for the service com.zj.test.dobboprovider.service.DubboProviderTestService from the url zookeeper://localhost:2181/com.alibaba.dubbo.registry.RegistryService?application=springboot-dubbo-customer&dubbo=2.5.6&interface=com.zj.test.dobboprovider.service.DubboProviderTestService&methods=timeoutTest,helloDubbo&pid=15268&retries=1&side=consumer&timeout=-1&timestamp=1609401613900 to the consumer 172.16.200.122 use dubbo version 2.5.6
+     * 	at com.alibaba.dubbo.config.ReferenceConfig.createProxy(ReferenceConfig.java:407) ~[dubbo-2.5.6.jar:2.5.6]
+     * 	at com.alibaba.dubbo.config.ReferenceConfig.init(ReferenceConfig.java:320) ~[dubbo-2.5.6.jar:2.5.6]
+     *
+     * 注意：该报错不会中断服务的启动。
+     *
+     * 2.check=false
+     * 在服务启动的时候， 不会报错。
+     *
+     * 【配置提示】
+     * 1.如果dubbo服务需要严格按照 customer -> provider的顺序启动，则设置check=true(默认)。
+     *
+     * 2.如果dubbo服务不需要按照顺序启动，支持动态发现，则设置check=false(常用)。
      * */
     @Reference(timeout = -1,retries = 1,check = false)
     DubboProviderTestService dubboProviderTestService;
@@ -92,4 +119,16 @@ public class DubboProviderTestServiceImpl implements DubboCustomerTestService {
 
         return "ok";
     }
+
+    /**
+     *
+     * 什么情况下,@Reference注入的对象会是null?
+     * 当check=true且指定的provider不存在时,代理对象会被赋值为null。来向程序员表明，启动时就报错了,
+     * 是一种错误的状态，即使后来privider上线了，也仍然是null。
+     *
+     * bug: 2.5.4存在bug:
+     * 1.先启动consumer，@Reference注入的代理对象将一直为null。
+     * 【原因】
+     * 该版本存在bug,尝试修改check=false无效，会默认使用check=true,所以会导致代理对象一直为null。
+     */
 }
