@@ -8,6 +8,9 @@ server:
 ## dubbo配置
 spring:
   dubbo:
+    provider:
+      # 统一配置负载均衡策略: random、roundrobin、leastactive、consistenthash
+      loadbalance: roundrobin
     application:
       name: springboot-dubbo-provider #应用名
     registry:

@@ -3,8 +3,11 @@ server:
 
 spring:
   dubbo:
+    provider:
+      # 统一配置负载均衡策略: random、roundrobin、leastactive、consistenthash
+      loadbalance: roundrobin
     consumer:
-      check: "false"
+      check: false
     # dubbo服务是否对外提供接口,默认true
     # 消费者也可以是提供者,也可以设置true
     # 为了测试消费者也可以是提供者, 设置为true

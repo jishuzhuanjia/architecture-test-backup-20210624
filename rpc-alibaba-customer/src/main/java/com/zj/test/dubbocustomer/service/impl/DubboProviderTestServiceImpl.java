@@ -99,8 +99,31 @@ public class DubboProviderTestServiceImpl implements DubboCustomerTestService {
      * 1.如果dubbo服务需要严格按照 customer -> provider的顺序启动，则设置check=true(默认)。
      *
      * 2.如果dubbo服务不需要按照顺序启动，支持动态发现，则设置check=false(常用)。
+     *
+     *
+     * 6.lazy.默认false
+     * 懒加载，是否使用的时候才去连接provider服务。
+     * 会出现如下的信息：
+     * 2020-12-31 16:27:58.872  INFO 20172 --- [:20890-thread-3] c.a.d.r.p.d.LazyConnectExchangeClient    :  [DUBBO] Lazy connect to dubbo://172.16.200.122:20880/com.zj.test.dobboprovider.service.DubboProviderTestService?anyhost=true&application=springboot-dubbo-customer&check=false&codec=dubbo&dubbo=2.5.6&generic=false&heartbeat=60000&interface=com.zj.test.dobboprovider.service.DubboProviderTestService&lazy=true&methods=timeoutTest,helloDubbo&pid=20172&remote.timestamp=1609403271268&retries=1&send.reconnect=true&side=consumer&timeout=-1&timestamp=1609403236902, dubbo version: 2.5.6, current host: 172.16.200.122
+     * 2020-12-31 16:27:58.929  INFO 20172 --- [:20890-thread-3] c.a.d.remoting.transport.AbstractClient  :  [DUBBO] Successed connect to server /172.16.200.122:20880 from NettyClient 172.16.200.122 using dubbo version 2.5.6, channel is NettyChannel [channel=[id: 0x2331b4a6, /172.16.200.122:11201 => /172.16.200.122:20880]], dubbo version: 2.5.6, current host: 172.16.200.122
+     * ...
+     *
+     * lazy=true在什么情况下奏效？
+     * 1.当check=true时，启动时必须有对应的provider,之后调用时provider存在，才会懒加载，否则代理对象将为null。
+     * 2.当check=false时，调用时provider服务需要存在，才会懒加载,否则不加载。
+     *
+     * 7.version,默认"",不论版本
+     * 接口版本控制,调用接口时，会调用版本符合的接口。如果没有：
+     * com.alibaba.dubbo.rpc.RpcException: Failed to invoke the method timeoutTest in the service com.zj.test.dobboprovider.service.DubboProviderTestService. No provider available for the service com.zj.test.dobboprovider.service.DubboProviderTestService:1.0.0 from registry localhost:2181 on the consumer 172.16.200.122 using the dubbo version 2.5.6. Please check if the providers have been started and registered.
+     *
+     * 在check=true时也会检查。如果不存在：
+     * java.lang.IllegalStateException: Failed to check the status of the service com.zj.test.dobboprovider.service.DubboProviderTestService. No provider available for the service com.zj.test.dobboprovider.service.DubboProviderTestService:1.0.0 from the url zookeeper://localhost:2181/com.alibaba.dubbo.registry.RegistryService?application=springboot-dubbo-customer&dubbo=2.5.6&interface=com.zj.test.dobboprovider.service.DubboProviderTestService&methods=timeoutTest,helloDubbo&pid=17440&retries=1&revision=1.0.0&side=consumer&timeout=-1&timestamp=1609404275812&version=1.0.0 to the consumer 172.16.200.122 use dubbo version 2.5.6
+     *
+     * 1.如果provider暴露的接口指定了version,则此处必须指定version,且必须与provider提供的version一致，否则接口实例为null。
+     * 2.如果provider暴露的接口没有指定version，则此处不能指定version(当然，指定默认值""是可以的),否则也会因找不到指定的接口而报错：
+     * com.alibaba.dubbo.rpc.RpcException: Failed to invoke the method timeoutTest in the service com.zj.test.dobboprovider.service.DubboProviderTestService. No provider available for the service com.zj.test.dobboprovider.service.DubboProviderTestService:1.0.0 from registry localhost:2181 on the consumer 172.16.200.122 using the dubbo version 2.5.6. Please check if the providers have been started and registered.
      * */
-    @Reference(timeout = -1,retries = 1,check = false)
+    @Reference(timeout = -1, retries = 1, check = false, version = "1.0.0")
     DubboProviderTestService dubboProviderTestService;
 
     @Override
@@ -112,9 +135,9 @@ public class DubboProviderTestServiceImpl implements DubboCustomerTestService {
     public String timeoutTest() {
         TestHelper.println("invoking provider...");
         //try {
-            dubboProviderTestService.timeoutTest();
-       // } catch (Exception e) {
-         //   e.printStackTrace();
+        dubboProviderTestService.timeoutTest();
+        // } catch (Exception e) {
+        //   e.printStackTrace();
         //}
 
         return "ok";
