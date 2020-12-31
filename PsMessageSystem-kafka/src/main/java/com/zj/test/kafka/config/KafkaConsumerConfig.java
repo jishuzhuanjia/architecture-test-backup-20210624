@@ -1,4 +1,4 @@
-package com.zj.test.kafka;
+package com.zj.test.kafka.config;
 
 import com.alibaba.fastjson.serializer.StringSerializer;
 import lombok.extern.slf4j.Slf4j;

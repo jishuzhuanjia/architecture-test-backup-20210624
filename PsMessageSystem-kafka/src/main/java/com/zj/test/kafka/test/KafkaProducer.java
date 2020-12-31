@@ -1,4 +1,4 @@
-package com.zj.test.kafka;
+package com.zj.test.kafka.test;
 
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
