@@ -23,7 +23,6 @@
         <module>transaction</module>
         <module>interview-question</module>
         <module>jvm</module>
-        <module>mq-apache-kafka</module>
         <module>mq-apache-activemq</module>
         <module>datasource-commons-dbcp</module>
         <module>model-mybatis</module>

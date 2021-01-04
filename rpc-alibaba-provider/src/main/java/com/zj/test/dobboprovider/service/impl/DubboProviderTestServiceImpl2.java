@@ -8,14 +8,14 @@ import java.util.Date;
 
 /* @author: zhoujian
  * @qq: 2025513
- * @create-time: 2020/10/21 10:45
- * @description:
+ * @create-time: 2021年1月4日 20:39:46
+ * @description: 用来测试group参数和DubboProviderTestServiceImpl
  * @version: 1.0
  * @finished: false
  * @finished-time:
  */
-@Service(timeout = 2000,retries = 2,group = "group1")
-public class DubboProviderTestServiceImpl implements DubboProviderTestService {
+@Service(timeout = 2000,retries = 2,group = "group2")
+public class DubboProviderTestServiceImpl2 implements DubboProviderTestService {
 
     /**
      * 1.测试: provider服务是否有效检测方法实现
@@ -28,7 +28,7 @@ public class DubboProviderTestServiceImpl implements DubboProviderTestService {
      */
     @Override
     public String helloDubbo() {
-        TestHelper.println("DubboProviderTestServiceImpl: Hello Dubbo!");
+        TestHelper.println("DubboProviderTestServiceImpl2: Hello Dubbo!");
         return "Hello Dubbo!";
     }
 

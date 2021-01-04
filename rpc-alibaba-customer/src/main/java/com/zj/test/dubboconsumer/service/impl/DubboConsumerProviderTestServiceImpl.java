@@ -1,7 +1,7 @@
-package com.zj.test.dubbocustomer.service.impl;
+package com.zj.test.dubboconsumer.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.zj.test.dubbocustomer.service.DubboCustomerProviderTestService;
+import com.zj.test.dubboconsumer.service.DubboConsumerProviderTestService;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -12,7 +12,7 @@ import com.zj.test.dubbocustomer.service.DubboCustomerProviderTestService;
  * @finished-time:
  */
 @Service
-public class DubboCustomerProviderTestServiceImpl implements DubboCustomerProviderTestService {
+public class DubboConsumerProviderTestServiceImpl implements DubboConsumerProviderTestService {
     @Override
     public void sayHello() {
         System.out.println("Hello, I am a Customer,but i also a provider");

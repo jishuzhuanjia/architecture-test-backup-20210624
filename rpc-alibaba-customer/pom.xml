@@ -50,11 +50,11 @@
         </dependency>
 
         <!--@Reference注解check属性无效:dubbo2.5.4的一个bug，在2.5.6版本修复了-->
-       <!-- <dependency>
+       <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
             <version>2.6.7</version>
-        </dependency>-->
+        </dependency>
 
         <dependency>
             <groupId>com.alibaba</groupId>

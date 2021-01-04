@@ -34,7 +34,7 @@ spring:
       # 2.对于消费者,dubbo的@Reference注解注解的类必须在此包下。
       # 3.对于即使提供者又是消费者的服务,dubbo的@Service和@Reference注解的类
       # 都需要在此包下,否则扫描不到。
-    scan: com.zj.test.dubbocustomer.service.impl #会扫描bean中的@Reference注解的接口。会订阅并实例化接口
+    scan: com.zj.test.dubboconsumer.service.impl #会扫描bean中的@Reference注解的接口。会订阅并实例化接口
     # 该参数是否真实有效未测试
     timeout: 3000
 

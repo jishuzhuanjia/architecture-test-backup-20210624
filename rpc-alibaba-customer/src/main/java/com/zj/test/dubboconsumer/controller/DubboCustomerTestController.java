@@ -1,6 +1,6 @@
-package com.zj.test.dubbocustomer.controller;
+package com.zj.test.dubboconsumer.controller;
 
-import com.zj.test.dubbocustomer.service.DubboCustomerTestService;
+import com.zj.test.dubboconsumer.service.DubboConsumerTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/test/dubbo/customer")
 @RestController
 public class DubboCustomerTestController {
-    @Autowired
-    DubboCustomerTestService dubboCustomerTestService;
+    //@Autowired
+    DubboConsumerTestService dubboCustomerTestService;
     @RequestMapping("test1")
     public String test1(){
         dubboCustomerTestService.helloDubboTest();

@@ -1,4 +1,4 @@
-package com.zj.test.dubbocustomer.service;
+package com.zj.test.dubboconsumer.service;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -8,6 +8,6 @@ package com.zj.test.dubbocustomer.service;
  * @finished: false
  * @finished-time:
  */
-public interface DubboCustomerProviderTestService {
+public interface DubboConsumerProviderTestService {
     public void sayHello();
 }
