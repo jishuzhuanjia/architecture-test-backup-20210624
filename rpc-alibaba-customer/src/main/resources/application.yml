@@ -5,7 +5,7 @@ spring:
   dubbo:
     provider:
       # 统一配置负载均衡策略: random、roundrobin、leastactive、consistenthash
-      loadbalance: roundrobin
+      #loadbalance: roundrobin
     consumer:
       check: false
     # dubbo服务是否对外提供接口,默认true
