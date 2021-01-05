@@ -3,17 +3,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-parent</artifactId>
+            <version>1.5.9.RELEASE</version>
+        <!--<relativePath/>--> <!-- lookup parent from repository -->
     </parent>
-
     <groupId>com.zj.test</groupId>
-    <artifactId>rpc-alibaba-provider</artifactId>
+    <artifactId>rpc-alibaba-dubbo-consumer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rpc-alibaba-provider</name>
-    <description>dobbo-provider</description>
+    <name>dubbo-consumer</name>
+    <description>dobbo-customer</description>
 
     <properties>
         <java.version>1.7</java.version>
@@ -42,6 +41,19 @@
             <groupId>io.dubbo.springboot</groupId>
             <artifactId>spring-boot-starter-dubbo</artifactId>
             <version>1.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>dubbo</artifactId>
+                    <groupId>com.alibaba</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--@Reference注解check属性无效:dubbo2.5.4的一个bug，在2.5.6版本修复了-->
+       <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.6.7</version>
         </dependency>
 
         <dependency>
@@ -49,24 +61,21 @@
             <artifactId>dubbo</artifactId>
             <version>2.5.6</version>
         </dependency>
+
         <!-- zookeeper客户端 -->
         <!--<dependency>
             <groupId>com.101tec</groupId>
             <artifactId>zkclient</artifactId>
+            &lt;!&ndash;0.7 -> 0.10&ndash;&gt;
             <version>0.10</version>
         </dependency>-->
         <dependency>
             <groupId>com.zj.test</groupId>
-            <artifactId>model-mybatis</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>rpc-alibaba-dubbo-provider</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>mybatis-spring-boot-starter</artifactId>
-                    <groupId>org.mybatis.spring.boot</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency><!--end-->
+        </dependency>
+        <!--end-->
     </dependencies>
 
     <build>

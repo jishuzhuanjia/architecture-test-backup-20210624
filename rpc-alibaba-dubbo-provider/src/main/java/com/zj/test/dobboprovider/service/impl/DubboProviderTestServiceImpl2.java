@@ -14,7 +14,7 @@ import java.util.Date;
  * @finished: false
  * @finished-time:
  */
-@Service(timeout = 2000,retries = 2,group = "group2")
+@Service(timeout = 2000,retries = 2,group = "gp2")
 public class DubboProviderTestServiceImpl2 implements DubboProviderTestService {
 
     /**

@@ -136,8 +136,22 @@ public class DubboProviderTestServiceImpl implements DubboConsumerTestService {
      * 1.9.loadbalance
      * 负载均衡策略，只有在不同的ip之间才能看出效果。
      * 测试过在单机注册多个相同服务，结果调用服务时，均衡策略无法生效。
+     *
+     * 1.10.genric-泛化引用泛化服务
+     * 使用场景：跨语言或consumer没有对应的接口的情况,但是consumer需要自己定义接口。
+     *
+     *
+     * 【泛化调用注意点】
+     * 1.@Reference必须指定interface参数,否则@Reference默认获取成员变量类型对应的服务，一般情况下会在调用时报错：
+     * com.alibaba.dubbo.rpc.RpcException: Failed to invoke the method helloDubbo in the service com.zj.test.dubboconsumer.service.GenericServiceTestService. No provider available for the service group2/com.zj.test.dubboconsumer.service.GenericServiceTestService from registry localhost:2181 on the consumer 172.16.200.122 using the dubbo version 2.5.6. Please check if the providers have been started and registered.
+     *
+     * 2.在指定interface参数的情况下，如果不指定generic=true,@Reference注入的对象将为null,调用服务时会报错。
+     *
+     * 【备注】
+     * 未成功引用，后续有需要再进行测试。
+     *
      * */
-    @Reference(timeout = -1, retries = 1, check = false,/*loadbalance = "RoundRobin,"*/group="group2")
+    @Reference(/*generic=true,interfaceName = "com.zj.test.dobboprovider.service.DubboProviderTestService",*/timeout = -1, retries = 1, check = false,/*loadbalance = "RoundRobin,"*/group="group2")
     DubboProviderTestService dubboProviderTestService;
 
     @Override
