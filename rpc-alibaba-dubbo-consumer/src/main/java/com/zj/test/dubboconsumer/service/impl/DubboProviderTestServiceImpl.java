@@ -133,13 +133,18 @@ public class DubboProviderTestServiceImpl implements DubboConsumerTestService {
      *
      * 如果服务指定了group,@Reference注解也需要显示指定group参数，否则：com.alibaba.dubbo.rpc.RpcException: No provider available from registry localhost:2181 for...
      *
-     * 1.9.loadbalance
+     * 1.9.loadbalance(相同权重的服务会依次调用，总调用次数差<=1)
      * 负载均衡策略，只有在不同的ip之间才能看出效果。
      * 测试过在单机注册多个相同服务，结果调用服务时，均衡策略无法生效。
      *
-     * 注意，经测试，默认情况下，dubbo也开始了默认的均衡策略，但是具体是哪个策略没有继续探索。
+     * 注意，经测试，默认情况下，dubbo使用了默认的均衡策略-random(基于权重的随机负载均衡)。
      *
-     * RoundRobin：测试时，并不是每个服务依次调用一次，A的调用次数比B的多，不知道是什么原因。
+     *
+     * 注意：loadbalance均衡策略应小写，如RoundRobin会报错：No such extension RoundRobin for loadbalance/com.alibaba
+     * 应该使用roundrobin
+     *
+     * 【timeout对均衡策略的影响】
+     * 1.对于robin,如果当前调用的服务A超时,会尝试调用B,需要注意的是，下一次请求还是从B开始调用。
      *
      * 1.10.genric-泛化引用泛化服务
      * 使用场景：跨语言或consumer没有对应的接口的情况,但是consumer需要自己定义接口。
@@ -153,7 +158,7 @@ public class DubboProviderTestServiceImpl implements DubboConsumerTestService {
      * 【备注】
      * 未成功引用，后续有需要再进行测试。
      * */
-    @Reference(/*generic=true,interfaceName = "com.zj.test.dobboprovider.service.DubboProviderTestService",*/timeout = -1, retries = 1, check = false,loadbalance = "RoundRobin,",group="gp1")
+    @Reference(/*generic=true,interfaceName = "com.zj.test.dobboprovider.service.DubboProviderTestService",*/timeout = -1, retries = 1, check = false,loadbalance = "roundrobin",group="gp1")
     DubboProviderTestService dubboProviderTestService;
 
     @Override

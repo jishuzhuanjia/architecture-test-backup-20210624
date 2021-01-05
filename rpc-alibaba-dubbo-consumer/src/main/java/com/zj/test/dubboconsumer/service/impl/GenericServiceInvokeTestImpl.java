@@ -33,7 +33,7 @@ public class GenericServiceInvokeTestImpl implements GenericServiceInvokeService
     // 指定interfaeName而不指定genric=true,且变量类型为GenricService,则报错：java.lang.IllegalArgumentException: Can not set com.alibaba.dubbo.rpc.service.GenericService field com.zj.test.dubboconsumer.service.impl.GenericServiceInvokeTestImpl.dubboProviderTestService to com.alibaba.dubbo.common.bytecode.proxy0
     // 指定interaceName而不指定generic=true,且变量类型为接口，不会报错，调用正常。
     // GenericService,则generic=true、interfaceName也必须指定。
-    @Reference(generic=true,interfaceName = "com.zj.test.dobboprovider.service.DubboProviderTestService",timeout = -1, retries = 1, check = false,loadbalance = "RoundRobin,",group="gp2")
+    @Reference(generic=true,interfaceName = "com.zj.test.dobboprovider.service.DubboProviderTestService",timeout = -1, retries = 1, check = false,loadbalance = "roundrobin",group="gp2")
     GenericService dubboProviderTestService;
 
     @Override
