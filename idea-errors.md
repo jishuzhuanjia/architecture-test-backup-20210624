@@ -23,3 +23,9 @@
 # 3.解决Module名和pom中artifactId不一致
     删除Module下的iml文件 -> Maven reimport即可
     备注：被导入的Maven Module下会生成iml文件。
+    
+# 4.maven导入依赖不成功，可以尝试如下的操作
+    1.maven窗口中可以尝试对导入依赖失败的module单独进行reimport。
+    
+# 5.编译报错：Error:(74, 120) java: -source 1.5 中不支持 diamond 运算符(请使用 -source 7 或更高版本以启用 diamond 运算符)
+    Build,Execution,Deployment->..->Java Compiler -> Override compile parameters per-module中的参数移除掉. 
