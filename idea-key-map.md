@@ -60,6 +60,10 @@ Shift+Shift                             查找所有
 
 Alt + Shift + C                         查看IDEA文件修改记录(Recent Changes)
 
+## 记忆书签
+ctrl + F11                              为光标位置添加/移除书签,为其分配数字或字母
+ctrl + 数字/字母                          快速跳转到指定的标签位置
+
 ## 4.重构
 Shift + F6                              重命名 (包、类、方法、变量、甚至注释等)✔
 Ctrl + Alt + Shift + T                  弹出重构菜单✔

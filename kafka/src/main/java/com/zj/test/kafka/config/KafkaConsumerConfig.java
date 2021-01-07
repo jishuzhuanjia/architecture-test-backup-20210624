@@ -65,9 +65,9 @@ public class KafkaConsumerConfig {
      *
      *
      *
-     * 【java代码中的写法】
+     * 【java代码中如何合理使用@KakfaListener】
      * 1.每个@KakfaListener执行一个特定的任务，并指定concurrency参数。
-     * 2.@KafkaListener添加groupId参数后，似乎进行了分区一般，会出现消息只能被相同groupId中的某一个@KafkaListener消费。
+     * 2.对多个@KafkaListener添加groupId参数后，这几个@KafkaListener将作为一个消费者集群，消息会被某个@KafkaListener消费。
      */
     @Bean(name = "simpleFactory")
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Integer, String>> kafkaListenerContainerFactory() {
@@ -75,6 +75,7 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(consumerFactory());
         factory.setConcurrency(3);
         factory.getContainerProperties().setPollTimeout(3000);
+        /** 经测试, 这里的groupId不会影响@KafkaListener的 groupId,不知道此处设置factory的groupId有什么用。 */
         factory.getContainerProperties().setGroupId("lsp001");
         //当使用手动提交时必须设置ackMode为MANUAL,否则会报错No Acknowledgment available as an argument, the listener container must have a MANUAL AckMode to populate the Acknowledgment.
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);

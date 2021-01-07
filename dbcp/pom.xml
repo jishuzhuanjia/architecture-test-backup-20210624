@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>datasource-commons-dbcp</artifactId>
+    <artifactId>dbcp</artifactId>
 
     <dependencies>
         <!--dbcp连接池依赖

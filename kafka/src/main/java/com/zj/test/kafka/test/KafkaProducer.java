@@ -9,23 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-/**
- * 类功能描述：<br>
- * <ul>
- * <li>类功能描述1<br>
- * <li>类功能描述2<br>
- * <li>类功能描述3<br>
- * </ul>
- * 修改记录：<br>
- * <ul>
- * <li>修改记录描述1<br>
- * <li>修改记录描述2<br>
- * <li>修改记录描述3<br>
- * </ul>
- *
- * @author xuefl
- * @version 5.0 since 2020-01-13
- */
+/***/
 @Component
 @Slf4j
 public class KafkaProducer {
