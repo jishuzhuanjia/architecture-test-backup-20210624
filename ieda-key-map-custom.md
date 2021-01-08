@@ -9,10 +9,11 @@ alt + shift + 3     新建模块(Module)
 alt + 5             reimport某个Module(这个命令需要Maven窗口激活并选中某个Module才有效)
 alt + shift + 5     reimport所有Module(可以在任何情况下执行)
 
-##
+## 跳转
 Ctrl  + Shift + Backspace           回到上一个光标位置，可能不会切换文件。
-
 
 ## Git
 pull                alt + shift + 7     
-fetch               alt + shift + 8           
+fetch               alt + shift + 8     
+Show History        alt + shift + 0     查看文件的所有历史版本
+      
