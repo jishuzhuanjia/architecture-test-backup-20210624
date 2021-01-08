@@ -59,11 +59,26 @@
 
 	<!--3.choose + when 测试
 	常常用where包围choose内容，以避免and多余导致的语法错误。
-	choose相当于swtich,when相当于case,otherwise相当于default
+
+	choose常用标签组合使用(相当于java中的switch,case,default):
+	<choose>
+		<when>
+		</when>
+		<when>
+		</when>
+		...
+		<otherwise>
+		</otherwise>
+	</choose>
+
+	标签意义:
+	choose相当于switch
+	when相当于case
+	otherwise相当于default
 
 	注：
-	when按照书写的顺序进行判断
-	otherwise标签必须写在when的后面，且至多只有一个。
+    1.多个when标签按照书写顺序进行判断,当test为true时不会继续判断后面的when标签。
+	2.otherwise标签必须写在所有when标签的后面，且至多只有一个。
 
 	测试场景：
 	通过bId或book_name查找书籍,如果bId和book_name参数同时存在，则通过bId查询,
