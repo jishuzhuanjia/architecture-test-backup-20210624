@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zj.test.mybatis.mapper.selectKey_test.UserMapper">
+    <sql id="table_name">`user`</sql>
+
+    <insert id="insertUser" parameterType="com.tgd.mybatis.po.UserPO">
+        insert into <include refid="table_name"/>(`username`,`password`,`age`)
+        values(#{user.username},#{user.password},#{user.age})
+    </insert>
+
+    <!--<selectKey>使用示范-->
+    <insert id="insertUser2">
+        insert into <include refid="table_name"/>(`username`,`password`,`age`)
+        values(#{user.username},#{user.password},#{user.age})
+        <selectKey resultType="Integer" keyProperty="user.uId" keyColumn="u_id" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+    </insert>
+</mapper>

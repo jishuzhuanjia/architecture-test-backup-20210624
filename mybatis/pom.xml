@@ -44,6 +44,14 @@
 
     <build>
         <resources>
+            <resource>
+                <directory>src/main/java/</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
             <!--保留resources中xml文件(包含mybatis mapper xml文件)-->
             <resource>
                 <directory>src/main/resources/</directory>
