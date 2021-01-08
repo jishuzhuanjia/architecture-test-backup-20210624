@@ -11,3 +11,8 @@ alt + shift + 5     reimport所有Module(可以在任何情况下执行)
 
 ##
 Ctrl  + Shift + Backspace           回到上一个光标位置，可能不会切换文件。
+
+
+## Git
+pull                alt + shift + 7     
+fetch               alt + shift + 8           
