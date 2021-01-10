@@ -58,12 +58,10 @@ public class KafkaConsumerConfig {
      * C1-3 将消费 2, 5, 8 分区
      *
      * 注意：
-     * 1、一个分区只能被一个消费者消费，但一个消费者可以消费多个分区的数据
+     * 1、一个分区只能被一个消费者线程消费。
      * 2、新的api中预留了自己实现分配策略的可能性class org.apache.kafka.clients.consumer.RangeAssignor
      *
      * 三、分区修改./kafka-topics.sh --alter --topic topic1 --zookeeper zkip:2181/kafka --partitions 6
-     *
-     *
      *
      * 【java代码中如何合理使用@KakfaListener】
      * 1.每个@KakfaListener执行一个特定的任务，并指定concurrency参数。
@@ -121,13 +119,14 @@ public class KafkaConsumerConfig {
 
         经检测(zj)：
         当auto.offset.reset=earliest时。
-        1.想要AUTO_OFFSET_RESET_CONFIG生效，@KafkaListener中groupId需要和group.id相同。
-        2.相同groupId对每个分区只能消费一次,因此再次消费时earliest不能从头消费，但是将groupId修改为一个未使用过的新值可以从头消费。
+        1.@KafkaListener必须指定groupId才有效。
+        2.已经消费过的groupId在重启消费者后不会从头开始消费。
+        3.新增的groupId会从头开始消费。
 
         当auto.offset.reset=latest
         1.就算修改为新的groupId也不会从头消费,只会消费新消息。
         */
-        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         // 设置group id
         // 只要不更改group.id，每次重新消费kafka，都是从上次消费结束的地方继续开始，不论"auto.offset.reset”属性设置的是什么 - 待验证

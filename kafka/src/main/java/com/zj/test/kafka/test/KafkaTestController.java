@@ -24,4 +24,16 @@ public class KafkaTestController {
         kafkaProducer.send("this is a kafka message!");
         return "ok";
     }
+
+    @RequestMapping("send2")
+    public String send2(){
+        kafkaProducer.send2("this is a kafka message!");
+        return "ok";
+    }
+
+    @RequestMapping("send3")
+    public String send3(){
+        kafkaProducer.send3("this is a kafka message for ConsumerRecord test!");
+        return "ok";
+    }
 }
