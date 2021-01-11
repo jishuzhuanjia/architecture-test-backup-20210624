@@ -27,6 +27,7 @@
         <module>dbcp</module>
         <module>mybatis</module>
         <module>kafka</module>
+        <module>mybatis-plus</module>
     </modules>
     <!--end-->
 

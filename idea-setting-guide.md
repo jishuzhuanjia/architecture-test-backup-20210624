@@ -7,3 +7,6 @@ C:\Users\Administrator\AppData\Roaming\JetBrains\IntelliJIdea2020.1\options\ui.i
 添加
 <option name="FONT_SIZE" value="14" />
 恢复正常。
+
+3.设置Settings repository后import settings和export settings消失的解决办法
+Settings -> Tools-> Settings Repository -> Delete
