@@ -2,7 +2,9 @@ package test.frame.json.fastjson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 import com.alibaba.fastjson.JSON;
@@ -53,7 +55,7 @@ public class FastJsonTest {
         java.lang.ClassCastException: com.alibaba.fastjson.JSONArray cannot be cast to com.alibaba.fastjson.JSONObject
          * */
         JSONObject userJSONObject = (JSONObject) JSON.parse(userJson);
-        TestHelper.println("JSON.parse({\"username\":\"zhoujian\",\"age\":25})",userJSONObject);
+        TestHelper.println("JSON.parse({\"username\":\"zhoujian\",\"age\":25})", userJSONObject);
 
         /*
         1.2.JSON.parseObject(..) 和JSON.parseArray(..)系列方法
@@ -64,8 +66,8 @@ public class FastJsonTest {
         //获取属性的方法,这些get开头的方法很容易控制返回类型，如返回int或double
         Object username = userJSONObject.get("username");
         Integer age = userJSONObject.getInteger("age");
-        TestHelper.println("userJSONObject.get(\"username\")",username);
-        TestHelper.println("userJSONObject.getInteger(\"age\")",age);
+        TestHelper.println("userJSONObject.get(\"username\")", username);
+        TestHelper.println("userJSONObject.getInteger(\"age\")", age);
 
         // 反序列化数组测试
         String arr = "[1,\"zhoujian\"]";
@@ -76,9 +78,9 @@ public class FastJsonTest {
 
         // 测试数组元素的类型
         // array.toArray()元素类型: class java.lang.Integer
-        TestHelper.println("array.toArray()[0]元素类型",objects[0].getClass());
+        TestHelper.println("array.toArray()[0]元素类型", objects[0].getClass());
         // array.toArray()[1]元素类型: class java.lang.String
-        TestHelper.println("array.toArray()[1]元素类型",objects[1].getClass());
+        TestHelper.println("array.toArray()[1]元素类型", objects[1].getClass());
 
         // JSONArray也可以像List一样添加元素
         array.add("name");
@@ -119,9 +121,9 @@ public class FastJsonTest {
          * 默认情况下，null值不会被序列化,""值会序列化。
          * */
         userObject.put("emptyField", "");
-        userObject.put("nullField",null);
+        userObject.put("nullField", null);
         // {"age":25,"emptyField":"","username":"zhoujian"} -> 因为默认序列化null值会被值过滤器过滤掉。
-       TestHelper.println(userObject);
+        TestHelper.println(userObject);
 
         // DEMO: 将属性和值的""用''代替
         // UseSingleQuotes：属性和值的""被替换成''
@@ -172,5 +174,57 @@ public class FastJsonTest {
         // {"age":25,"emptyField":"","emptyList":[],"list":["1","2"],"username":"zhoujian"}
         System.out.println(JSONObject.toJSONString(userObject));
 
+    }
+
+    /**
+     * 3.测试: fastjson时间日期序列化控制
+     *
+     * 【方式】
+     * 1.使用@JSONField + JSON.toJSONString(..)控制时间日期的序列化。
+     * 2.对属性统一处理:
+     * JSON.toJSONStringWithDateFormat(..)
+     * 3.修改JSON默认序列化格式,使用规则SerializerFeature.WriteDateUseDateFormat进行控制。
+     */
+    @Test
+    public void dateTimeToJson() {
+
+        /* 1.fastjson JSONObject默认是如何序列化Date对象的?
+
+        【结论】
+        序列化成时间戳(ms)
+         */
+        JSONObject object = new JSONObject();
+        object.put("username", "xiaocaiji");
+        object.put("lastLoginTime", new Date());
+
+        //object: {"lastLoginTime":1610344260013,"username":"xiaocaiji"}
+        TestHelper.println("object", object);
+
+        /*
+        2.控制时间日期的序列化
+        2.1.使用@JSONField控制时间日期的序列化
+
+        注: 网上查到新版本使用JSONFormat注解,我的是旧版本,使用@JSONField
+
+        【测试过程遇到的问题】
+        1.@JSONField + JSON.toJSON()无效
+        解决:
+        JSON.toJSON()默认是序列化日期时间为时间戳, 所以@JSONField注解无效。
+        要使用JSON.toJSONString(String),问题就解决了。
+        */
+        User user = new User();
+        user.setUsername("xiaocaiya");
+        user.setPassword("123456");
+        user.setLastLoginTime(new Date());
+        // JSON.toJSON(String)无效,输出为时间戳,使用toJSONSting问题解决
+        TestHelper.println(JSON.toJSONString(user));
+
+        // 2.2.对属性统一处理
+        // 需要注意的是: 如果属性有@JSONField注解,则最终序列化格式由@JSONField控制
+        TestHelper.println(JSON.toJSONStringWithDateFormat(user, "yyyy-MM-dd HH:mm:ss"));
+
+        // 2.3.修改JSON默认序列化,使用规则进行控制
+        JSONObject.DEFFAULT_DATE_FORMAT = "yyyy-MM-dd";
+        TestHelper.println(JSON.toJSONString(user, SerializerFeature.WriteDateUseDateFormat));
     }
 }
