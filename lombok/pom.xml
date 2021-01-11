@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <!--Maven窗口显示名-->
-    <name>lombok</name>
     <artifactId>lombok</artifactId>
+    <name>lombok</name>
 
     <dependencies>
         <dependency>

@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis</artifactId>
+    <name>mybatis</name>
 
     <dependencies>
         <!--PageHelper分页插件-->

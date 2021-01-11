@@ -26,7 +26,7 @@ public class GsonTest {
 	/**
 	 * 1.Object -> JSON字符串
 	 * */
-	//@Test /* @Test要求方法public非静态  */
+	@Test /* @Test要求方法public非静态  */
 	public void Object2JSON() {
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 		User testUser = new User();

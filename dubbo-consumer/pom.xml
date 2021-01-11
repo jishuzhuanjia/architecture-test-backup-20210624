@@ -9,9 +9,10 @@
         <!--<relativePath/>--> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zj.test</groupId>
-    <artifactId>rpc-alibaba-dubbo-consumer</artifactId>
+    <artifactId>dubbo-consumer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dubbo-consumer</name>
+
     <description>dobbo-customer</description>
 
     <properties>
@@ -71,7 +72,7 @@
         </dependency>-->
         <dependency>
             <groupId>com.zj.test</groupId>
-            <artifactId>rpc-alibaba-dubbo-provider</artifactId>
+            <artifactId>dubbo-provider</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

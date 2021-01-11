@@ -9,6 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>debuge-run</artifactId>
+    <name>debuge-run</name>
+
     <dependencies>
         <dependency>
             <groupId>com.zj.util</groupId>

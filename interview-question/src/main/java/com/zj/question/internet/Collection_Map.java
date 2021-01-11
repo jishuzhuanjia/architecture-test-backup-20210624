@@ -9,7 +9,7 @@ package com.zj.question.internet;
  * @finished-time:
  */
 public class Collection_Map {
-    /*
+    /**
     ################################ 1.Java集合框架面试题 #####################################
 
     1.HashMap 和 HashTable 的区别？
