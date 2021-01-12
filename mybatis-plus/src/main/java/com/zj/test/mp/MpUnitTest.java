@@ -389,9 +389,8 @@ public class MpUnitTest {
         TestHelper.println("分页查询Page(1,2)查询数据条数",teachers.size());
         TestHelper.println("分页查询Page(1,2)查询到的数据",teachers);
 
-
         /*
-        1.测试: 查询结果封装到IPage中
+        2.测试: 查询结果封装到IPage中
 
         结果: 成功
 
