@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Data
 // 指定表名
 @TableName("teacher")
-public class LogicTeacher implements Serializable {
+public class LogicDeleteTeacher implements Serializable {
 
     @TableId(type = IdType.AUTO)
     Integer id;

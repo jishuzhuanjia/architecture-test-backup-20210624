@@ -2,6 +2,7 @@ package com.zj.test.mp.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.zj.test.mp.enums.SexEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -21,4 +22,6 @@ public class Teacher implements Serializable {
     Integer id;
     String name;
     Integer age;
+
+    SexEnum sex;
 }

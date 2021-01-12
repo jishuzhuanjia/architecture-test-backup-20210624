@@ -4,10 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.zj.test.mp.mapper.LogicTeacherMapper;
+import com.zj.test.mp.enums.SexEnum;
+import com.zj.test.mp.mapper.LogicDeleteTeacherMapper;
 import com.zj.test.mp.mapper.PageMapper;
 import com.zj.test.mp.mapper.TeacherMapper;
-import com.zj.test.mp.po.LogicTeacher;
+import com.zj.test.mp.po.LogicDeleteTeacher;
 import com.zj.test.mp.po.Teacher;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
@@ -416,22 +417,22 @@ public class MpUnitTest {
      *
      */
     @Autowired
-    LogicTeacherMapper logicTeacherMapper;
+    LogicDeleteTeacherMapper logicDeleteTeacherMapper;
     @Test
     public void logicDeleteTest(){
 
-        LogicTeacher logicTeacher = new LogicTeacher();
-        logicTeacher.setName("teacher-for-logic-delete");
-        logicTeacher.setAge(111);
-        logicTeacher.setDeleted(null);
+        LogicDeleteTeacher logicDeleteTeacher = new LogicDeleteTeacher();
+        logicDeleteTeacher.setName("teacher-for-logic-delete");
+        logicDeleteTeacher.setAge(111);
+        logicDeleteTeacher.setDeleted(null);
 
         // 插入一条数据用于逻辑删除
         // 注意: mybatis-plus不会为数据库表添加逻辑删除字段
-        logicTeacherMapper.insert(logicTeacher);
+        logicDeleteTeacherMapper.insert(logicDeleteTeacher);
 
         // 尝试逻辑删除
         // 结果:成功,表中flag属性由0->1
-        logicTeacherMapper.deleteById(2765846);
+        logicDeleteTeacherMapper.deleteById(2765846);
     }
 
     /**
@@ -458,9 +459,9 @@ public class MpUnitTest {
     @Test
     public void logicDeleteSelect(){
         // 尝试查询,观察flag=1的数据是否被返回
-        LogicTeacher condition = new LogicTeacher();
+        LogicDeleteTeacher condition = new LogicDeleteTeacher();
         condition.setName("teacher-for-logic-delete");
-        List<LogicTeacher> selectList = logicTeacherMapper.selectList(new QueryWrapper<LogicTeacher>()
+        List<LogicDeleteTeacher> selectList = logicDeleteTeacherMapper.selectList(new QueryWrapper<LogicDeleteTeacher>()
                 .eq("name", "teacher-for-logic-delete"));
         TestHelper.println("查询到的数据条数",selectList.size());
         TestHelper.println("查询到的数据:\n" + selectList);
@@ -487,13 +488,43 @@ public class MpUnitTest {
      */
     @Test
     public void logicDeleteUpdate(){
-        LogicTeacher logicTeacher = new LogicTeacher();
-        logicTeacher.setName("new-name-for-logic-delete");
-        int affectRows = logicTeacherMapper.update(logicTeacher, new UpdateWrapper<LogicTeacher>()
+        LogicDeleteTeacher logicDeleteTeacher = new LogicDeleteTeacher();
+        logicDeleteTeacher.setName("new-name-for-logic-delete");
+        int affectRows = logicDeleteTeacherMapper.update(logicDeleteTeacher, new UpdateWrapper<LogicDeleteTeacher>()
                 .eq("name", "teacher-for-logic-delete"));
 
         TestHelper.println("更新数据条数",affectRows);
     }
 
+    /**
+     * 6.测试: 插入通用枚举
+     *
+     * 【测试输出】
+     *
+     * 数据库插入了数据:
+     * 2765852	小明	13		0
+     * 2765854	小红	13		1
+     *
+     * 【结论】
+     * 1.注意，如果没有添加@EnumValue注解，则会插入枚举常量,在这里指的是MALE/FEMALE.
+     */
+    @Test
+    public void insertCommonEnum(){
+        Teacher insertTeacher = new Teacher();
+        insertTeacher.setName("小明");
+        insertTeacher.setAge(13);
+        insertTeacher.setSex(SexEnum.MALE);
+        int affectRows = teacherMapper.insert(insertTeacher);
+        TestHelper.println("插入数据条数",affectRows);
 
+        Teacher insertTeacher2 = new Teacher();
+        insertTeacher.setName("小红");
+        insertTeacher.setAge(13);
+        insertTeacher.setSex(SexEnum.FEMALE);
+        int affectRows2 = teacherMapper.insert(insertTeacher);
+        TestHelper.println("插入数据条数",affectRows2);
+
+
+
+    }
 }

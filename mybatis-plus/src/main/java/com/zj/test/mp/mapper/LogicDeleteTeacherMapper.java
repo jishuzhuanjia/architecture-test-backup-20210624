@@ -1,8 +1,7 @@
 package com.zj.test.mp.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zj.test.mp.po.LogicTeacher;
-import com.zj.test.mp.po.Teacher;
+import com.zj.test.mp.po.LogicDeleteTeacher;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -12,5 +11,5 @@ import com.zj.test.mp.po.Teacher;
  * @finished: false
  * @finished-time:
  */
-public interface LogicTeacherMapper extends BaseMapper<LogicTeacher> {
+public interface LogicDeleteTeacherMapper extends BaseMapper<LogicDeleteTeacher> {
 }
