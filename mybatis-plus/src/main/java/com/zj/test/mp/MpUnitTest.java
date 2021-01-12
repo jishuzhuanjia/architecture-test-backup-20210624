@@ -6,14 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zj.test.mp.mapper.TeacherMapper;
 import com.zj.test.mp.po.Teacher;
 import com.zj.test.util.TestHelper;
-import org.apache.ibatis.annotations.Param;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.temporal.TemporalAdjuster;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -174,7 +172,7 @@ public class MpUnitTest {
         // 只删除年纪22岁的老师记录
         deleteMap.put("age", 22);
         int deleteRow = teacherMapper.deleteByMap(deleteMap);
-        TestHelper.println("teacherMapper.deleteByMap(deleteMap)",deleteRow);
+        TestHelper.println("teacherMapper.deleteByMap(deleteMap)", deleteRow);
 
         /*
         4.测试: 根据条件删除- 更加复杂的条件判断
@@ -186,11 +184,10 @@ public class MpUnitTest {
         // 这里使用QueryWrapper和UpdateWrapper都可以,没有看出区别,这个放在后面讨论
         // QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
         UpdateWrapper<Teacher> queryWrapper = new UpdateWrapper<>();
-        queryWrapper.eq("name","teacher for delete").eq("age",22);
+        queryWrapper.eq("name", "teacher for delete").eq("age", 22);
         int delete = teacherMapper.delete(queryWrapper);
-        TestHelper.println("teacherMapper.delete(queryWrapper)",delete);
+        TestHelper.println("teacherMapper.delete(queryWrapper)", delete);
     }
-
 
 
     /**
@@ -205,7 +202,7 @@ public class MpUnitTest {
      *
      */
     @Test
-    public void update(){
+    public void update() {
         /*
         1.demo: 根据主键修改指定的记录
         int updateById(@Param("et") T entity);
@@ -216,7 +213,7 @@ public class MpUnitTest {
         teacher.setId(2765820);
         teacher.setName("update-teacher-name");
         int i = teacherMapper.updateById(teacher);
-        TestHelper.println("teacherMapper.updateById(teacher)",i);
+        TestHelper.println("teacherMapper.updateById(teacher)", i);
 
         /*
         2.demo: 根据条件批量更新
@@ -230,10 +227,10 @@ public class MpUnitTest {
         // UpdateWrapper也可以
         QueryWrapper<Teacher> updateWrapper = new QueryWrapper<>();
         // 经测试, 主键也可以作为Wrapper的条件。
-        updateWrapper.eq("name","update-teacher-name4").eq("age",21)/*.eq("id",2765820)*/;
+        updateWrapper.eq("name", "update-teacher-name4").eq("age", 21)/*.eq("id",2765820)*/;
 
         int update = teacherMapper.update(updateTeacher, updateWrapper);
-        TestHelper.println("teacherMapper.update(updateTeacher, updateWrapper)",update);
+        TestHelper.println("teacherMapper.update(updateTeacher, updateWrapper)", update);
     }
 
     /**
@@ -270,7 +267,7 @@ public class MpUnitTest {
      *
      */
     @Test
-    public void select(){
+    public void select() {
         QueryWrapper<Teacher> queryWrapper = new QueryWrapper<Teacher>()
                 .eq("name", "update-teacher-name5");
 
@@ -279,9 +276,9 @@ public class MpUnitTest {
         1.Integer selectCount(Wrapper<T> queryWrapper);
          */
         Integer integer = teacherMapper.selectCount(queryWrapper);
-        TestHelper.println("name=update-teacher-name5的数据条数",integer);
+        TestHelper.println("name=update-teacher-name5的数据条数", integer);
 
-        Page queryPage =new Page(1,3);
+        Page queryPage = new Page(1, 3);
 
         /*
         2.条件进行分页查询,返回结果封装在Page中,数据用实体类封装
@@ -293,35 +290,35 @@ public class MpUnitTest {
         <E extends IPage<Map<String, Object>>> E selectMapsPage(E page,Wrapper<T> queryWrapper);
          */
         Page page1 = teacherMapper.selectPage(queryPage, queryWrapper);
-        TestHelper.println("teacherMapper.selectPage(queryPage, queryWrapper)",page1.getRecords());
+        TestHelper.println("teacherMapper.selectPage(queryPage, queryWrapper)", page1.getRecords());
 
         /*
         3.根据条件全量查询数据，结果封装在List中
         List<T> selectList(Wrapper<T> queryWrapper);
          */
         List<Teacher> teachers = teacherMapper.selectList(queryWrapper);
-        TestHelper.println("teacherMapper.selectList(queryWrapper)共查询" + teachers.size()+"条数据",teachers);
+        TestHelper.println("teacherMapper.selectList(queryWrapper)共查询" + teachers.size() + "条数据", teachers);
 
         /*
         4.根据ids批量获取, 结果封装在List中
         List<T> selectBatchIds(Collection<? extends Serializable> idList);
          */
-        TestHelper.println("teacherMapper.selectBatchIds(Arrays.asList(2765823,2765826))",teacherMapper.selectBatchIds(Arrays.asList(2765823,2765826)));
+        TestHelper.println("teacherMapper.selectBatchIds(Arrays.asList(2765823,2765826))", teacherMapper.selectBatchIds(Arrays.asList(2765823, 2765826)));
 
         /*
         5.通过id查询单条记录
         T selectById(Serializable id);
         返回值: 如果对应主键的数据不存在,返回null,如果存在则返回实体对象。
          */
-        TestHelper.println("teacherMapper.selectById(2765823)",teacherMapper.selectById(276582222));
+        TestHelper.println("teacherMapper.selectById(2765823)", teacherMapper.selectById(276582222));
 
         /*
         6.多条件全量查询,条件用Map<String,Object>参数传递,结果封装在List中
         List<T> selectByMap(@Param("cm") Map<String, Object> columnMap);
          */
-        Map<String,Object> selectByMap = new HashMap<String,Object>();
-        selectByMap.put("name","update-teacher-name5");
-        TestHelper.println("teacherMapper.selectByMap()",teacherMapper.selectByMap(selectByMap));
+        Map<String, Object> selectByMap = new HashMap<String, Object>();
+        selectByMap.put("name", "update-teacher-name5");
+        TestHelper.println("teacherMapper.selectByMap()", teacherMapper.selectByMap(selectByMap));
 
         /*
         7.根据条件批量查询,返回数据的主键集合
@@ -330,8 +327,8 @@ public class MpUnitTest {
         注意:
         1.返回的数据是主键集合,数据引用类型是Object,实际对象类型为Long
          */
-        TestHelper.println("teacherMapper.selectObjs(queryWrapper)",teacherMapper.selectObjs(queryWrapper));
-        TestHelper.println("teacherMapper.selectObjs(queryWrapper).get(0).class",teacherMapper.selectObjs(queryWrapper).get(0).getClass());
+        TestHelper.println("teacherMapper.selectObjs(queryWrapper)", teacherMapper.selectObjs(queryWrapper));
+        TestHelper.println("teacherMapper.selectObjs(queryWrapper).get(0).class", teacherMapper.selectObjs(queryWrapper).get(0).getClass());
 
         /*
         8.根据条件查询一条数据
@@ -343,6 +340,6 @@ public class MpUnitTest {
             nested exception is org.apache.ibatis.exceptions.TooManyResultsException:
                 Expected one result (or null) to be returned by selectOne(), but found: 7
          */
-        TestHelper.println("teacherMapper.selectOne(queryWrapper)",teacherMapper.selectOne(queryWrapper));
+        TestHelper.println("teacherMapper.selectOne(queryWrapper)", teacherMapper.selectOne(queryWrapper));
     }
 }
