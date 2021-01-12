@@ -278,7 +278,9 @@ public class MpUnitTest {
         Integer integer = teacherMapper.selectCount(queryWrapper);
         TestHelper.println("name=update-teacher-name5的数据条数", integer);
 
-        Page queryPage = new Page(1, 3);
+        // current: 从1开始,1为第一页,<=0当做1来处理
+        // 相当于Page queryPage = new Page(1, 3)
+        Page queryPage = new Page(-333, 3);
 
         /*
         2.条件进行分页查询,返回结果封装在Page中,数据用实体类封装
@@ -340,6 +342,6 @@ public class MpUnitTest {
             nested exception is org.apache.ibatis.exceptions.TooManyResultsException:
                 Expected one result (or null) to be returned by selectOne(), but found: 7
          */
-        TestHelper.println("teacherMapper.selectOne(queryWrapper)", teacherMapper.selectOne(queryWrapper));
+        // TestHelper.println("teacherMapper.selectOne(queryWrapper)", teacherMapper.selectOne(queryWrapper));
     }
 }
