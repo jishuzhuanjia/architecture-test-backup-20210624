@@ -37,11 +37,7 @@ public class Teacher implements Serializable {
      * 并且要为字段添加@TableField(typeHandler = JacksonTypeHandler.class)或
      * @TableField(typeHandler = FastjsonTypeHandler.class)
      *
-     *
-     * 而我在测试的时候,上面的注解都没有添加,但是测试成功返回了数据。可能是我的mybatis-plus版本比较新
-     * 的缘故,如果使用较低版本的mybatis-plus时,应考虑到这个问题。
-     *
-     * 我在测试的时候没有添加,会自动完成
+     * 而我在测试的时候,字段类型处理器的作用没有表现出来,留待以后测试。
      */
-    String teachACourse;
+    String teachCourse;
 }
