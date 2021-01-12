@@ -21,8 +21,7 @@ public class User {
 
     String username;
     String password;
-
-    //@JsonFormat(pattern = "yyyy-MM-dd")-没有效果
+    //@JsonFormat(pattern = "yyyy-MM-dd") // zj,没有效果
     @JSONField(format="yyyy-MM-dd")
     Date lastLoginTime;
 }

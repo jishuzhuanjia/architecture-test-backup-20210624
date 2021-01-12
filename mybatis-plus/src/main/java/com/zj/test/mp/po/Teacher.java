@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2021/1/11 16:19
@@ -13,7 +15,7 @@ import lombok.Data;
  * @finished-time:
  */
 @Data
-public class Teacher {
+public class Teacher implements Serializable {
 
     @TableId(type = IdType.AUTO)
     Integer id;

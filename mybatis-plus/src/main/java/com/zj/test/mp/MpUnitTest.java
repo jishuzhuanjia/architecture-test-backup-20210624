@@ -1,15 +1,23 @@
 package com.zj.test.mp;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zj.test.mp.mapper.TeacherMapper;
 import com.zj.test.mp.po.Teacher;
 import com.zj.test.util.TestHelper;
+import org.apache.ibatis.annotations.Param;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.temporal.TemporalAdjuster;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -56,19 +64,27 @@ public class MpUnitTest {
 
 
     /**
-     * 2.测试: Mapper CRUD接口方法
-     * insert(..)
-     * delete(..)
-     * update(..)
-     * select(..)
+     * 2.Mapper CRUD接口方法测试
      *
-     * 【测试结果】
+     * 2.1.demo: 增,有以下方法
+     * int insert(T entity)
      *
-     * 【结论】
+     * 【注意】
+     * 1.默认情况下,持久化对象主键id需要是long/Long类型,否则会报错:
+     * 原因是mybatis-plus默认的主键生成策略会为我们生成long类型的主键。
      *
+     * 2.如果需要使用数据库默认的主键自增策略,则为主键属性添加@TableId(type =IdType.AUTO)即可。
+     *
+     * 3.mybatis-plus默认的序列化/反序列化映射:
+     * 3.1.将与表列名相同的Entity类属性进行序列化/反序列化。
+     * 3.2.序列化/反序列化的表名由类名指定。
+     *
+     * 【缺点】
+     * 1.只有一个insert方法,每次只能插入一条。批量插入数据时会影响系统性能。
+     * 2.当实体对象所有属性都为null时,会导致语法错误异常: SQLSyntaxErrorException...
      */
     @Test
-    public void test2(){
+    public void insert() {
 
         /*
         1.insert测试: int insert(T entity)
@@ -95,5 +111,238 @@ public class MpUnitTest {
         // 记录一个小失误: 在将表主键id改为bigint后,使用@TableId(type =IdType.AUTO)无效，仍然会使用很长的long值作为主键,原因就是表AUTO_INCREMENT的值因为long类型的插入而变得很大,解决方法就是将AUTO_INCREMENT改为正常值就好了。
          */
         teacherMapper.insert(insertTeacher);
+    }
+
+
+    /**
+     * 2.2.demo: 删除操作,有以下方法
+     * int deleteById(Serializable id)      根据主键删除一条记录,想要使用该方法,实体类必须实现序列化接口
+     *
+     */
+    @Test
+    public void delete() {
+        Teacher deleteTeacher = new Teacher();
+        deleteTeacher.setId(2765815);
+        /*
+        1.测试: 根据主键删除记录
+        int deleteById(Serializable id)
+        会根据实体类中与表主键字段相同的属性值，删除表中的数据。
+
+        缺点: 一次只能删除一条,在批量删除大量数据的时候返回调用该方法会影响系统性能。
+
+        返回值: 如果存在指定的记录并删除,返回1, 如果没有指定的记录,返回0。
+
+        注意: 想要使用该方法,实体类必须实现序列化接口。
+         */
+        int row1 = teacherMapper.deleteById(deleteTeacher);
+        TestHelper.println("teacherMapper.deleteById(deleteTeacher)", row1);
+
+        /*
+        2.测试: 根据主键批量删除
+        int deleteBatchIds(@Param("coll") Collection<? extends Serializable> idList);
+
+        优点: 批量的。
+        */
+        // Arrays.asList: 一种快速的写法,不用new多个实体类对象
+        int row2 = teacherMapper.deleteBatchIds(Arrays.asList(2765816, 2765817));
+        TestHelper.println("teacherMapper.deleteById(deleteTeacher)", row2);
+
+        /*
+        3.测试: 多条件批量删除
+        int deleteByMap(@Param("cm") Map<String, Object> columnMap);
+
+        返回值: 返回根据条件删除的记录数。
+         */
+        // 创建几条数据用于删除
+        Teacher deleteTeacher1 = new Teacher();
+        Teacher deleteTeacher2 = new Teacher();
+        Teacher deleteTeacher3 = new Teacher();
+
+        deleteTeacher1.setName("teacher for delete");
+        deleteTeacher1.setAge(22);
+        deleteTeacher2.setName("teacher for delete");
+        deleteTeacher2.setAge(22);
+        deleteTeacher3.setName("teacher for delete");
+        deleteTeacher3.setAge(21);
+
+        teacherMapper.insert(deleteTeacher1);
+        teacherMapper.insert(deleteTeacher2);
+        teacherMapper.insert(deleteTeacher3);
+
+        Map<String, Object> deleteMap = new HashMap<String, Object>();
+        deleteMap.put("name", "teacher for delete");
+        // 只删除年纪22岁的老师记录
+        deleteMap.put("age", 22);
+        int deleteRow = teacherMapper.deleteByMap(deleteMap);
+        TestHelper.println("teacherMapper.deleteByMap(deleteMap)",deleteRow);
+
+        /*
+        4.测试: 根据条件删除- 更加复杂的条件判断
+         */
+        teacherMapper.insert(deleteTeacher1);
+        teacherMapper.insert(deleteTeacher2);
+        teacherMapper.insert(deleteTeacher3);
+
+        // 这里使用QueryWrapper和UpdateWrapper都可以,没有看出区别,这个放在后面讨论
+        // QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
+        UpdateWrapper<Teacher> queryWrapper = new UpdateWrapper<>();
+        queryWrapper.eq("name","teacher for delete").eq("age",22);
+        int delete = teacherMapper.delete(queryWrapper);
+        TestHelper.println("teacherMapper.delete(queryWrapper)",delete);
+    }
+
+
+
+    /**
+     * 2.3.demo: 更新, 有以下方法:
+     * int updateById(@Param("et") T entity);   根据主键更新单条数据
+     * int update(@Param("et") T entity, @Param("ew") Wrapper<T> updateWrapper);
+     *              根据条件批量更新，需要注意的是entity的主键不会被序列化。
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     */
+    @Test
+    public void update(){
+        /*
+        1.demo: 根据主键修改指定的记录
+        int updateById(@Param("et") T entity);
+
+        返回值:0/1
+         */
+        Teacher teacher = new Teacher();
+        teacher.setId(2765820);
+        teacher.setName("update-teacher-name");
+        int i = teacherMapper.updateById(teacher);
+        TestHelper.println("teacherMapper.updateById(teacher)",i);
+
+        /*
+        2.demo: 根据条件批量更新
+        int update(@Param("et") T entity, @Param("ew") Wrapper<T> updateWrapper);
+
+        注意: entity主键字段不会被序列化。
+         */
+        Teacher updateTeacher = new Teacher();
+        updateTeacher.setId(1111111);// 不会被序列化: 不会被更新到数据库。
+        updateTeacher.setName("update-teacher-name5");
+        // UpdateWrapper也可以
+        QueryWrapper<Teacher> updateWrapper = new QueryWrapper<>();
+        // 经测试, 主键也可以作为Wrapper的条件。
+        updateWrapper.eq("name","update-teacher-name4").eq("age",21)/*.eq("id",2765820)*/;
+
+        int update = teacherMapper.update(updateTeacher, updateWrapper);
+        TestHelper.println("teacherMapper.update(updateTeacher, updateWrapper)",update);
+    }
+
+    /**
+     * 2.4.测试: 查询数据, 方法比较多, 如下:
+     * Integer selectCount(Wrapper<T> queryWrapper);
+     * 根据条件查询数据条数
+     *
+     * <E extends IPage<T>> E selectPage(E page,Wrapper<T> queryWrapper);
+     * 条件进行分页查询,返回结果封装在Page中,数据用实体类封装
+     * <E extends IPage<Map<String, Object>>> E selectMapsPage(E page,Wrapper<T> queryWrapper);
+     * 条件进行分页查询，结果封装在Page中，且数据用Map封装。
+     *
+     * List<T> selectList(Wrapper<T> queryWrapper);
+     * 根据条件全量查询数据，结果封装在List中
+     *
+     * 根据ids批量获取, 结果封装在List中
+     * List<T> selectBatchIds(Collection<? extends Serializable> idList);
+     *
+     * T selectById(Serializable id);
+     * 通过id查询单条记录
+     *
+     * List<T> selectByMap(@Param("cm") Map<String, Object> columnMap);
+     * 多条件全量查询,条件用Map<String,Object>参数传递,结果封装在List中
+     *
+     * List<Object> selectObjs(Wrapper<T> queryWrapper);
+     * 根据条件批量查询,返回数据的主键集合
+     *
+     * T selectOne(@Param("ew") Wrapper<T> queryWrapper);
+     * 根据条件查询一条数据
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     */
+    @Test
+    public void select(){
+        QueryWrapper<Teacher> queryWrapper = new QueryWrapper<Teacher>()
+                .eq("name", "update-teacher-name5");
+
+        /*
+        根据条件统计数据量:
+        1.Integer selectCount(Wrapper<T> queryWrapper);
+         */
+        Integer integer = teacherMapper.selectCount(queryWrapper);
+        TestHelper.println("name=update-teacher-name5的数据条数",integer);
+
+        Page queryPage =new Page(1,3);
+
+        /*
+        2.条件进行分页查询,返回结果封装在Page中,数据用实体类封装
+        <E extends IPage<T>> E selectPage(E page,Wrapper<T> queryWrapper);
+
+        注: 测试时分页无效果,待后续处理
+
+        条件进行分页查询，结果封装在Page中，且数据用Map封装。
+        <E extends IPage<Map<String, Object>>> E selectMapsPage(E page,Wrapper<T> queryWrapper);
+         */
+        Page page1 = teacherMapper.selectPage(queryPage, queryWrapper);
+        TestHelper.println("teacherMapper.selectPage(queryPage, queryWrapper)",page1.getRecords());
+
+        /*
+        3.根据条件全量查询数据，结果封装在List中
+        List<T> selectList(Wrapper<T> queryWrapper);
+         */
+        List<Teacher> teachers = teacherMapper.selectList(queryWrapper);
+        TestHelper.println("teacherMapper.selectList(queryWrapper)共查询" + teachers.size()+"条数据",teachers);
+
+        /*
+        4.根据ids批量获取, 结果封装在List中
+        List<T> selectBatchIds(Collection<? extends Serializable> idList);
+         */
+        TestHelper.println("teacherMapper.selectBatchIds(Arrays.asList(2765823,2765826))",teacherMapper.selectBatchIds(Arrays.asList(2765823,2765826)));
+
+        /*
+        5.通过id查询单条记录
+        T selectById(Serializable id);
+        返回值: 如果对应主键的数据不存在,返回null,如果存在则返回实体对象。
+         */
+        TestHelper.println("teacherMapper.selectById(2765823)",teacherMapper.selectById(276582222));
+
+        /*
+        6.多条件全量查询,条件用Map<String,Object>参数传递,结果封装在List中
+        List<T> selectByMap(@Param("cm") Map<String, Object> columnMap);
+         */
+        Map<String,Object> selectByMap = new HashMap<String,Object>();
+        selectByMap.put("name","update-teacher-name5");
+        TestHelper.println("teacherMapper.selectByMap()",teacherMapper.selectByMap(selectByMap));
+
+        /*
+        7.根据条件批量查询,返回数据的主键集合
+        List<Object> selectObjs(Wrapper<T> queryWrapper);
+
+        注意:
+        1.返回的数据是主键集合,数据引用类型是Object,实际对象类型为Long
+         */
+        TestHelper.println("teacherMapper.selectObjs(queryWrapper)",teacherMapper.selectObjs(queryWrapper));
+        TestHelper.println("teacherMapper.selectObjs(queryWrapper).get(0).class",teacherMapper.selectObjs(queryWrapper).get(0).getClass());
+
+        /*
+        8.根据条件查询一条数据
+        T selectOne(@Param("ew") Wrapper<T> queryWrapper);
+
+        注意:
+        1.根据条件必须只能查到1/0条记录, 否则报错:
+        org.mybatis.spring.MyBatisSystemException:
+            nested exception is org.apache.ibatis.exceptions.TooManyResultsException:
+                Expected one result (or null) to be returned by selectOne(), but found: 7
+         */
+        TestHelper.println("teacherMapper.selectOne(queryWrapper)",teacherMapper.selectOne(queryWrapper));
     }
 }
