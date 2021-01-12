@@ -23,7 +23,9 @@ public class LogicDeleteTeacher implements Serializable {
     String name;
     Integer age;
 
-    @TableLogic// 指定该字段是逻辑删除字段
+    // 指定该字段是逻辑删除字段,如果属性名和mybatis-plus全局设置的逻辑删除字段相同,则不需要添加该注解
+    @TableLogic
+    // 如果实体类属性名和表中列名不相同,需要通过@TableField添加手动映射。
     @TableField("flag")
     Integer deleted;
 }

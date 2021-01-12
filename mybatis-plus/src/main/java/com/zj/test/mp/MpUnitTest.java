@@ -527,4 +527,38 @@ public class MpUnitTest {
 
 
     }
+
+    /**
+     * 7.mybatis 字段类型处理器测试
+     *
+     * 测试前,数据库有相关数据:
+     * 2765861	autoMap	22			english
+     * 【测试输出】
+     *
+     * 【结论】
+     * 注:
+     * 1.mybatis-plus官方关于字段类型处理的Demo中,提到必须要开启映射:
+     * @TableName(autoResultMap = true)
+     * 并且要为字段添加@TableField(typeHandler = JacksonTypeHandler.class)或
+     * @TableField(typeHandler = FastjsonTypeHandler.class)
+     *
+     * 而我在测试的时候,上面的注解都没有添加,但是测试成功映射并返回了数据。可能是我的mybatis-plus版本比较新
+     * 的缘故,如果使用较低版本的mybatis-plus时,应考虑到这个问题。
+     *
+     * 默认自动完成了驼峰命名向_连接符的映射,如:
+     * teachCourse -> teach_course
+     *
+     * 2.实体类中的属性必须都是表中的字段,否则查询的时候会报错:
+     * ...
+     * ### The error may involve defaultParameterMap
+     * ### The error occurred while setting parameters
+     * ### SQL: SELECT id,name,age,sex,teach_a_course FROM teacher WHERE id=?
+     * ### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'teach_a_course' in 'field list'
+     * ...
+     */
+    @Test
+    public void typeHandlerTest(){
+        Teacher teacher = teacherMapper.selectById(2765861);
+        TestHelper.println("查询返回的数据",teacher);
+    }
 }
