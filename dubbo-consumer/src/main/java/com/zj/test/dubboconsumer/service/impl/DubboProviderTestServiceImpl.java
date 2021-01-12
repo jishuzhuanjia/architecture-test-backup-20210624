@@ -155,8 +155,6 @@ public class DubboProviderTestServiceImpl implements DubboConsumerTestService {
      *
      * 2.在指定interface参数的情况下，如果不指定generic=true,@Reference注入的对象将为null,调用服务时会报错。
      *
-     * 【备注】
-     * 未成功引用，后续有需要再进行测试。
      * */
     @Reference(/*generic=true,interfaceName = "com.zj.test.dobboprovider.service.DubboProviderTestService",*/timeout = -1, retries = 1, check = false,loadbalance = "roundrobin",group="gp1")
     DubboProviderTestService dubboProviderTestService;
