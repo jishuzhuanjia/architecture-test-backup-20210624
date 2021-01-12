@@ -35,6 +35,12 @@
             <version>3.4.1</version>
         </dependency>
 
+        <!--<dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.3.0</version>
+        </dependency>-->
+
         <!--其他测试依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -2,7 +2,9 @@ package com.zj.test.mp;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zj.test.mp.mapper.PageMapper;
 import com.zj.test.mp.mapper.TeacherMapper;
 import com.zj.test.mp.po.Teacher;
 import com.zj.test.util.TestHelper;
@@ -343,5 +345,60 @@ public class MpUnitTest {
                 Expected one result (or null) to be returned by selectOne(), but found: 7
          */
         // TestHelper.println("teacherMapper.selectOne(queryWrapper)", teacherMapper.selectOne(queryWrapper));
+    }
+
+    @Autowired
+    PageMapper pageMapper;
+    /**
+     * 3.测试: mybatis xml无分页方式实现自定义sql
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     */
+    @Test
+    public void xmlNoPageTest(){
+
+        // 1.自定义sql,无分页测试
+        // 测试结果: 确实没有进行分页
+        List<Teacher> teachers = pageMapper.queryNoPage("update-teacher-name5");
+        TestHelper.println("无分页查询获取的数据条数",teachers.size());
+        TestHelper.println("无分页查询获取的数据",teachers);
+    }
+
+    /**
+     * 4.测试: mybatis-plus xml方式实现分页查询
+     *
+     * NOTE:
+     * 如果返回类型为List则会将查询结果封装到List中,
+     * 如果返回类型是Page则会将查询结果封装到Page中。
+     */
+    @Test
+    public void xmlByPageTest(){
+        Page<Teacher> page = new Page<Teacher>();
+        page.setCurrent(1);
+        page.setSize(2);
+
+        /*
+        1.测试: 查询结果封装到List中
+
+        结果: 成功
+         */
+        List<Teacher> teachers = pageMapper.queryByPage(page, "update-teacher-name5");
+        TestHelper.println("分页查询Page(1,2)查询数据条数",teachers.size());
+        TestHelper.println("分页查询Page(1,2)查询到的数据",teachers);
+
+
+        /*
+        1.测试: 查询结果封装到IPage中
+
+        结果: 成功
+
+        注意: 官方教程中demo中提到Page参数必须放在第一个参数位置,我这里测试放在第二位，并没有什么问题。
+         */
+        IPage<Teacher> teachers1 = pageMapper.queryByPage2("update-teacher-name5",page);
+        TestHelper.println("分页查询Page(1,2)查询数据条数",teachers1.getSize());
+        TestHelper.println("分页查询Page(1,2)查询到的数据",teachers1.getRecords());
     }
 }

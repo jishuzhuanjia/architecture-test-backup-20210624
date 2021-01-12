@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zj.test.mp.mapper.PageMapper">
+
+    <!--xml分页查询demo-->
+    <select id="queryNoPage" resultType="com.zj.test.mp.po.Teacher">
+        select * from teacher where name = #{name}
+    </select>
+
+    <select id="queryByPage" resultType="com.zj.test.mp.po.Teacher">
+        select * from teacher where name = #{name}
+    </select>
+
+    <select id="queryByPage2" resultType="com.zj.test.mp.po.Teacher">
+        select * from teacher where name = #{name}
+    </select>
+</mapper>
