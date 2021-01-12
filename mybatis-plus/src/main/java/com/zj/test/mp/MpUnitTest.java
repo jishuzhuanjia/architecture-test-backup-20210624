@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.zj.test.mp.mapper.LogicTeacherMapper;
 import com.zj.test.mp.mapper.PageMapper;
 import com.zj.test.mp.mapper.TeacherMapper;
+import com.zj.test.mp.po.LogicTeacher;
 import com.zj.test.mp.po.Teacher;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
@@ -400,4 +402,98 @@ public class MpUnitTest {
         TestHelper.println("分页查询Page(1,2)查询数据条数",teachers1.getSize());
         TestHelper.println("分页查询Page(1,2)查询到的数据",teachers1.getRecords());
     }
+
+    /**
+     * 5.逻辑删除相关测试
+     *
+     * 5.1.测试: 带有逻辑删除的数据插入、删除操作
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     * 1.删除时只是将表中逻辑删除标记字段设置为1, 不会真正删除数据。
+     * 2.插入时,逻辑删除字段可以是0/1/NULL,如果为1则表示插入一条已经被标识为逻辑删除的数据。
+     *
+     */
+    @Autowired
+    LogicTeacherMapper logicTeacherMapper;
+    @Test
+    public void logicDeleteTest(){
+
+        LogicTeacher logicTeacher = new LogicTeacher();
+        logicTeacher.setName("teacher-for-logic-delete");
+        logicTeacher.setAge(111);
+        logicTeacher.setDeleted(null);
+
+        // 插入一条数据用于逻辑删除
+        // 注意: mybatis-plus不会为数据库表添加逻辑删除字段
+        logicTeacherMapper.insert(logicTeacher);
+
+        // 尝试逻辑删除
+        // 结果:成功,表中flag属性由0->1
+        logicTeacherMapper.deleteById(2765846);
+    }
+
+    /**
+     * 5.2.测试: 带有逻辑删除的数据查询操作
+     *
+     * 测试前,表中相关数据如下:
+     * 2765842	teacher-for-logic-delete	111 NULL
+     * 2765843	teacher-for-logic-delete	111 NULL
+     * 2765844	teacher-for-logic-delete	111	1
+     * 2765845	teacher-for-logic-delete	111	1
+     * 2765846	teacher-for-logic-delete	111	1
+     * 2765847	teacher-for-logic-delete	111	0
+     * 2765848	teacher-for-logic-delete	111	0
+     * 2765849	teacher-for-logic-delete	111	0
+     *
+     * 【测试输出】
+     *
+     * 查询到的数据条数: 3
+     * 查询到的数据: [LogicTeacher(id=2765847, name=teacher-for-logic-delete, age=111, deleted=0), LogicTeacher(id=2765848, name=teacher-for-logic-delete, age=111, deleted=0), LogicTeacher(id=2765849, name=teacher-for-logic-delete, age=111, deleted=0)]
+     *
+     * 【结论】
+     * 1.只有逻辑删除字段为0的数据才会被返回,1或NULL的数据都不会返回。
+     */
+    @Test
+    public void logicDeleteSelect(){
+        // 尝试查询,观察flag=1的数据是否被返回
+        LogicTeacher condition = new LogicTeacher();
+        condition.setName("teacher-for-logic-delete");
+        List<LogicTeacher> selectList = logicTeacherMapper.selectList(new QueryWrapper<LogicTeacher>()
+                .eq("name", "teacher-for-logic-delete"));
+        TestHelper.println("查询到的数据条数",selectList.size());
+        TestHelper.println("查询到的数据:\n" + selectList);
+    }
+
+    /**
+     * 5.3.带有逻辑删除的数据更新操作
+     *
+     * 更新操作之前的数据库相关数据:
+     * 2765842	teacher-for-logic-delete	111 NULL
+     * 2765843	teacher-for-logic-delete	111 NULL
+     * 2765844	teacher-for-logic-delete	111	1
+     * 2765845	teacher-for-logic-delete	111	1
+     * 2765846	teacher-for-logic-delete	111	1
+     * 2765847	teacher-for-logic-delete	111	0
+     * 2765848	teacher-for-logic-delete	111	0
+     * 2765849	teacher-for-logic-delete	111	0
+     *
+     * 【测试输出】
+     * 更新数据条数: 3
+     *
+     * 【结论】
+     * 1.只会更新flag=0(逻辑未删除)的数据，1和NULL的数据不会被修改。
+     */
+    @Test
+    public void logicDeleteUpdate(){
+        LogicTeacher logicTeacher = new LogicTeacher();
+        logicTeacher.setName("new-name-for-logic-delete");
+        int affectRows = logicTeacherMapper.update(logicTeacher, new UpdateWrapper<LogicTeacher>()
+                .eq("name", "teacher-for-logic-delete"));
+
+        TestHelper.println("更新数据条数",affectRows);
+    }
+
+
 }
