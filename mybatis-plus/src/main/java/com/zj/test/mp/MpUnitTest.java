@@ -247,7 +247,7 @@ public class MpUnitTest {
      * 根据条件全量查询数据，结果封装在List中
      *
      * 根据ids批量获取, 结果封装在List中
-     * List<T> selectBatchIds(Collection<? extends Serializable> idList);
+     * List<77T> selectBatchIds(Collection<? extends Serializable> idList);
      *
      * T selectById(Serializable id);
      * 通过id查询单条记录
