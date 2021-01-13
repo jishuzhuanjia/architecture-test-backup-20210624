@@ -1,5 +1,6 @@
 package com.zj.test.mp.mapper;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -36,4 +37,11 @@ public interface PageMapper /*extends BaseMapper<Teacher>*/ {
      * 分页查询的结果封装在Page中
      */
     IPage<Teacher> queryByPage2(@Param("name") String name,Page<?> page);
+
+    /**
+     * 切换数据源进行CRUD操作
+     */
+    @DS("slave1")
+    List<Teacher> selectTeacherByIdFromSlave(Integer id);
+
 }

@@ -1,6 +1,30 @@
-# 测试mybatis-plus对于其他配置是否有效
+# 1.测试mybatis-plus对于其他配置是否有效
 # 结果: 有效,Tomcat started on port(s): 8899 (http) with context path ''
 server:
   # port配置要求提供Integer类型，我们在这里提供了字符串
   # 虽然飘红了，但是不影响使用
-  port: mpw:/9YSDVHqS/4tvgEtrNYXgw==
+  # 由于单元测试不能懈怠--mpw.key参数,因此配置中不保留加密配置数据
+  # port: mpw:/9YSDVHqS/4tvgEtrNYXgw==
+  port: 8881
+
+
+## 2.测试mybatis-plus动态数据源
+spring:
+  datasource:
+    dynamic:
+      # 默认的数据源,默认值为master
+      primary: master
+      strict: false
+      datasource:
+        master:
+          url: jdbc:mysql://localhost:3306/architecture_test_mybatis_plus?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useAffectedRows=true&autoReconnect=true&allowMultiQueries=true
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+        slave1:
+          url: jdbc:mysql://localhost:3306/architecture_test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useAffectedRows=true&autoReconnect=true&allowMultiQueries=true
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver

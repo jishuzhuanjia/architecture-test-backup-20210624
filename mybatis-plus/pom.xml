@@ -34,11 +34,12 @@
             <version>3.4.1</version>
         </dependency>
 
-        <!--<dependency>
+        <!--mybatis-plus动态数据源依赖-->
+        <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-extension</artifactId>
-            <version>3.3.0</version>
-        </dependency>-->
+            <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+            <version>3.2.1</version>
+        </dependency>
 
         <!--其他测试依赖-->
         <dependency>

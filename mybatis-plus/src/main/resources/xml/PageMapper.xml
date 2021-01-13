@@ -15,4 +15,8 @@
     <select id="queryByPage2" resultType="com.zj.test.mp.po.Teacher">
         select * from teacher where name = #{name}
     </select>
+
+    <select id="selectTeacherByIdFromSlave" resultType="com.zj.test.mp.po.Teacher">
+        select * from teacher where id=#{id};
+    </select>
 </mapper>

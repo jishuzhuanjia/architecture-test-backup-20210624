@@ -582,6 +582,43 @@ public class MpUnitTest {
 
     }
 
+
+    /**
+     * 9.demo: mybatis多数据源测试
+     *
+     * 【测试输出】
+     * ****************** mybatis多数据源测试 ******************
+     * mybatis-plus数据源master查询到的数据: Teacher(id=2765862, name=张老师, age=33, sex=null, teachCourse=高等数学)
+     * myabtis-plus数据源slave1查询到的数据: [Teacher(id=2764817, name=name2, age=10, sex=null, teachCourse=null)]
+     *
+     * 【结论】
+     * 切换成功
+     * 1.再添加dynamic-datasource-spring-boot-starter依赖后,
+     * 传统的myabtis数据源配置如spring.datasource.url将无效,
+     * 必须配置动态数据源(至少master),否则报错:
+     * org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'dataSecureController': Unsatisfied dependency expressed through field 'teacherMapper'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'teacherMapper' defined in file [E:\ideaProjects\architecture-test\mybatis-plus\target\classes\com\zj\test\mp\mapper\TeacherMapper.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'sqlSessionFactory' defined in class path resource [com/baomidou/mybatisplus/autoconfigure/MybatisPlusAutoConfiguration.class]: Unsatisfied dependency expressed through method 'sqlSessionFactory' parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [com/baomidou/dynamic/datasource/spring/boot/autoconfigure/DynamicDataSourceAutoConfiguration.class]: Invocation of init method failed; nested exception is java.lang.RuntimeException: dynamic-datasource Please check the setting of primary
+     *
+     * 2.多个数据源配置可以是多主多从，也可以是纯粹多库,如果是不同类型的数据库，需要指定不同的driver-class-name。
+     *
+     * 3.多数据源切换的方法:
+     * 通过@DS注解，该注解可以放在类上或方法上，同时存在时，方法上@DS优先级更高。
+     *
+     * 注：如果没有添加@DS注解，则会使用primary指定的默认数据源。
+     *
+     */
+    @Test
+    public void multiDataSourceTest(){
+        TestHelper.startTest("mybatis多数据源测试");
+
+        // 1.使用默认数据源master进行CRUD操作
+        Teacher teacher = teacherMapper.selectById(2765862);
+        TestHelper.println("mybatis-plus数据源master查询到的数据",teacher);
+
+        // 2.切换数据源slave1进行CRUD操作
+        List<Teacher> teachers = pageMapper.selectTeacherByIdFromSlave(2764817);
+        TestHelper.println("myabtis-plus数据源slave1查询到的数据",teachers);
+    }
+
     public static void main(String[] args) {
 
     }
