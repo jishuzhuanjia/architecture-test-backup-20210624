@@ -1,2 +1,2 @@
 # architecture-test
-# 框架测试专业项目
+# 框架测试专用项目
