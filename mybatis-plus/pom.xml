@@ -34,6 +34,25 @@
             <version>3.4.1</version>
         </dependency>
 
+        <!--MyBatis-Plus 从 3.0.3 之后移除了代码生成器与模板引擎的默认依赖，需要手动添加相关依赖-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <!--模版引擎依赖-->
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity-engine-core</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <!--官方说默认使用velocity,但是不添加也会报错-->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.30</version>
+        </dependency>
+
         <!--mybatis-plus动态数据源依赖-->
         <dependency>
             <groupId>com.baomidou</groupId>

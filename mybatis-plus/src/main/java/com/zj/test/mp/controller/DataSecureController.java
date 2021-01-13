@@ -1,6 +1,6 @@
 package com.zj.test.mp.controller;
 
-import com.zj.test.mp.mapper.TeacherMapper;
+import com.zj.test.mp.mapper.TeacherMapper1;
 import com.zj.test.mp.po.Teacher;
 import com.zj.test.util.TestHelper;
 import com.zj.test.util.TestResultTips;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class DataSecureController {
 
     @Autowired
-    TeacherMapper teacherMapper;
+    TeacherMapper1 teacherMapper;
 
     /**
      * 1.测试: mybatis-plus使用安全保护配置数据情况下,是否有效?

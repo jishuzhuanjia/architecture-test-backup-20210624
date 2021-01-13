@@ -13,6 +13,7 @@ import java.util.List;
  * @finished: false
  * @finished-time:
  */
-public interface TeacherMapper extends BaseMapper<Teacher> {
+// 由于与com.zj.test.mp.mapper中bean名冲突,修改类名
+public interface TeacherMapper1 extends BaseMapper<Teacher> {
 
 }

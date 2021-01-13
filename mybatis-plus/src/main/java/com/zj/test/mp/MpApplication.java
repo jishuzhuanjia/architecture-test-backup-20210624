@@ -16,7 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
-@MapperScan("com.zj.test.mp.mapper")
+@MapperScan({"com.zj.test.mp.mapper","com.zj.test.mp.test.code_generator.teacher_module.mapper"})
 public class MpApplication {
 
     public static void main(String[] args) {

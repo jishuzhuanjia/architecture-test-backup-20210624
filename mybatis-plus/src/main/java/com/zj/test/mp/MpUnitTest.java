@@ -3,12 +3,11 @@ package com.zj.test.mp;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.AES;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zj.test.mp.enums.SexEnum;
 import com.zj.test.mp.mapper.LogicDeleteTeacherMapper;
 import com.zj.test.mp.mapper.PageMapper;
-import com.zj.test.mp.mapper.TeacherMapper;
+import com.zj.test.mp.mapper.TeacherMapper1;
 import com.zj.test.mp.po.LogicDeleteTeacher;
 import com.zj.test.mp.po.Teacher;
 import com.zj.test.util.TestHelper;
@@ -44,7 +43,7 @@ public class MpUnitTest {
      */
 
     @Autowired
-    TeacherMapper teacherMapper;
+    TeacherMapper1 teacherMapper;
 
     /**
      * 1.测试: mybatis-plus集成测试
