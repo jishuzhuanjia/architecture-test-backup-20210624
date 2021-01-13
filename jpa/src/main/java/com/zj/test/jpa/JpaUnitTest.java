@@ -139,6 +139,8 @@ public class JpaUnitTest {
      *
      * 2.这也暴露出jpa的一个缺陷:
      * 插入和更新界限不明显,会执行额外的sql语句。
+     *
+     * 3.从目前测试进度看，jpa的插入和更新情况下，都不要求实体类属性在表中一定要存在。
      */
     @Test
     public void test4(){
