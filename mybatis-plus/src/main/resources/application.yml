@@ -4,5 +4,3 @@ server:
   # port配置要求提供Integer类型，我们在这里提供了字符串
   # 虽然飘红了，但是不影响使用
   port: mpw:/9YSDVHqS/4tvgEtrNYXgw==
-
-
