@@ -28,6 +28,7 @@
         <module>mybatis</module>
         <module>kafka</module>
         <module>mybatis-plus</module>
+        <module>jpa</module>
     </modules>
     <!--end-->
 
