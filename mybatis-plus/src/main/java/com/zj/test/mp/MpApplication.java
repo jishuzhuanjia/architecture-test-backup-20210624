@@ -1,5 +1,7 @@
 package com.zj.test.mp;
 
+import com.baomidou.mybatisplus.core.toolkit.AES;
+import com.zj.test.util.TestHelper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +20,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MpApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(MpApplication.class,args);
+        SpringApplication.run(MpApplication.class, args);
+
     }
 }

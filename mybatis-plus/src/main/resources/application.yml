@@ -1,0 +1,8 @@
+# 测试mybatis-plus对于其他配置是否有效
+# 结果: 有效,Tomcat started on port(s): 8899 (http) with context path ''
+server:
+  # port配置要求提供Integer类型，我们在这里提供了字符串
+  # 虽然飘红了，但是不影响使用
+  port: mpw:/9YSDVHqS/4tvgEtrNYXgw==
+
+

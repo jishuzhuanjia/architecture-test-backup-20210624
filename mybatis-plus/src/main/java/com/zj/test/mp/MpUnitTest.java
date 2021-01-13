@@ -3,6 +3,7 @@ package com.zj.test.mp;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.AES;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zj.test.mp.enums.SexEnum;
 import com.zj.test.mp.mapper.LogicDeleteTeacherMapper;
@@ -552,5 +553,36 @@ public class MpUnitTest {
     public void typeHandlerTest(){
         Teacher teacher = teacherMapper.selectById(2765861);
         TestHelper.println("查询返回的数据",teacher);
+    }
+
+
+    /**
+     * 8.测试: mybatis-plus数据安全保护
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     */
+    @Test
+    public void dataSecurityProtectionTest(){
+        // 为数据安全保护生成key和加密配置
+        /*
+        加密key: d8a536ffbaed5e26
+        加密后的配置: ulJw7jHAT/elfXiZxlaT4oBmSQl8Wo6IAl2rGsKMSIueJq6naWnhodS74ECDegz1lfaZCLNsEj/rR6D6BocQ/cCyeLLVlfUWrSe7cAEU9k24mtVQiDn+Ktf7dPSyTQkkCbmfC0r/mLbKKW7lJynpIrF484QofWEENGXTFEDdwZRBfTEwlg+OHKpzDTbcAs931pTYxHzDSQ9/J4k0kZTz7CvQRmdKac5GFYRV788+m8Y=
+         */
+        /*String key = AES.generateRandomKey();
+        String encrptyConfigStr = AES.encrypt("jdbc:mysql://localhost:3306/architecture_test?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useAffectedRows=true&autoReconnect=true&allowMultiQueries=true",key);
+        TestHelper.println("加密key",key);
+        TestHelper.println("加密后的配置",encrptyConfigStr);*/
+
+        // 检测: 数据安全保护情况下, 查询是否正常
+        Teacher teacher = teacherMapper.selectById(2764817);
+        TestHelper.println("数据保护情况下查询到的数据",teacher);
+
+    }
+
+    public static void main(String[] args) {
+
     }
 }
