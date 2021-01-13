@@ -34,6 +34,14 @@ import java.util.Map;
 @SpringBootTest(classes = MpApplication.class)
 @RunWith(SpringRunner.class)
 public class MpUnitTest {
+    /**
+     * 框架注解:
+     * @TableName       实体指定表名
+     * @TableId         指定主键生成策略
+     * @TableLogic      指定字段是逻辑删除字段,如果该字段不是全局默认逻辑删除字段的话
+     * @TableField      指定字段和表字段的映射。
+     * @EnumValue       指定枚举类型序列化的字段
+     */
 
     @Autowired
     TeacherMapper teacherMapper;
