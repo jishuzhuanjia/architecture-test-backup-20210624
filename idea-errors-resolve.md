@@ -1,6 +1,8 @@
 # 记录idea使用期间出现错误的解决方法
 
 # 1.Error:java: Compilation failed: internal java compiler error
+# 或
+# Error:java: 无效的源发行版: 11
     原因：jdk设置不一致导致。
     解决：保证以下3处设置相同：
     1.Project Structure -> Project -> Project SDK
@@ -29,3 +31,5 @@
     
 # 5.编译报错：Error:(74, 120) java: -source 1.5 中不支持 diamond 运算符(请使用 -source 7 或更高版本以启用 diamond 运算符)
     Build,Execution,Deployment->..->Java Compiler -> Override compile parameters per-module中的参数移除掉. 
+    
+# 6.
