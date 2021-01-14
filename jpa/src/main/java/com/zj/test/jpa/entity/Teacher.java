@@ -3,9 +3,7 @@ package com.zj.test.jpa.entity;
 import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -22,10 +20,36 @@ import javax.persistence.Id;
 即提示设置主键
 */
 @Entity
+/*
+@Table: 手动映射表名
+
+如果不指定,会按照类名进行默认动态映射:
+Teacher -> teacher
+TeacherTable -> teacher_table
+
+注: name值可以是大小写混合,框架会自动处理,但是不推荐这个干。
+ */
+@Table(name="teacher_table")
 public class Teacher {
 
+    /*
+    @Id: 指定主键字段,需要注意的是,JPA中实体类必须要添加此注解,否则会报错:
+    java.lang.IllegalStateException: Failed to load ApplicationContext
+    ...
+
+     */
     @Id
     @GeneratedValue // 自动生成,不会跟随表AUTO_INCREMENT,会从最小数开始生成
+    /*
+    @Column(name="column"): 手动字段映射,当字段名不能和表名自动完成映射时,需要手动映射
+
+    默认的动态映射:
+    tid -> tid
+    tId -> t_id
+
+    注: name值可以是大小写混合,框架会自动处理,但是不推荐这个干。
+     */
+    @Column(name="t_id")
     Integer id;
 
     String name;

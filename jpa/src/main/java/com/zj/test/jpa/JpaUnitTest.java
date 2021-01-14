@@ -389,6 +389,5 @@ public class JpaUnitTest {
         TestHelper.println("teacherDAO.findAll(sort).size()",all3.size());
         TestHelper.println("teacherDAO.findAll(sort)",all3);
         TestHelper.println("--------------------");
-
     }
 }

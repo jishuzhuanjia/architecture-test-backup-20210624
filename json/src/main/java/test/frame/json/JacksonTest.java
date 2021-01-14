@@ -1,14 +1,15 @@
 package test.frame.json;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import org.junit.Test;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @time 2019年12月12日 下午3:23:50
@@ -65,6 +66,7 @@ public class JacksonTest {
 	 */
 	public static void test1() {
 		ObjectMapper objectMapper = new ObjectMapper();
+
 
 		// 1.json来源 - 字符串
 		/*
