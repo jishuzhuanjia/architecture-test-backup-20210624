@@ -1,5 +1,6 @@
 package com.zj.test.jpa.test.field_mapping.entity;
 
+import com.zj.test.jpa.test.field_mapping.enums.SexEnum;
 import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
@@ -18,19 +19,60 @@ import java.util.Calendar;
  * @finished-time:
  */
 @Data
-@Entity
+@Entity() // name属性指定Bean的名称，默认为非限定类名
 @Proxy(lazy = false)
-@Table(name = "teacher_table")
+/*
+@Table属性说明:
+name: 表名
+catalog: 数据库名,如果不指定会使用spring.datasource.url指定的数据库       // true
+schema:指定数据库的用户名        // 作用UNKNOWN
+uniqueConstraints:指定唯一性字段约束,如为personid 和name 字段指定唯一性约束:
+uniqueConstraints={ @UniqueConstraint(columnNames={"personid", "name"})}
+
+注意:
+uniqueConstraints是将多个字段形成唯一索引，而不是每个字段形成唯一索引,如下面的定义会创建唯一索引:
+UNIQUE KEY `UKc16wo9imyjgbkrlwt1avn7qhr` (`name`,`address`)
+ */
+@Table(name = "teacher_table",catalog = "test",schema = "sch")/*,
+uniqueConstraints = {@UniqueConstraint(columnNames = {"name","address"})*/
+
+/*
+@SecondaryTables: 多库多表映射
+也可以指定数据库，通过@SecondaryTable catalog属性指定
+ */
+/*@SecondaryTables({
+        @SecondaryTable(catalog = "architecture_test",name="teacher_table", pkJoinColumns={@PrimaryKeyJoinColumn(name="t_id")})})*/
+// @PrimaryKeyJoinColumn: 引用表的主键字段,如果引用表不存在该字段，会自动创建
+// 注意: 如果@SecondaryTable是其他库中同名表，则最终只会创建@SecondaryTable指定的表，而不会向其插入数据。
+// 因此实体映射多表时，只能映射到与@Table本身的表名不同的表,并且不同库中的相同表不允许重复使用@SecondayTable重复定义。
+
+@SecondaryTable(catalog = "architecture_test",name = "teacher_table1",pkJoinColumns={@PrimaryKeyJoinColumn(name = "t_id")})
+
+// 即使teacher_table1与teacher_table不同,但是已经在architecture_test表中定义过了,所以会报错:
+// Caused by: org.hibernate.boot.spi.InFlightMetadataCollector$DuplicateSecondaryTableException:
+//  Table with that name [teacher_table1] already associated with entity
+//@SecondaryTable(catalog = "temp",name = "teacher_table1",pkJoinColumns={@PrimaryKeyJoinColumn(name = "t_id")})
 public class TeacherEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "t_id")
     private Integer tId;
 
     Integer age;
 
     String name;
+
+    // 注意: 实体类中默认的字段都会映射到@Table指定的表，而不会映射到SecdonaryTable指定的表
+    // 需要手动设置字段所属表:
+    @Column(table = "teacher_table1")
+
+    // 网上说只通过@JoinColumn(table = "teacher_book")也可以，但是我失败了
+    // 甚至是我同时使用@Column和@JoinColumn都失败了
+    // 根据目前的测试我得出的结论是,实体类中的属性只能属于一个表名,注意是表名，而不是表。
+    // @JoinColumn(table = "teacher_book")
+    String book;
+
 
     // 表中没有的字段
     String address;
@@ -138,4 +180,9 @@ public class TeacherEntity {
     // 测试结果: 成功: 没有自动添加表字段。
     @Transient
     String s;
+
+    @Enumerated(value = EnumType.ORDINAL)
+    SexEnum sex;
+
+
 }

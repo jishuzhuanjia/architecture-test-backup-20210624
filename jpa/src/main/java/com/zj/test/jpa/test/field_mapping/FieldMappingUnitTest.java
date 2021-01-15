@@ -3,6 +3,7 @@ package com.zj.test.jpa.test.field_mapping;
 import com.zj.test.jpa.JpaApplication;
 import com.zj.test.jpa.test.field_mapping.dao.FieldMappingDAO;
 import com.zj.test.jpa.test.field_mapping.entity.TeacherEntity;
+import com.zj.test.jpa.test.field_mapping.enums.SexEnum;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -133,5 +134,124 @@ public class FieldMappingUnitTest {
         // decimal
         teacherEntity.setD3(new BigDecimal(1.21521321312));
         fieldMappingDAO.save(teacherEntity);
+    }
+
+    /**
+     * 5.测试: @GeneratedValue主键生成策略
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     * 1.有以下策略:
+     * GenerationType.AUTO:
+     * 该策略会在数据库添加hibernate_sequence表，
+     * 该表中next_val用来指定下一条插入数据的主键,next_val是递增的,
+     * next_val值在第一次创建hibernate_sequence的时候设置为1，每次插入都会自增一次。
+     *
+     * 注意:
+     * 1.如果next_val主键已经被占用,则会抛出异常:
+     * Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry '36' for key 'PRIMARY'
+     * 并且将next_val +1;
+     *
+     * 2.如果没有hibernate_sequence表,hibernate会自动创建并且将next_val置1,
+     * 如果表中已经有大量的数据，就会导入插入频繁报错，因此该策略不适合已有大量数据的表，
+     * 可以通过指定正确的next_val来解决该问题。
+     *
+     * GenerationType.IDENTITY
+     * 也会创建hibernate_sequence表
+     * 生成的主键不是由AUTO_INCREMENT决定,而是由表主键最大id决定,等于max(id) + 1
+     * 插入数据不会修改表的AUTO_INCREMENT属性
+     *
+     * GenerationType.TABLE
+     *
+     *
+     *
+     * ------------------------------------------------
+     * 来自互联网的内容:
+     *
+     * JPA自带的主键生成策略有以下四种：
+     *
+     * AUTO：主键由程序控制，默认的主键生成策略，能够适应数据库变化，Oracle默认是序列方式，Mysql默认是主键自增长方式。
+     *
+     * IDENTITY：主键由数据库自动生成（主要是自动增长型），Mysql支持，Oracle不支持。
+     * 主键自增策略       // true
+     *
+     * SEQUENCE：根据底层数据库的序列来生成主键，条件是数据库支持序列，Oracle支持，Mysql不支持。
+     *
+     * TABLE：使用一个特定的数据库表格来保存主键。
+     */
+    @Test
+    public void generatedValueStrategy(){
+        // 1.自动生成策略: 会根据数据库类型自定决定策略。mysql是IDENTITY,oracle是SEQUENCE
+        /*TeacherEntity teacherEntity = new TeacherEntity();
+        teacherEntity.setAge(22);
+        teacherEntity.setName("generatedValueStrategy-default");
+        fieldMappingDAO.save(teacherEntity)*/
+
+        // 2.主键生成策略: GenerationType.IDENTITY
+        // 也会创建hibernate_sequence表,但是不是通过该表记录主键
+        // 生成的主键等于表AUTO_INCRMENT值
+        // 因此该策略就是主键自增策略
+        TeacherEntity teacherEntity = new TeacherEntity();
+        teacherEntity.setAge(22);
+        teacherEntity.setName("generatedValueStrategy-IDENTITY");
+        fieldMappingDAO.save(teacherEntity);
+
+        // 3.GenerationType.TABLE
+        // 通过表hibernate_sequence表的next_val来记录下一次插入的主键
+        // 使用时需要确保正确的next_val,以免插入时主键重复报错:
+        // Duplicate entry '2' for key 'PRIMARY'
+
+        // 4.GenerationType.SEQUENCE
+        // mysql不支持,这里不进行测试。
+    }
+
+    /**
+     * 6.测试: JPA枚举类型序列化测试
+     *
+     * 枚举属性: sex
+     *
+     * 【测试输出】
+     * 1.EnumType.STRING时: 自动生成VARCHAR类型的字段
+     * SexEnum.FEMALE -> ,序列化结果为FEMALE
+     * 即序列化枚举常量名。
+     *
+     * 2.EnumType.ORDINAL   自动生成INT类型的字段
+     * SexEnum.FEMALE -> 序列化结果为1
+     * SexEnum.MALE -> 序列化结果为0
+     * 即序列化的
+     * 【注意】
+     * 1.@Enumerated注解是用在实体类属性上，而不是枚举类型属性上。
+     * 2.EnumType.ORDINAL序列化成int时，是字符串常量在枚举类型中的序号，从0开始。
+     * 与枚举类型的属性无关。
+     */
+    @Test
+    public void enumTypeSerializate(){
+        TeacherEntity teacherEntity = new TeacherEntity();
+        teacherEntity.setName("张老师");
+        teacherEntity.setAge(22);
+        teacherEntity.setSex(SexEnum.MALE);
+
+        fieldMappingDAO.save(teacherEntity);
+    }
+
+    /**
+     * 7.实体多表映射
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     */
+    @Test
+    public void multiTablesMapping(){
+        TeacherEntity teacherEntity = new TeacherEntity();
+        teacherEntity.setName("张老师");
+        teacherEntity.setAge(22);
+        teacherEntity.setSex(SexEnum.MALE);
+        teacherEntity.setBook("呐喊");
+
+        fieldMappingDAO.save(teacherEntity);
+
     }
 }
