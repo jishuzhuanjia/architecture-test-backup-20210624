@@ -37,7 +37,7 @@ UNIQUE KEY `UKc16wo9imyjgbkrlwt1avn7qhr` (`name`,`address`)
 uniqueConstraints = {@UniqueConstraint(columnNames = {"name","address"})*/
 
 /*
-@SecondaryTables: 多库多表映射
+@SecondaryTables: 多库多表映射,@SecondaryTable是引用表,会创建外键。
 也可以指定数据库，通过@SecondaryTable catalog属性指定
  */
 /*@SecondaryTables({
