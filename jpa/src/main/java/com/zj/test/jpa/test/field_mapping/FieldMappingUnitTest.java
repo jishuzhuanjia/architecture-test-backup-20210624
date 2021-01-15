@@ -2,6 +2,7 @@ package com.zj.test.jpa.test.field_mapping;
 
 import com.zj.test.jpa.JpaApplication;
 import com.zj.test.jpa.test.field_mapping.dao.FieldMappingDAO;
+import com.zj.test.jpa.test.field_mapping.entity.MapKey;
 import com.zj.test.jpa.test.field_mapping.entity.Name;
 import com.zj.test.jpa.test.field_mapping.entity.TeacherEntity;
 import com.zj.test.jpa.test.field_mapping.enums.SexEnum;
@@ -13,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -263,6 +267,8 @@ public class FieldMappingUnitTest {
      * 【结论】
      * 1.JPA实体如果想要映射String外的引用类型，类型定义上要加@Embeddable注解。
      * 2.JPA默认情况下会映射嵌套类所有属性。
+     * 可以通过@AttributeOverrides和@AttributeOverride来覆盖某些字段的默认映射,
+     * 对于没有使用@AttributeOverride的嵌套字段，依然使用默认的映射。
      */
     @Test
     public void demo(){
@@ -275,6 +281,57 @@ public class FieldMappingUnitTest {
         teacherEntity.setSex(SexEnum.MALE);
         teacherEntity.setBook("呐喊");
         teacherEntity.setNames(name);
+
+        fieldMappingDAO.save(teacherEntity);
+
+    }
+
+    /**
+     * 9.demo: 集合字段插入1对多
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     */
+    @Test
+    public void collectionMapping(){
+        Name name = new Name();
+        name.setFirstName("zhou");
+        name.setLastName("jian");
+        TeacherEntity teacherEntity = new TeacherEntity();
+        teacherEntity.setName("周老师");
+        teacherEntity.setLabels(Arrays.asList("label1","label2"));
+        fieldMappingDAO.save(teacherEntity);
+    }
+
+    /**
+     * 10.demo: Map字段插入1对多
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     */
+    @Test
+    public void mapMapping(){
+        Name name = new Name();
+        name.setFirstName("zhou");
+        name.setLastName("jian");
+        TeacherEntity teacherEntity = new TeacherEntity();
+        teacherEntity.setName("周女士");
+
+        /*Map<Integer,String> address = new HashMap<Integer,String>();
+        address.put(1,"地址1");
+        address.put(2,"地址2");*/
+
+        Map<MapKey,String> address = new HashMap<MapKey,String>();
+        MapKey mapKey = new MapKey();
+        mapKey.setDes("首选地址");
+        mapKey.setOrderNo(1);
+        address.put(mapKey,"地址1");
+        address.put(mapKey,"地址2");
+        teacherEntity.setRecvAddress(address);
 
         fieldMappingDAO.save(teacherEntity);
 

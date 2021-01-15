@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -202,4 +204,56 @@ public class TeacherEntity {
     /*@Embedded: 测试时,加不加没有区别,待以后解决*/
     Name names;
 
+    /*
+    测试: 集合插入1对多映射
+    注意: 非String类型的引用类型，如果不添加@Embeddable或@ElementCollection等注解,是无法自动完成映射的:
+    Caused by: org.hibernate.MappingException:
+        Could not determine type for:
+            java.util.List, at table: teacher_table, for columns: [org.hibernate.mapping.Column(labels)]
+
+     使用注意点:
+     1.光光只有@ElementCollection注解没有任何作用。还需要@CollectionTable指定表名,
+     映射的目标表的字段默认等于属性名,在下面的例子中,就是labels,也可以用过@Column来修改.
+
+     2.@CollectionTable只会自动映射表的对应属性,不会映射主键字段。
+     表主键需要手动创建或者通过@SecondaryTable实现自动创建。
+     */
+    /*
+    joinColumns: 只是指定对应表中用来存储本实体id的字段,默认会自动生成,如对于本实体，
+    会生成teacher_entity_t_id字段(根据实体类名和实体类表中主键名生成)。
+     */
+    @CollectionTable(name="teacher_labels"/*,joinColumns ={@JoinColumn(name = "l_id")}*/ )
+    @Column(name = "label")
+    @ElementCollection
+    List<String> labels;
+
+    /*
+    测试: Map插入时1对多映射
+    joinColumns: 只是指定对应表中用来存储本实体id的字段,默认会自动生成,如对于本实体，
+    会生成teacher_entity_t_id字段(根据实体类名和实体类表中主键名生成)。
+
+    测试插入的数据:
+    teacher_entity_t_id address recv_address_key
+
+    52	地址1	1
+    52	地址2	2   // 可以看到会额外生成一个recv_address_key字段用来存储Map的key,至于如果指定该字段名日后解决。
+
+    如果Map key是PO类型，输出:
+    teacher_entity_t_id address des order_no            // 可以看到PO key的属性都会被序列化到表中。
+    59	地址2	首选地址	1
+
+
+    // 注意: 如果Map key是PO类型，则所有属性都会被序列化到表中
+    // 对于Map会创建多列主键,如: PRIMARY KEY (`teacher_entity_t_id`,`des`,`order_no`),  // 顺序与属性定义似乎有关,日后解决
+
+    综上: Map映射必须的注解:
+    1.@ElementCollection
+    2.@CollectionTable
+    3.如果key是PO类型,需要为其添加@Embeddable注解。
+     */
+    @CollectionTable(name="teacher_recv"/*,joinColumns ={@JoinColumn(name = "l_id")}*/)//
+    @Column(name="address")
+    // @MapKeyJoinColumn(name="orderNo") //作用暂时未知,日后解决
+    @ElementCollection
+    Map<MapKey,String> recvAddress; //收货地址*/
 }
