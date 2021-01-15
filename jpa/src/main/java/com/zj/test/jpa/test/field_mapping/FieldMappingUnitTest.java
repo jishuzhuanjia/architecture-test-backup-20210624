@@ -2,6 +2,7 @@ package com.zj.test.jpa.test.field_mapping;
 
 import com.zj.test.jpa.JpaApplication;
 import com.zj.test.jpa.test.field_mapping.dao.FieldMappingDAO;
+import com.zj.test.jpa.test.field_mapping.entity.Name;
 import com.zj.test.jpa.test.field_mapping.entity.TeacherEntity;
 import com.zj.test.jpa.test.field_mapping.enums.SexEnum;
 import com.zj.test.util.TestHelper;
@@ -250,6 +251,30 @@ public class FieldMappingUnitTest {
         teacherEntity.setAge(22);
         teacherEntity.setSex(SexEnum.MALE);
         teacherEntity.setBook("呐喊");
+
+        fieldMappingDAO.save(teacherEntity);
+    }
+
+    /**
+     * 8.demo: JPA嵌套对象的映射
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     * 1.JPA实体如果想要映射String外的引用类型，类型定义上要加@Embeddable注解。
+     * 2.JPA默认情况下会映射嵌套类所有属性。
+     */
+    @Test
+    public void demo(){
+        Name name = new Name();
+        name.setFirstName("zhou");
+        name.setLastName("jian");
+        TeacherEntity teacherEntity = new TeacherEntity();
+        teacherEntity.setName("张老师");
+        teacherEntity.setAge(22);
+        teacherEntity.setSex(SexEnum.MALE);
+        teacherEntity.setBook("呐喊");
+        teacherEntity.setNames(name);
 
         fieldMappingDAO.save(teacherEntity);
 

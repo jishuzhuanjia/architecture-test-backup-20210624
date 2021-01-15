@@ -46,7 +46,7 @@ uniqueConstraints = {@UniqueConstraint(columnNames = {"name","address"})*/
 // 注意: 如果@SecondaryTable是其他库中同名表，则最终只会创建@SecondaryTable指定的表，而不会向其插入数据。
 // 因此实体映射多表时，只能映射到与@Table本身的表名不同的表,并且不同库中的相同表不允许重复使用@SecondayTable重复定义。
 
-@SecondaryTable(catalog = "architecture_test",name = "teacher_table1",pkJoinColumns={@PrimaryKeyJoinColumn(name = "t_id")})
+// @SecondaryTable(catalog = "architecture_test",name = "teacher_table1",pkJoinColumns={@PrimaryKeyJoinColumn(name = "t_id")})
 
 // 即使teacher_table1与teacher_table不同,但是已经在architecture_test表中定义过了,所以会报错:
 // Caused by: org.hibernate.boot.spi.InFlightMetadataCollector$DuplicateSecondaryTableException:
@@ -65,7 +65,9 @@ public class TeacherEntity {
 
     // 注意: 实体类中默认的字段都会映射到@Table指定的表，而不会映射到SecdonaryTable指定的表
     // 需要手动设置字段所属表:
-    @Column(table = "teacher_table1")
+    // 注意，如果table指定的表没有通过@SecondaryTable定义会报错:
+    // Caused by: org.hibernate.AnnotationException: Cannot find the expected secondary table: no teacher_table1 available for com.zj.test.jpa.test.field_mapping.entity.TeacherEntit
+    // @Column(table = "teacher_table1")
 
     // 网上说只通过@JoinColumn(table = "teacher_book")也可以，但是我失败了
     // 甚至是我同时使用@Column和@JoinColumn都失败了
@@ -184,5 +186,20 @@ public class TeacherEntity {
     @Enumerated(value = EnumType.ORDINAL)
     SexEnum sex;
 
+    /*
+    嵌入对象映射测试
+
+    测试结果:
+    1.jpa实体类属性默认不支持除String外的引用类型，嵌套类型定义中如果不添加@Embededdable注解,则会报错: Caused by: javax.persistence.PersistenceException: [PersistenceUnit: default] Unable to build Hibernate SessionFactory; nested exception is org.hibernate.MappingException: Could not determine type for: com.zj.test.jpa.test.field_mapping.entity.Name, at table: teacher_table, for columns: [org.hibernate.mapping.Column(names)]
+    2.满足1的情况下,默认情况下，jpa会将嵌套对象Name的所有属性都映射到表,如果不存在对应的表字段，则会自动添加。并将嵌套属性序列化到数据库中
+     */
+    /*
+    @AttributeOverrides: 覆盖默认的属性映射,对于没有覆盖的属性，按照jpa默认方式进行映射。
+     */
+    @AttributeOverrides({
+            @AttributeOverride(name="firstName",column = @Column(name="f_name"))
+    })
+    /*@Embedded: 测试时,加不加没有区别,待以后解决*/
+    Name names;
 
 }
