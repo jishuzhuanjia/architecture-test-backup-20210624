@@ -29,6 +29,8 @@
         <module>kafka</module>
         <module>mybatis-plus</module>
         <module>jpa</module>
+        <module>spring-boot</module>
+        <module>utilbox-datasource</module>
     </modules>
     <!--end-->
 
