@@ -1,9 +1,11 @@
 package com.zj.test.datasource.config;
 
+import com.zj.test.util.TestHelper;
 import com.zj.util.datasource.dynamic.config.AbstractDataSourceConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
@@ -25,8 +27,6 @@ import java.util.Map;
 @Configuration
 @PropertySource("classpath:db.properties")
 public class DataSourceConfig extends AbstractDataSourceConfig {
-    public DataSourceConfig() {
-    }
 
     @Bean({"defaultDataSource"})
     @ConfigurationProperties(
@@ -45,8 +45,8 @@ public class DataSourceConfig extends AbstractDataSourceConfig {
     }
 
     public Map<Object, Object> getDataSourceMap() {
-        Map<Object, Object> dataSourceMap = new HashMap();
-        dataSourceMap.put("dynamicDataSource1", this.dataSource1());
+        Map<Object, Object> dataSourceMap = new HashMap<>();
+        dataSourceMap.put("dynamic1", this.dataSource1());
         return dataSourceMap;
     }
 
@@ -57,7 +57,8 @@ public class DataSourceConfig extends AbstractDataSourceConfig {
     public List<String> getMapperLocations() {
         List<String> mapperLocations = new ArrayList();
         mapperLocations.add("classpath:xml/*.xml");
-        mapperLocations.add("classpath:xml2/*.xml");
+        //目录必须存在，否则报错
+        //mapperLocations.add("classpath:xml2/*.xml");
         return mapperLocations;
     }
 }

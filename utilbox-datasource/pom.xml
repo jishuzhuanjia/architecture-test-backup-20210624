@@ -33,9 +33,32 @@
             <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
     </repositories>
+
+    <build>
+        <resources>
+            <!--解决xml在spring boot编译被排除的问题，主要是用来解决mybatis xml映射文件被编译排除在外的问题-->
+            <resource>
+                <directory>src/main/resources/</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources/</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
+
 
     <!--<build>
         <plugins>

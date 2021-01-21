@@ -18,7 +18,7 @@ import java.util.Map;
 // 如果指定名的数据源不存在，则会使用默认数据源
 // 因为在构造动态数据源的时候数据源对象null是不合法的,会启动报错
 // 所以可以认为只要@DataSource指定的数据源名存在，则数据源可用
-@DataSource("dynamicDataSourcexx") //放到impl,controller层也可以
+@DataSource("dynamic1") //放到impl,controller层也可以
 public interface TestMapper {
     public List<Map<Object,Object>> selectTest();
 }
