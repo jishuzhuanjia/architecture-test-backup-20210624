@@ -9,7 +9,9 @@ package com.zj.springboot;
  * @finished-time:
  */
 
+import com.zj.test.util.TestHelper;
 import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 // SpringBootApplication是一个组合注解,也可以使用下面的多个注解来达到相同的效果:
 /*
@@ -28,7 +30,7 @@ public class SpringBootApplication {
          * 如果包根目录下有banner.txt文件，则会替代默认banner。
          *
          */
-        SpringApplication.run(SpringBootApplication.class,args);
+        ConfigurableApplicationContext run = SpringApplication.run(SpringBootApplication.class, args);
 
         /**
          * 2.关闭banner显示
