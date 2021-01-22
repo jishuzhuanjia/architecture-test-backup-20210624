@@ -3,7 +3,6 @@ package com.zj.springboot.test.annotation.EnableConfigurationProperties;
 import com.zj.springboot.test.po.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component;
  */
 // 实例化指定的类，指定的类需要有ConfigurationProperties注解，可以没有实例化注解
 @EnableConfigurationProperties(User.class)
-@Component
+// @Component
 public class EnableConfigurationPropertiesTest {
 
     // 因为@EnableConfigurationProperties已经实例化了指定类型的Bean,这里只需要注入即可

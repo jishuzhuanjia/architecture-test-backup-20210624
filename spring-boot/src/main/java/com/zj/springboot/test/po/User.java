@@ -1,6 +1,5 @@
 package com.zj.springboot.test.po;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

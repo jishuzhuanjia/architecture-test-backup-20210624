@@ -2,8 +2,6 @@ package com.zj.springboot.test.annotation.ConditionalOnProperty;
 
 import com.zj.test.util.TestHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @finished: false
  * @finished-time:
  */
-@Component
+// @Component
 // name和value属性是互斥的,不能同时出现,否则报错:
 // The name and value attributes of @ConditionalOnProperty are exclusive,如果想要匹配值,使用havingValue
 @ConditionalOnProperty(prefix = "xxx",name = "username",havingValue = "usernameInConditional",/*value = "usernameInConditional",*/

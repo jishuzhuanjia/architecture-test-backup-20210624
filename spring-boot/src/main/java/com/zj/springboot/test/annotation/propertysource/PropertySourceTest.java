@@ -11,9 +11,8 @@ package com.zj.springboot.test.annotation.propertysource;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.stereotype.Component;
 
-@Component
+// @Component
 // @PropertySource也需要和实例化注解一起使用,如@Configuration,@Componnet,否则无效
 // 路径分隔符是/而不是.否则报错
 // classpath:不能省略,否则报错

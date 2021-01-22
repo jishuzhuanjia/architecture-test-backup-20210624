@@ -12,13 +12,11 @@ package com.zj.springboot.test.annotation.ConfigurationProperties;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
-@Component
+// @Component
 // 必须和序列化注解一起使用,否则报错
 // 可以注入来自全局application配置和@ImportResource引入的配置
-@ConfigurationProperties(prefix = "configuration.properties")
+// @ConfigurationProperties(prefix = "configuration.properties")
 @Getter
 @Setter
 @ToString

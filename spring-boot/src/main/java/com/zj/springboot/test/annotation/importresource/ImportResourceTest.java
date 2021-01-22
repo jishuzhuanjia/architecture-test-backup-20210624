@@ -10,7 +10,6 @@ package com.zj.springboot.test.annotation.importresource;
  */
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
 // @ImportResource必须和实例化注解一起使用,如@Configuration,@Service,@Component,否则无效
