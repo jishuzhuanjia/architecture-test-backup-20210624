@@ -20,3 +20,4 @@ Show History        alt + shift + 0     查看文件的所有历史版本
 
 ## File
 Invalidate Caches/Restart       alt + shift + F1
+Open Recent(打开最近的项目)        alt + shift + F2
