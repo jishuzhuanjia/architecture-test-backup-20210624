@@ -206,8 +206,10 @@ public class ElasticsearchUtil {
      * @return
      */
     public static EsPage searchDataPage(String index, String type, int startPage, int pageSize, QueryBuilder query, String fields, String sortField, String highlightField) {
+        // 1.设置索引
         SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index);
         if (StringUtils.isNotEmpty(type)) {
+            // 2.设置类型
             searchRequestBuilder.setTypes(type.split(","));
         }
         searchRequestBuilder.setSearchType(SearchType.QUERY_THEN_FETCH);
