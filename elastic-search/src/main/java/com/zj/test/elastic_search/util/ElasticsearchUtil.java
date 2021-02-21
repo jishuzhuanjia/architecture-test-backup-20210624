@@ -30,6 +30,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/* @author: zhoujian
+ * @qq: 2025513
+ * @create-time: 2021年2月21日 13:20:56
+ * @description: elasticsearch工具类
+ * @version: 1.0
+ * @finished: false
+ * @finished-time:
+ */
 @Component
 @Slf4j
 public class ElasticsearchUtil {
@@ -39,18 +47,15 @@ public class ElasticsearchUtil {
 
     private static TransportClient client;
 
-    /**
-     * @PostContruct是spring框架的注解 spring容器初始化的时候执行该方法
-     */
     @PostConstruct
-    public void init() {
+    private void init() {
         client = this.transportClient;
     }
 
     /**
      * 创建索引
      *
-     * @param index
+     * @param index 索引名
      * @return
      */
     public static boolean createIndex(String index) {
@@ -65,13 +70,15 @@ public class ElasticsearchUtil {
     /**
      * 删除索引
      *
-     * @param index
-     * @return
+     * @param index 要删除的索引名
+     * @return 如果成功删除返回true,索引不存在或删除失败则返回false。
      */
     public static boolean deleteIndex(String index) {
         if (!isIndexExist(index)) {
             log.info("Index is not exits!");
+            return false;
         }
+
         DeleteIndexResponse dResponse = client.admin().indices().prepareDelete(index).execute().actionGet();
         if (dResponse.isAcknowledged()) {
             log.info("delete index " + index + "  successfully!");
@@ -98,10 +105,7 @@ public class ElasticsearchUtil {
     }
 
     /**
-     * @Author: LX
-     * @Description: 判断inde下指定type是否存在
-     * @Date: 2018/11/6 14:46
-     * @Modified by:
+     * 判断index下指定type是否存在
      */
     public boolean isTypeExist(String index, String type) {
         return isIndexExist(index)
