@@ -371,15 +371,25 @@
         </snapshotRepository>
     </distributionManagement>
 
-    <!--<repositories>
+    <repositories>
+        <repository>
+            <url>http://localhost:8081/nexus/content/repositories/releases/</url>
+            <id>local-releases</id>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+        </repository>
+
         <repository>
             <url>http://localhost:8081/nexus/content/repositories/snapshots/</url>
-            <id>snapshot</id>
+            <id>local-snapshots</id>
             <snapshots>
                 <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
             </snapshots>
         </repository>
-    </repositories>-->
+    </repositories>
 
     <build>
         <plugins>
