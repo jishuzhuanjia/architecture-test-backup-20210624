@@ -1,6 +1,7 @@
 package com.zj.test.elastic_search.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zj.test.util.TestHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -28,7 +29,6 @@ import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -53,59 +53,66 @@ public class ElasticsearchUtil {
     }
 
     /**
-     * 创建索引
+     * 如果索引不存在，则创建索引
      *
+     * @finished-Time: 2021年2月22日 09:52:59
      * @param index 索引名
-     * @return
+     * @return 索引已经存在或创建失败, 返回false, 否则返回true。
+     *
+     * @exception InvalidIndexNameException 运行时异常,索引名无效，如索引名字母必须全部小写,否则会抛出此异常
+     *
      */
     public static boolean createIndex(String index) {
-        if (!isIndexExist(index)) {
-            log.info("Index is not exits!");
+        if (isIndexExist(index)) {
+            log.info("createIndex: Index [{}] already exist! create failed.", index);
+            return false;
         }
+
+        log.info("createIndex: Index [{}] is not exist! prepare to create...", index);
         CreateIndexResponse indexresponse = client.admin().indices().prepareCreate(index).execute().actionGet();
-        log.info("执行建立成功？" + indexresponse.isAcknowledged());
+        log.info("createIndex: Create index [{}] " + (indexresponse.isAcknowledged() ? "successfully." : "failed."), index);
         return indexresponse.isAcknowledged();
     }
 
     /**
      * 删除索引
      *
+     * @finished-time: 2021年2月22日 10:41:15
      * @param index 要删除的索引名
-     * @return 如果成功删除返回true,索引不存在或删除失败则返回false。
+     * @return 如果成功删除返回true, 索引不存在或删除失败则返回false。
      */
     public static boolean deleteIndex(String index) {
         if (!isIndexExist(index)) {
-            log.info("Index is not exits!");
+            log.info("deleteIndex: Index [{}] is not exist! delete failed.", index);
             return false;
         }
-
-        DeleteIndexResponse dResponse = client.admin().indices().prepareDelete(index).execute().actionGet();
-        if (dResponse.isAcknowledged()) {
-            log.info("delete index " + index + "  successfully!");
+        DeleteIndexResponse deleteIndexResponse = client.admin().indices().prepareDelete(index).execute().actionGet();
+        if (deleteIndexResponse.isAcknowledged()) {
+            log.info("deleteIndex: Delete index [{}]" + " successfully.", index);
         } else {
-            log.info("Fail to delete index " + index);
+            log.info("deleteIndex: Delete index [{}] failed.", index);
         }
-        return dResponse.isAcknowledged();
+        return deleteIndexResponse.isAcknowledged();
     }
 
     /**
      * 判断索引是否存在
+     * 说明：由于判断索引是否存在所需时间较删除/创建索引微不足道(1:10左右)，因此在删除/创建索引之前进行索引存在判断可减少用时。
      *
+     * @finish-time: 2021年2月22日 16:38:11
      * @param index
      * @return
      */
     public static boolean isIndexExist(String index) {
+        // indices: index的复数
         IndicesExistsResponse inExistsResponse = client.admin().indices().exists(new IndicesExistsRequest(index)).actionGet();
-        if (inExistsResponse.isExists()) {
-            log.info("Index [" + index + "] is exist!");
-        } else {
-            log.info("Index [" + index + "] is not exist!");
-        }
         return inExistsResponse.isExists();
     }
 
     /**
      * 判断index下指定type是否存在
+     *
+     * @finished-time: 2021年2月22日 17:18:13
      */
     public boolean isTypeExist(String index, String type) {
         return isIndexExist(index)
@@ -114,49 +121,63 @@ public class ElasticsearchUtil {
     }
 
     /**
-     * 数据添加，正定ID
+     * 插入/更新：根据指定的id插入/更新数据，这取决于指定id的数据是否已经存在，如果存在，则是更新操作。
      *
-     * @param jsonObject 要增加的数据
+     * @tip 为了与update操作区分开，请使用update方法进行更新操作。
+     * @tip 不要进行批量操作，性能不好
+     * @tip index type参数不能省略，如果索引没有完成映射，会自动完成索引和type的映射，如果已经完成映射，则index 和 type必须与已有对应，否则报错
+     * @finished-time: 2021年2月22日 17:18:22
+     * @param jsonObject 要插入的数据
      * @param index      索引，类似数据库
      * @param type       类型，类似表
-     * @param id         数据ID
-     * @return
+     * @param id         数据id
+     * @return 返回插入/更新的数据的id
      */
-    public static String addData(JSONObject jsonObject, String index, String type, String id) {
+    public static String insertDataUseSpecifiedId(JSONObject jsonObject, String index, String type, String id) {
+        // get() = execute().actionGet()
+        /*
+        prepareIndex:
+        1.id: 如果省略,则es自动分配id并插入数据。
+        如果不省略，则是插入/更新操作。这取决于指定的id是否已经存在数据。
+         */
         IndexResponse response = client.prepareIndex(index, type, id).setSource(jsonObject).get();
-        log.info("addData response status:{},id:{}", response.status().getStatus(), response.getId());
+        //log.info("addData response status:{},id:{}", response.status().getStatus(), response.getId());
         return response.getId();
     }
 
     /**
-     * 数据添加
+     * 插入数据
      *
+     * @finished-time: 2021年2月23日 09:46:26
+     * @tip 不要进行批量操作，性能不好
      * @param jsonObject 要增加的数据
      * @param index      索引，类似数据库
      * @param type       类型，类似表
      * @return
      */
-    public static String addData(JSONObject jsonObject, String index, String type) {
-        return addData(jsonObject, index, type, UUID.randomUUID().toString().replaceAll("-", "").toUpperCase());
+    public static String insertDataUseRandomId(JSONObject jsonObject, String index, String type) {
+        IndexResponse response = client.prepareIndex(index, type).setSource(jsonObject).get();
+        return response.getId();
     }
 
     /**
-     * 通过ID删除数据
+     * 通过id删除数据
      *
+     * @finish-time 2021年2月23日 09:57:38
      * @param index 索引，类似数据库
      * @param type  类型，类似表
      * @param id    数据ID
      */
     public static void deleteDataById(String index, String type, String id) {
-
         DeleteResponse response = client.prepareDelete(index, type, id).execute().actionGet();
-
-        log.info("deleteDataById response status:{},id:{}", response.status().getStatus(), response.getId());
+        //log.info("deleteDataById response status:{},id:{}", response.status().getStatus(), response.getId());
     }
 
     /**
-     * 通过ID 更新数据
+     * 通过id更新数据
      *
+     * @finish-time 2021年2月23日 10:01:21
+     * @tip 如果指定的id数据不存在，就什么都不做
      * @param jsonObject 要增加的数据
      * @param index      索引，类似数据库
      * @param type       类型，类似表
@@ -164,56 +185,145 @@ public class ElasticsearchUtil {
      * @return
      */
     public static void updateDataById(JSONObject jsonObject, String index, String type, String id) {
-
         UpdateRequest updateRequest = new UpdateRequest();
-
         updateRequest.index(index).type(type).id(id).doc(jsonObject);
-
         client.update(updateRequest);
-
     }
 
     /**
-     * 通过ID获取数据
+     * 通过id获取数据
      *
+     * @finish-time 2021年2月23日 10:16:26
      * @param index  索引，类似数据库
      * @param type   类型，类似表
-     * @param id     数据ID
+     * @param id     数据id
      * @param fields 需要显示的字段，逗号分隔（缺省为全部字段）
      * @return
      */
     public static Map<String, Object> searchDataById(String index, String type, String id, String fields) {
-
         GetRequestBuilder getRequestBuilder = client.prepareGet(index, type, id);
-
         if (StringUtils.isNotEmpty(fields)) {
             getRequestBuilder.setFetchSource(fields.split(","), null);
         }
-
         GetResponse getResponse = getRequestBuilder.execute().actionGet();
-
         return getResponse.getSource();
     }
 
-
     /**
-     * 使用分词查询,并分页
+     * 结构化查询，将查询数据封装到到分页中
+     *
+     * @attention 高亮字段结果将会覆盖正常返回的字段的结果
+     * @attention 高亮字段需要作为查询的条件，否则查询结果不会返回highlight而报空指针异常
+     * @attention type传参: 对于低/高版本es,会查询索引中的多个索引，如果都不存在，不会报错，查询结果为空。
+     *                       如果不传参，则会查询索引所有存在的type
+     *                       兼容高低版本的es
+     * @finish-time: 2021年2月23日 14:18:54
+     *
      *
      * @param index          索引名称
-     * @param type           类型名称,可传入多个type逗号分隔
-     * @param startPage      当前页
-     * @param pageSize       每页显示条数
+     * @param type           索引type,低版本中索引支持多个type,高版本中最多只有一个type,但是不管传递1或多个type都不会报错。
+     * @param currentPage           开始行,基于0
+     * @param pageSize           每页显示条数
      * @param query          查询条件
      * @param fields         需要显示的字段，逗号分隔（缺省为全部字段）
      * @param sortField      排序字段
-     * @param highlightField 高亮字段
+     * @param highlightFieldsStr 高亮字段
      * @return
      */
-    public static EsPage searchDataPage(String index, String type, int startPage, int pageSize, QueryBuilder query, String fields, String sortField, String highlightField) {
+    public static EsPage searchDataAsPage(String index, String type, int currentPage, int pageSize, QueryBuilder query, String fields, String sortField, String highlightFieldsStr) {
+        String[] highlightFields = getHighlightArray(highlightFieldsStr);
+        SearchResponse searchResponse = sendSearchRequest(index, type, currentPage, pageSize, query, fields, sortField, highlightFields);
+
+        long totalHits = searchResponse.getHits().totalHits;
+        long length = searchResponse.getHits().getHits().length;
+
+        log.debug("共查询到[{}]条数据,返回[{}]条数据.", totalHits, length);
+
+        if (searchResponse.status().getStatus() == 200) {
+            // 解析返回结果
+            List<Map<String, Object>> sourceList = processSearchResponse(searchResponse, highlightFields);
+            return new EsPage(currentPage, pageSize, (int) totalHits, sourceList);
+        }
+
+        return null;
+    }
+
+
+
+
+    /**
+     * 结构化查询，将查询数据封装到到列表中
+     *
+     * @attention 高亮字段结果将会覆盖正常返回的字段的结果
+     * @attention 高亮字段需要作为查询的条件，否则查询结果不会返回highlight而报空指针异常
+     * @attention type传参: 对于低/高版本es,会查询索引中的多个索引，如果都不存在，不会报错，查询结果为空。
+     *                       如果不传参，则会查询索引所有存在的type
+     *                       兼容高低版本的es
+     *
+     * @param index          索引名称
+     * @param type           索引type,低版本中索引支持多个type,高版本中最多只有一个type,但是不管传递1或多个type都不会报错。
+     * @param currentPage           开始行,基于0
+     * @param pageSize           每页显示条数
+     * @param query          查询条件
+     * @param fields         需要显示的字段，逗号分隔（缺省为全部字段）
+     * @param sortField      排序字段
+     * @param highlightFieldsStr 高亮字段
+     * @return
+     */
+    public static List<Map<String, Object>> searchDataAsList(String index, String type, int currentPage, int pageSize, QueryBuilder query, String fields, String sortField, String highlightFieldsStr) {
+        String[] highlightArray = getHighlightArray(highlightFieldsStr);
+        SearchResponse searchResponse = sendSearchRequest(index, type, currentPage, pageSize, query, fields, sortField, highlightArray);
+
+        if (searchResponse.status().getStatus() == 200) {
+            // 解析返回结果
+            return processSearchResponse(searchResponse, highlightArray);
+        }
+        return null;
+    }
+
+    /**
+     * 加工es响应结果
+     *
+     * @param searchResponse
+     * @param highlightFields
+     */
+    private static List<Map<String, Object>> processSearchResponse(SearchResponse searchResponse, String[] highlightFields) {
+        List<Map<String, Object>> sourceList = new ArrayList<Map<String, Object>>();
+        boolean hasHighlight = (null != highlightFields && highlightFields.length > 0);
+
+        for (SearchHit searchHit : searchResponse.getHits().getHits()) {
+            // 1.将文档id封装到返回结果中
+            searchHit.getSourceAsMap().put("id", searchHit.getId());
+
+            // 2.加工高亮字段: 会覆盖正常的返回值。
+            if (hasHighlight) {
+                for (int i = 0; i < highlightFields.length; i++) {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    Text[] text = searchHit.getHighlightFields().get(highlightFields[i]).getFragments();
+                    if (text != null) {
+                        for (Text str : text) {
+                            // <em>123456</em>
+                            // TestHelper.println("fragment",str);
+                            stringBuilder.append(str.string());
+                        }
+                        searchHit.getSourceAsMap().put(highlightFields[i], stringBuilder.toString());
+                    }
+                }
+            }
+            sourceList.add(searchHit.getSourceAsMap());
+        }
+        return sourceList;
+    }
+
+    private static SearchResponse sendSearchRequest(String index, String type, int currentPage, int pageSize, QueryBuilder query, String fields, String sortField, String[] highlightFields) {
         // 1.设置索引
         SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index);
         if (StringUtils.isNotEmpty(type)) {
             // 2.设置类型
+            /*
+            设置查询的type,可以不存在
+            之所以参数为数组类型，可以兼容es版本,因为高版本es中index最多有一个type
+             */
             searchRequestBuilder.setTypes(type.split(","));
         }
         searchRequestBuilder.setSearchType(SearchType.QUERY_THEN_FETCH);
@@ -223,145 +333,59 @@ public class ElasticsearchUtil {
             searchRequestBuilder.setFetchSource(fields.split(","), null);
         }
 
-		//排序字段
+        //排序字段
         if (StringUtils.isNotEmpty(sortField)) {
             searchRequestBuilder.addSort(sortField, SortOrder.DESC);
         }
 
-		// 高亮（xxx=111,aaa=222）
-        if (StringUtils.isNotEmpty(highlightField)) {
+        if (null != highlightFields && highlightFields.length > 0) {
             HighlightBuilder highlightBuilder = new HighlightBuilder();
-
-            //highlightBuilder.preTags("<span style='color:red' >");//设置前缀
-            //highlightBuilder.postTags("</span>");//设置后缀
-
+            // 默认前后缀: <em> </em>
+            /*highlightBuilder.preTags("<span style='color:red' >");//设置前缀
+            highlightBuilder.postTags("</span>");//设置后缀*/
             // 设置高亮字段
-            highlightBuilder.field(highlightField);
+            for (int i = 0; i < highlightFields.length; i++) {
+                // TestHelper.println("高亮字段", highlightFields[i]);
+                highlightBuilder.field(highlightFields[i]);
+            }
             searchRequestBuilder.highlighter(highlightBuilder);
         }
 
-		//searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
+        //searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
         searchRequestBuilder.setQuery(query);
 
-        // 分页应用
-        searchRequestBuilder.setFrom(startPage).setSize(pageSize);
+        // 分页(浅分页)
+        searchRequestBuilder.setFrom((currentPage - 1) * pageSize).setSize(pageSize);
 
         // 设置是否按查询匹配度排序
         searchRequestBuilder.setExplain(true);
 
         //打印的内容 可以在 Elasticsearch head 和 Kibana  上执行查询
-        log.info("\n{}", searchRequestBuilder);
+        log.debug("\n{}", searchRequestBuilder);
 
+        //TimeHelper.start();
         // 执行搜索,返回搜索响应信息
-        SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
-
-        long totalHits = searchResponse.getHits().totalHits;
-        long length = searchResponse.getHits().getHits().length;
-
-        log.debug("共查询到[{}]条数据,处理数据条数[{}]", totalHits, length);
-
-        if (searchResponse.status().getStatus() == 200) {
-			// 解析对象
-            List<Map<String, Object>> sourceList = setSearchResponse(searchResponse, highlightField);
-
-            return new EsPage(startPage, pageSize, (int) totalHits, sourceList);
-        }
-
-        return null;
-
+        return searchRequestBuilder.execute().actionGet();
     }
 
-
     /**
-     * 使用分词查询
      *
-     * @param index          索引名称
-     * @param type           类型名称,可传入多个type逗号分隔
-     * @param query          查询条件
-     * @param size           文档大小限制
-     * @param fields         需要显示的字段，逗号分隔（缺省为全部字段）
-     * @param sortField      排序字段
-     * @param highlightField 高亮字段
+     * @param highlightFieldsStr 高亮字符串,不同字段以,隔开
      * @return
      */
-    public static List<Map<String, Object>> searchListData(
-            String index, String type, QueryBuilder query, Integer size,
-            String fields, String sortField, String highlightField) {
-
-        SearchRequestBuilder searchRequestBuilder = client.prepareSearch(index);
-        if (StringUtils.isNotEmpty(type)) {
-            searchRequestBuilder.setTypes(type.split(","));
+    private static String[] getHighlightArray(String highlightFieldsStr) {
+        String[] highlightFields = null;
+        if (StringUtils.isNotBlank(highlightFieldsStr)) {
+            // 字段不能包含空格，所以需要移除空格
+            highlightFields = StringUtils.remove(highlightFieldsStr," ").split(",");
         }
-
-        if (StringUtils.isNotEmpty(highlightField)) {
-            HighlightBuilder highlightBuilder = new HighlightBuilder();
-            // 设置高亮字段
-            highlightBuilder.field(highlightField);
-            searchRequestBuilder.highlighter(highlightBuilder);
-        }
-
-        searchRequestBuilder.setQuery(query);
-
-        if (StringUtils.isNotEmpty(fields)) {
-            searchRequestBuilder.setFetchSource(fields.split(","), null);
-        }
-        searchRequestBuilder.setFetchSource(true);
-
-        if (StringUtils.isNotEmpty(sortField)) {
-            searchRequestBuilder.addSort(sortField, SortOrder.DESC);
-        }
-
-        if (size != null && size > 0) {
-            searchRequestBuilder.setSize(size);
-        }
-
-        //打印的内容 可以在 Elasticsearch head 和 Kibana  上执行查询
-        log.info("\n{}", searchRequestBuilder);
-
-        SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
-
-        long totalHits = searchResponse.getHits().totalHits;
-        long length = searchResponse.getHits().getHits().length;
-
-        log.info("共查询到[{}]条数据,处理数据条数[{}]", totalHits, length);
-
-        if (searchResponse.status().getStatus() == 200) {
-            // 解析对象
-            return setSearchResponse(searchResponse, highlightField);
-        }
-        return null;
-
+        return highlightFields;
     }
 
-
-    /**
-     * 高亮结果集 特殊处理
-     *
-     * @param searchResponse
-     * @param highlightField
-     */
-    private static List<Map<String, Object>> setSearchResponse(SearchResponse searchResponse, String highlightField) {
-        List<Map<String, Object>> sourceList = new ArrayList<Map<String, Object>>();
-        StringBuffer stringBuffer = new StringBuffer();
-
-        for (SearchHit searchHit : searchResponse.getHits().getHits()) {
-            searchHit.getSourceAsMap().put("id", searchHit.getId());
-
-            if (StringUtils.isNotEmpty(highlightField)) {
-
-                System.out.println("遍历 高亮结果集，覆盖 正常结果集" + searchHit.getSourceAsMap());
-                Text[] text = searchHit.getHighlightFields().get(highlightField).getFragments();
-
-                if (text != null) {
-                    for (Text str : text) {
-                        stringBuffer.append(str.string());
-                    }
-					//遍历 高亮结果集，覆盖 正常结果集
-                    searchHit.getSourceAsMap().put(highlightField, stringBuffer.toString());
-                }
-            }
-            sourceList.add(searchHit.getSourceAsMap());
-        }
-        return sourceList;
+    public static void main(String[] args) {
+        // 移除指定的字符,不会修改源字符串
+        String s = " This is my world!";
+        TestHelper.println(StringUtils.remove(s,' '));
+        TestHelper.println(s);
     }
 }

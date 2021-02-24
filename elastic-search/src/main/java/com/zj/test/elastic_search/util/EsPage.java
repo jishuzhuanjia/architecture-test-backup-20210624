@@ -81,4 +81,17 @@ public class EsPage {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "EsPage{" +
+                "currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                ", recordCount=" + recordCount +
+                ", recordList=" + recordList +
+                ", pageCount=" + pageCount +
+                ", beginPageIndex=" + beginPageIndex +
+                ", endPageIndex=" + endPageIndex +
+                '}';
+    }
 }
