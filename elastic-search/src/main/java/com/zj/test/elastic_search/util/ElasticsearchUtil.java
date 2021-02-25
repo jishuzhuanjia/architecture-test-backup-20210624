@@ -55,11 +55,9 @@ public class ElasticsearchUtil {
     /**
      * 如果索引不存在，则创建索引
      *
-     * @finished-Time                       2021年2月22日 09:52:59
-     * @param  index                        索引名
-     * @return                              索引已经存在或创建失败, 返回false, 否则返回true。
-     *
-     * @exception InvalidIndexNameException 运行时异常,索引名无效，如索引名字母必须全部小写,否则会抛出此异常
+     * @param       index   索引名
+     * @return      索引已经存在或创建失败, 返回false, 否则返回true。
+     * @exception   InvalidIndexNameException   运行时异常,索引名无效，如索引名字母必须全部小写,否则会抛出此异常
      *
      */
     public static boolean createIndex(String index) {
@@ -77,8 +75,7 @@ public class ElasticsearchUtil {
     /**
      * 删除索引
      *
-     * @finished-time   2021年2月22日 10:41:15
-     * @param  index    要删除的索引名
+     * @param   index   要删除的索引名
      * @return          如果成功删除返回true, 索引不存在或删除失败则返回false。
      */
     public static boolean deleteIndex(String index) {
@@ -97,11 +94,10 @@ public class ElasticsearchUtil {
 
     /**
      * 判断索引是否存在
-     * 说明：由于判断索引是否存在所需时间较删除/创建索引微不足道(1:10左右)，因此在删除/创建索引之前进行索引存在判断可减少用时。
+     * 说明：由于判断索引是否存在所需时间较删除/创建索引微不足道(1:10左右)，因此在删除/创建索引之前进行索引存在判断可减少用时
      *
-     * @finish-time     2021年2月22日 16:38:11
-     * @param index     索引
-     * @return
+     * @param   index   索引
+     * @return          索引存在返回true,否则返回false
      */
     public static boolean isIndexExist(String index) {
         // indices: index的复数
@@ -112,25 +108,24 @@ public class ElasticsearchUtil {
     /**
      * 判断index下指定type是否存在
      *
-     * @finished-time   2021年2月22日 17:18:13
+     * @param   index   索引
+     * @param   type    类型
+     *
      */
     public boolean isTypeExist(String index, String type) {
-        return isIndexExist(index)
-                ? client.admin().indices().prepareTypesExists(index).setTypes(type).execute().actionGet().isExists()
-                : false;
+        return isIndexExist(index) && client.admin().indices().prepareTypesExists(index).setTypes(type).execute().actionGet().isExists();
     }
 
     /**
      * 插入/更新：根据指定的id插入/更新数据，这取决于指定id的数据是否已经存在，如果存在，则是更新操作。
+     * 为了与update操作区分开，请使用update方法进行更新操作。
+     * 不要进行批量操作，性能不好
+     * index type参数不能省略，如果索引没有完成映射，会自动完成索引和type的映射，如果已经完成映射，则index 和 type必须与已有对应，否则报错
      *
-     * @tip                 为了与update操作区分开，请使用update方法进行更新操作。
-     * @tip                 不要进行批量操作，性能不好
-     * @tip                 index type参数不能省略，如果索引没有完成映射，会自动完成索引和type的映射，如果已经完成映射，则index 和 type必须与已有对应，否则报错
-     * @finished-time       2021年2月22日 17:18:22
-     * @param  jsonObject   要插入的数据
-     * @param  index        索引，类似数据库
-     * @param  type         类型，类似表
-     * @param  id           数据id
+     * @param   jsonObject  要插入的数据
+     * @param   index       索引，类似数据库
+     * @param   type        类型，类似表
+     * @param   id          数据id
      * @return              返回插入/更新的数据的id
      */
     public static String insertDataUseSpecifiedId(JSONObject jsonObject, String index, String type, String id) {
@@ -146,14 +141,13 @@ public class ElasticsearchUtil {
     }
 
     /**
-     * 插入数据
+     * 插入数据,使用es随机生成的id
+     * 不要进行批量操作，性能不好
      *
-     * @finished-time       2021年2月23日 09:46:26
-     * @tip                 不要进行批量操作，性能不好
-     * @param  jsonObject   要增加的数据
-     * @param  index        索引，类似数据库
-     * @param  type         类型，类似表
-     * @return
+     * @param   jsonObject  要增加的数据
+     * @param   index       索引，类似数据库
+     * @param   type        类型，类似表
+     * @return              插入数据的id
      */
     public static String insertDataUseRandomId(JSONObject jsonObject, String index, String type) {
         IndexResponse response = client.prepareIndex(index, type).setSource(jsonObject).get();
@@ -163,10 +157,9 @@ public class ElasticsearchUtil {
     /**
      * 通过id删除数据
      *
-     * @finish-time     2021年2月23日 09:57:38
-     * @param  index    索引，类似数据库
-     * @param  type     类型，类似表
-     * @param  id       数据ID
+     * @param   index   索引
+     * @param   type    类型
+     * @param   id      数据id
      */
     public static void deleteDataById(String index, String type, String id) {
         DeleteResponse response = client.prepareDelete(index, type, id).execute().actionGet();
@@ -175,15 +168,12 @@ public class ElasticsearchUtil {
 
     /**
      * 通过id更新数据
+     * 如果指定的id数据不存在，就什么都不做
      *
-     * @finish-time         2021年2月23日 10:01:21
-     * @tip                 如果指定的id数据不存在，就什么都不做
-     *
-     * @param  jsonObject   要增加的数据
-     * @param  index        索引，类似数据库
-     * @param  type         类型，类似表
-     * @param  id           数据id
-     * @return
+     * @param   jsonObject  要增加的数据
+     * @param   index       索引，类似数据库
+     * @param   type        类型，类似表
+     * @param   id          数据id
      */
     public static void updateDataById(JSONObject jsonObject, String index, String type, String id) {
         UpdateRequest updateRequest = new UpdateRequest();
@@ -192,14 +182,13 @@ public class ElasticsearchUtil {
     }
 
     /**
-     * 通过id获取数据
+     * 通过id获取数据,结果以Map返回
      *
-     * @finish-time     2021年2月23日 10:16:26
-     * @param  index    索引，类似数据库
-     * @param  type     类型，类似表
-     * @param  id       数据id
-     * @param  fields   需要显示的字段，逗号分隔（缺省为全部字段）
-     * @return
+     * @param   index   索引，类似数据库
+     * @param   type    类型，类似表
+     * @param   id      数据id
+     * @param   fields  需要显示的字段，逗号分隔（缺省为全部字段）
+     * @return          返回查到的数据，如果指定id的数据不存在，则返回null
      */
     public static Map<String, Object> searchDataById(String index, String type, String id, String fields) {
         GetRequestBuilder getRequestBuilder = client.prepareGet(index, type, id);
@@ -213,25 +202,23 @@ public class ElasticsearchUtil {
     /**
      * 结构化查询，将查询数据封装到到分页中
      *
-     * @attention                   高亮字段结果将会覆盖正常返回的字段的结果
-     * @attention                   高亮字段需要作为查询的条件，否则查询结果不会返回highlight而报空指针异常
-     * @attention                   type传参: 对于低/高版本es,会查询索引中的多个索引，如果都不存在，不会报错，
-     *                              查询结果为空。如果不传参，则会查询索引所有存在的type，兼容高低版本的es
-     * @finish-time                 2021年2月23日 14:18:54
+     * 高亮字段结果将会覆盖正常返回的字段的结果
+     * 高亮字段需要作为查询的条件，否则查询结果不会返回highlight而报空指针异常
+     * type传参: 对于低/高版本es,会查询索引中的多个索引，如果都不存在，不会报错，
+     * 查询结果为空。如果不传参，则会查询索引所有存在的type，兼容高低版本的es
      *
-     *
-     * @param  index                索引名称
-     * @param  type                 索引type,低版本中索引支持多个type,高版本中最多只有一个type,
-     *                              但是不管传递1或多个type都不会报错。
-     * @param  currentPage          开始行,基于0
-     * @param  pageSize             每页显示条数
-     * @param  query                查询条件
-     * @param  fieldsStr            需要显示的字段，逗号分隔（缺省为全部字段）
+     * @param   index               索引名称
+     * @param   type                索引type,低版本中索引支持多个type,高版本中最多只有一个type,
+     *                              但是不管传递1或多个type都不会报错.
+     * @param   currentPage         开始行,基于0
+     * @param   pageSize            每页显示条数
+     * @param   query               查询条件
+     * @param   fieldsStr           需要显示的字段，逗号分隔（缺省为全部字段）
+     *                              TIP: 字段必须以,隔开,且不能有多余的空格
+     * @param   sortField           排序字段
+     * @param   highlightFieldsStr  高亮字段
      *                              TIP: 字段必须以,隔开,且不能有多余的空格。
-     * @param  sortField            排序字段
-     * @param  highlightFieldsStr   高亮字段
-     *                              TIP: 字段必须以,隔开,且不能有多余的空格。
-     * @return
+     * @return                      EsPage中List永不为null,如果查询不到数据,size为0
      */
     public static EsPage searchDataAsPage(String index, String type,
                                           int currentPage, int pageSize, QueryBuilder query,
@@ -261,19 +248,19 @@ public class ElasticsearchUtil {
      * @attention                   高亮字段需要作为查询的条件，否则查询结果不会返回highlight而报空指针异常
      * @attention                   type传参: 对于低/高版本es,会查询索引中的多个索引，如果都不存在，不会报错，查询结果为空。
      *                              如果不传参，则会查询索引所有存在的type
-     *                              兼容高低版本的es
+     *                              兼容高低版本的es.
      *
-     * @param  index                索引名称
-     * @param  type                 索引type,低版本中索引支持多个type,高版本中最多只有一个type,但是不管传递1或多个type都不会报错。
-     * @param  currentPage          开始行,基于0
-     * @param  pageSize             每页显示条数
-     * @param  query                查询条件
-     * @param  fieldsStr            需要显示的字段，逗号分隔（缺省为全部字段）
-     *                              TIP: 字段必须以,隔开,且不能有多余的空格。
-     * @param  sortField            排序字段
-     * @param  highlightFieldsStr   高亮字段
-     *                              TIP: 字段必须以,隔开,且不能有多余的空格。
-     * @return
+     * @param   index               索引名称
+     * @param   type                索引type,低版本中索引支持多个type,高版本中最多只有一个type,但是不管传递1或多个type都不会报错。
+     * @param   currentPage         开始行,基于0
+     * @param   pageSize            每页显示条数
+     * @param   query               查询条件
+     * @param   fieldsStr           需要显示的字段，逗号分隔（缺省为全部字段）
+     *                              TIP: 字段必须以,隔开,且不能有多余的空格
+     * @param   sortField           排序字段
+     * @param   highlightFieldsStr  高亮字段
+     *                              TIP: 字段必须以,隔开,且不能有多余的空格.
+     * @return                      List永不为null,如果查询不到数据,size为0
      */
     public static List<Map<String, Object>> searchDataAsList(String index, String type,
                                                              int currentPage, int pageSize, QueryBuilder query,

@@ -267,7 +267,7 @@ class ElasticsearchUtilTest {
      */
     @Test
     void searchDataById() {
-        Map<String, Object> stringObjectMap = elasticsearchUtil.searchDataById("index-created-by-elasticsearchutil", "user", "bqeMzHcBNFW3G9O19W-Z", "_index,_type,_id,username");
+        Map<String, Object> stringObjectMap = elasticsearchUtil.searchDataById("index-created-by-elasticsearchutil", "user", "bqeMzHcBNFW3G9O19W-ZH", "_index,_type,_id,username");
         TestHelper.println("searchDataById(\"index-created-by-elasticsearchutil\", \"user\", \"bqeMzHcBNFW3G9O19W-Z\", \"username\")", stringObjectMap);
     }
 

@@ -48,7 +48,7 @@ public class ElasticsearchConfig {
         try {
             // 配置信息
             Settings settings = Settings.builder()
-                    .put("cluster.name", clusterName) //集群名字
+                    .put("cluster.name", clusterName) //集群名字需要正确，否则会报错
                     .put("client.transport.sniff", true)//增加嗅探机制，找到ES集群
                     .put("thread_pool.search.size", Integer.parseInt(poolSize))//增加线程池个数，暂时设为5
                     .build();
