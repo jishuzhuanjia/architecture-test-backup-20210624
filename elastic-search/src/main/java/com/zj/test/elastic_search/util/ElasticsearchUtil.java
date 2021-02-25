@@ -372,10 +372,10 @@ public class ElasticsearchUtil {
         return highlightFields;
     }*/
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         // 移除指定的字符,不会修改源字符串
         String s = " This is my world!";
         TestHelper.println(StringUtils.remove(s, ' '));
         TestHelper.println(s);
-    }
+    }*/
 }
