@@ -82,10 +82,13 @@ Alt+ 4                                  Run
 Alt + ←                                 选择上一个文件标签
 Alt + →                                 选择下一个文件标签
 
+## 6.debug
+Alt + F8                                Evaluate Expression: 以独立窗口查看变量具体值
+Ctrl + Shift + F8                       查看和管理当前断点
+Ctrl + Shift + F8                       查看断点
 ################################## 以上为开发中常用 ##################################    
 
 3.2、查询快捷键
-
 选中文本，按Alt+F3 ，高亮相同文本，F3逐个往下查找相同文本
 F4 查找变量来源
 Ctrl+Shift+O 弹出显示查找内容
@@ -122,11 +125,10 @@ Ctrl+Alt+V，可以引入变量。例如：new String(); 自动导入变量定�
 Ctrl+~，快速切换方案（界面外观、代码风格、快捷键映射等菜单
 
 3.4、调试快捷键
-Alt+F8 debug时选中查看值
 Alt+Shift+F9，选择 Debug
 Alt+Shift+F10，选择 Run
 Ctrl+Shift+F9，编译
-Ctrl+Shift+F8，查看断点
+
 F7，步入
 Shift+F7，智能步入
 Alt+Shift+F7，强制步入
