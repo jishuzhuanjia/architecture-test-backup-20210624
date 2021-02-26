@@ -1,7 +1,6 @@
 package com.zj.test.elastic_search.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.zj.test.util.TestHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -56,8 +55,8 @@ public class ElasticsearchUtil {
      * 如果索引不存在，则创建索引
      *
      * @param       index   索引名
-     * @return      索引已经存在或创建失败, 返回false, 否则返回true。
-     * @exception   InvalidIndexNameException   运行时异常,索引名无效，如索引名字母必须全部小写,否则会抛出此异常
+     * @return 索引已经存在或创建失败, 返回false, 否则返回true。
+     * @exception InvalidIndexNameException   运行时异常,索引名无效，如索引名字母必须全部小写,否则会抛出此异常
      *
      */
     public static boolean createIndex(String index) {
@@ -76,7 +75,7 @@ public class ElasticsearchUtil {
      * 删除索引
      *
      * @param   index   要删除的索引名
-     * @return          如果成功删除返回true, 索引不存在或删除失败则返回false。
+     * @return 如果成功删除返回true, 索引不存在或删除失败则返回false。
      */
     public static boolean deleteIndex(String index) {
         if (!isIndexExist(index)) {
@@ -97,7 +96,7 @@ public class ElasticsearchUtil {
      * 说明：由于判断索引是否存在所需时间较删除/创建索引微不足道(1:10左右)，因此在删除/创建索引之前进行索引存在判断可减少用时
      *
      * @param   index   索引
-     * @return          索引存在返回true,否则返回false
+     * @return 索引存在返回true, 否则返回false
      */
     public static boolean isIndexExist(String index) {
         // indices: index的复数
@@ -126,7 +125,7 @@ public class ElasticsearchUtil {
      * @param   index       索引，类似数据库
      * @param   type        类型，类似表
      * @param   id          数据id
-     * @return              返回插入/更新的数据的id
+     * @return 返回插入/更新的数据的id
      */
     public static String insertDataUseSpecifiedId(JSONObject jsonObject, String index, String type, String id) {
         // get() = execute().actionGet()
@@ -147,7 +146,7 @@ public class ElasticsearchUtil {
      * @param   jsonObject  要增加的数据
      * @param   index       索引，类似数据库
      * @param   type        类型，类似表
-     * @return              插入数据的id
+     * @return 插入数据的id
      */
     public static String insertDataUseRandomId(JSONObject jsonObject, String index, String type) {
         IndexResponse response = client.prepareIndex(index, type).setSource(jsonObject).get();
@@ -188,7 +187,7 @@ public class ElasticsearchUtil {
      * @param   type    类型，类似表
      * @param   id      数据id
      * @param   fields  需要显示的字段，逗号分隔（缺省为全部字段）
-     * @return          返回查到的数据，如果指定id的数据不存在，则返回null
+     * @return 返回查到的数据，如果指定id的数据不存在，则返回null
      */
     public static Map<String, Object> searchDataById(String index, String type, String id, String fields) {
         GetRequestBuilder getRequestBuilder = client.prepareGet(index, type, id);
@@ -218,7 +217,7 @@ public class ElasticsearchUtil {
      * @param   sortField           排序字段
      * @param   highlightFieldsStr  高亮字段
      *                              TIP: 字段必须以,隔开,且不能有多余的空格。
-     * @return                      EsPage中List永不为null,如果查询不到数据,size为0
+     * @return EsPage中List永不为null, 如果查询不到数据, size为0
      */
     public static EsPage searchDataAsPage(String index, String type,
                                           int currentPage, int pageSize, QueryBuilder query,
@@ -244,9 +243,9 @@ public class ElasticsearchUtil {
     /**
      * 结构化查询，将查询数据封装到到列表中
      *
-     * @attention                   高亮字段结果将会覆盖正常返回的字段的结果
-     * @attention                   高亮字段需要作为查询的条件，否则查询结果不会返回highlight而报空指针异常
-     * @attention                   type传参: 对于低/高版本es,会查询索引中的多个索引，如果都不存在，不会报错，查询结果为空。
+     * @attention 高亮字段结果将会覆盖正常返回的字段的结果
+     * @attention 高亮字段需要作为查询的条件，否则查询结果不会返回highlight而报空指针异常
+     * @attention type传参: 对于低/高版本es,会查询索引中的多个索引，如果都不存在，不会报错，查询结果为空。
      *                              如果不传参，则会查询索引所有存在的type
      *                              兼容高低版本的es.
      *
@@ -260,7 +259,7 @@ public class ElasticsearchUtil {
      * @param   sortField           排序字段
      * @param   highlightFieldsStr  高亮字段
      *                              TIP: 字段必须以,隔开,且不能有多余的空格.
-     * @return                      List永不为null,如果查询不到数据,size为0
+     * @return List永不为null, 如果查询不到数据, size为0
      */
     public static List<Map<String, Object>> searchDataAsList(String index, String type,
                                                              int currentPage, int pageSize, QueryBuilder query,
