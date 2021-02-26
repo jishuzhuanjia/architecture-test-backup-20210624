@@ -7,6 +7,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
@@ -49,6 +50,14 @@ public class ElasticsearchUtil {
     @PostConstruct
     private void init() {
         client = this.transportClient;
+    }
+
+    public static TransportClient getClient() {
+        return client;
+    }
+
+    public static void setClient(TransportClient client) {
+        ElasticsearchUtil.client = client;
     }
 
     /**
@@ -308,6 +317,17 @@ public class ElasticsearchUtil {
         }
         return sourceList;
     }
+
+    /**
+     * 发送Bulk api请求，实现批量操作
+     * 推荐批量操作数: 1000 ~ 5000
+     *
+     */
+    public void sendBulkRequest(){
+
+    }
+
+
 
     private static SearchResponse sendSearchRequest(String index, String type, int currentPage, int pageSize, QueryBuilder query, String fields, String sortField, String[] highlightFields) {
         // 1.设置索引

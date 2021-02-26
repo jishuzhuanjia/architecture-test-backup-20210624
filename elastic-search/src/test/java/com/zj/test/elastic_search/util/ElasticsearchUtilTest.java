@@ -3,6 +3,13 @@ package com.zj.test.elastic_search.util;
 import com.alibaba.fastjson.JSONObject;
 import com.zj.test.util.TestHelper;
 import com.zj.test.util.TimeHelper;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexRequestBuilder;
+import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.WildcardQueryBuilder;
@@ -12,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -344,5 +352,91 @@ class ElasticsearchUtilTest {
         // id字段一定返回的字段
         //  {password=password-addData, id=5FDB173EC33E476BA07480A6F2DF3C33, username=username-addData}]
         TestHelper.println("elasticsearchUtil.searchDataPage(\"index-created-by-elasticsearchutil\", \"user\", 1, 5, boolQueryBuilder, \"username,password\", \"\", \"\")", results);
+    }
+
+    private static String TEST_INDEX_NAME = "index-created-by-elasticsearchutil";
+    private static String TEST_TYPE_NAME = "user";
+
+    /**
+     * bulk批量操作请求测试
+     *
+     * 【测试输出】
+     *
+     * 【结论】
+     *
+     * 【时耗记录】
+     * bulk index 1000      233ms
+     * bulk index 2000      198ms
+     * bulk index 3000      237ms
+     * bulk index 4000      425ms
+     * bulk index 5000      326ms
+     * bulk index 100000    1921ms
+     * 可以看到,bulk进行批量操作已经很快了。
+     *
+     */
+    @Test
+    public void bulkRequestTest() {
+        TransportClient client = ElasticsearchUtil.getClient();
+        //
+        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
+
+        try {
+            for (int i = 1; i <= 100000; i++) {
+                /* IndexRequestBuilder: 创建/更新:
+                1.创建的情形: 没有指定id或者指定的id不存在数据，则会插入数据。
+                2.更新的情形: 指定的id存在数据，则进行更新操作。
+                 */
+                IndexRequestBuilder indexRequestBuilder1 = client.prepareIndex(TEST_INDEX_NAME, TEST_TYPE_NAME, "bulk-id" + i)
+                        .setSource(XContentFactory.jsonBuilder()
+                                .startObject()
+                                .field("username", "bulk zhoujian " + i)
+                                .field("password", "password" + i)
+                                .endObject());
+
+                bulkRequestBuilder.add(indexRequestBuilder1);
+            }
+
+            TimeHelper.start("bulk index请求测试");
+            BulkResponse bulkResponse = bulkRequestBuilder.get();
+            // OK
+            TestHelper.println(bulkResponse.status());
+            TimeHelper.finish();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * bulk请求传递字节数据DEMO
+     */
+    @Test
+    public void bulkRequestTest2() {
+        TransportClient client = ElasticsearchUtil.getClient();
+        //
+        BulkRequestBuilder bulkRequestBuilder = client.prepareBulk();
+
+        TimeHelper.start("bulk index请求测试");
+        // json字符串规则:
+        // action行和request body行结尾都需要有换行符\n,而不是\\n
+        String str = "{ \"index\": {\"_id\": \"bulk-id-uuu2\" }}\n{\"username\":\"wangcai2\",\"password\":\"123456\"}\n";
+        byte[] bytes = str.getBytes();
+
+        // java.lang.IllegalArgumentException: The bulk request must be terminated by a newline [
+        //]
+        // 最后一行要以\n结尾。
+        // org.elasticsearch.action.ActionRequestValidationException: Validation Failed: 1: no requests added;
+        // 除最后一行,每一行都要以\n结尾
+        try {
+            bulkRequestBuilder.add(bytes,0,bytes.length,TEST_INDEX_NAME,TEST_TYPE_NAME, XContentType.JSON);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        BulkResponse bulkResponse = bulkRequestBuilder.get();
+
+        // OK
+        TestHelper.println(bulkResponse.status());
+        TimeHelper.finish();
     }
 }
