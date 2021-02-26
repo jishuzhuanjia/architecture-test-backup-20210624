@@ -429,7 +429,12 @@ class ElasticsearchUtilTest {
         // org.elasticsearch.action.ActionRequestValidationException: Validation Failed: 1: no requests added;
         // 除最后一行,每一行都要以\n结尾
         try {
+            // 使用该方法,json字符串中_index,_type字段可省略,会使用参数中的默认值。
             bulkRequestBuilder.add(bytes,0,bytes.length,TEST_INDEX_NAME,TEST_TYPE_NAME, XContentType.JSON);
+
+            // 使用该方法,json字符串中必须提供_index,_type字段，否则会报错:
+            // org.elasticsearch.action.ActionRequestValidationException: Validation Failed: 1: index is missing;2: type is missing;
+            // bulkRequestBuilder.add(bytes,0,bytes.length,XContentType.JSON);
         } catch (Exception e) {
             e.printStackTrace();
         }
