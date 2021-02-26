@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.alibaba.fastjson.parser.Feature;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
@@ -87,6 +88,59 @@ public class FastJsonTest {
         array.add(true);
         //[1, zhoujian, name, true]
         TestHelper.println(Arrays.toString(array.toArray()));
+
+        /* ------------------------- 反序列化控制 ------------------------- */
+        TestHelper.startSubTest("反序列化控制");
+        String userObject = "{\n" +
+                "    \"username\": \"小菜鸭子-反序列化控制\",\n" +
+                "    \"password\": \"213456\",\n" +
+                "    \"lastLoginTime\": \"2021-2-26 00:00:00\",\n" +
+                "    \"age\": 26\n" +
+                "}";
+
+        /*
+        1.默认解析规则
+        1.1.JSON字符串只能yyyy-MM-dd HH:mm:ss才能解析成Date类型,否则会解析报错:
+        com.alibaba.fastjson.JSONException: For input string: "2021/2/26 00:00:00"
+
+        1.2.JSON字符串可以有实体类没有的字段，默认解析时会被忽略，不会报错。
+         */
+        TestHelper.println("JSON.parseObject(userObject,User.class)", JSON.parseObject(userObject, User.class));
+
+        userObject = "{\n" +
+                "    \"username\": \"小菜鸭子-反序列化控制\",\n" +
+                "    \"password\": \"213456\",\n" +
+                "    'lastLoginTime': '2021-2-26 00:00:00',\n" +
+                "    'age': 26\n" +
+                "}";
+        // 1.3.默认可以解析字段和值用单引号'包围的JSON字符串。
+        TestHelper.startSubTest("1.3.默认可以解析字段和值用单引号'包围的JSON字符串");
+        TestHelper.println("JSON.parseObject(userObject,User.class)", JSON.parseObject(userObject, User.class));
+
+        // 1.4.默认空串会被解析成"",而不是null
+        TestHelper.startSubTest("1.4.默认空串会被解析成\"\",而不是null");
+        userObject = "{\n" +
+                "    \"username\": \"\",\n" +
+                "    \"password\": \"213456\",\n" +
+                "    \"lastLoginTime\": \"2021-2-26 00:00:00\",\n" +
+                "    'age': 26\n" +
+                "}";
+        TestHelper.println("JSON.parseObject(userObject,User.class)", JSON.parseObject(userObject, User.class));
+
+        /*
+        1.5.默认json属性字段可以不用引号包围，不会报错,但是值一定要用""或''包围,不能用"' 或 '"包围,否则报错:
+        com.alibaba.fastjson.JSONException: unclosed single-quote string
+
+        并且字段和值可以一个用""包围，另一个用''包围，不会报错。
+        */
+        TestHelper.startSubTest("1.5.默认json属性字段可以不用引号包围，不会报错,但是值一定要用\"\"或''包围,不能用\"' 或 '\"包围");
+        userObject = "{\n" +
+                "    username: '小菜鸭',\n" +
+                "    \"password\": '213456',\n" +
+                "    \"lastLoginTime\": \"2021-2-26 00:00:00\",\n" +
+                "    \"age\": 26\n" +
+                "}";
+        TestHelper.println("JSON.parseObject(userObject,User.class)", JSON.parseObject(userObject, User.class));
     }
 
     /**
