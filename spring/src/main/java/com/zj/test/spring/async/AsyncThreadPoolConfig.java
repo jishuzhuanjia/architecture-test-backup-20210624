@@ -24,9 +24,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class AsyncThreadPoolConfig {
     private static final int corePoolSize = 10;     // 核心线程数（默认线程数）
     private static final int maxPoolSize = 100;     // 最大线程数
-    private static final int keepAliveTime = 10;    // 允许线程空闲时间（单位：默认为秒）
+    private static final int keepAliveSeconds = 10; // 允许线程空闲时间（单位：默认为秒）
     private static final int queueCapacity = 200;   // 缓冲队列数
-    private static final String threadNamePrefix = "Spring-Test-Async-Thread-"; // 线程池名前缀
+    private static final String threadNamePrefix = "Spring-Test-Async-Thread-"; // 线程池名前缀,加上编号总共15个字符，如果超过，前部截取丢弃。
 
     /*
      * 【如何使用该ThreadPoolTaskExecutor】
@@ -49,7 +49,7 @@ public class AsyncThreadPoolConfig {
         */
         executor.setQueueCapacity(queueCapacity);
         /*003.corePoolSize数量之外的线程如果空闲时间达到keepAliveTime，会被销毁*/
-        executor.setKeepAliveSeconds(keepAliveTime);
+        executor.setKeepAliveSeconds(keepAliveSeconds);
         // 设置线程名的前缀，不要过长，因为threadNamePrefix和线程编号拼接后超过15个字符的部分，会从字符串头部截取：如Spring-Test-Async-Thread-1 -> -Async-Thread-1
         // 线程编号: 从1开始
         executor.setThreadNamePrefix(threadNamePrefix);
