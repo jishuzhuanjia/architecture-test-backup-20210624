@@ -33,29 +33,19 @@ public class ProxyTestServiceProxyFactory implements InvocationHandler {
     }
 
     /**
-     * 获取ProxyTestService接口代理实例对象
+     * 使用动态代理技术，获取ProxyTestService接口代理实例对象
      */
     public ProxyTestService getProxyTestServiceProxy() {
-
-        // java.lang.IllegalArgumentException: interface com.zj.test.spring.proxy.service.ProxyTestService is not visible from class loader
-
-        // 应该是ProxyTestServiceImpl.class.getInterfaces()而不是ProxyTestService.class.getInterfaces()，否则:
-        // java.lang.ClassCastException: com.sun.proxy.$Proxy4 cannot be cast to com.zj.test.spring.proxy.service.ProxyTestService
-        /*ProxyTestService o = (ProxyTestService) Proxy.newProxyInstance(ProxyTestService.class.getClassLoader(), ProxyTestService.class.getInterfaces(),
-                this);*/
-
         /*
-        返回指定接口的代理类的实例
+        demo: 返回指定接口的代理类的实例
 
-        1.loader：不能是Class.class.getClassLoader(),否则会:
+        Proxy.newProxyInstance参数说明:
+        1.loader：要可见interfaces,不能是Class.class.getClassLoader(),否则会:
         java.lang.IllegalArgumentException: interface com.zj.test.spring.proxy.service.ProxyTestService
             is not visible from class loader
 
-        2.interfaces：必须是要代理的接口，否则可能会发生类转换异常：
-        java.lang.ClassCastException:
-            com.sun.proxy.$Proxy4 cannot be cast to com.zj.test.spring.proxy.service.ProxyTestService
-
-        这里也可以通过proxyTestService.class.getInterfaces[]
+        2.interfaces：要代理的接口，不能是具体的实现类,否则可能会发生类转换异常：
+        这里也可以通过proxyTestServiceImpl.class.getInterfaces[]来获取接口
 
         interfaces几种获取方式：
         1.直接通过接口, 指定需要代理的接口。
@@ -70,30 +60,33 @@ public class ProxyTestServiceProxyFactory implements InvocationHandler {
         proxyTestService.getClass().getInterfaces()
         虽然我们也不用管具体的实现，
         和2一样会代理实现类实现的所有接口，这往往不符合业务要求。
+        ---------------------
+        返回类型: 由于动态代理的原理是接口的动态实现，因此返回类型只能是接口类型。
         */
         ProxyTestService o = (ProxyTestService) Proxy.newProxyInstance(
+                // interfaces: 也可以是ProxyTestServiceImpl.getInterfaces()
                 ProxyTestService.class.getClassLoader(),new Class[]{ProxyTestService.class}, this);
         return o;
     }
 
     /**
-     * method: 代理接口中的方法
+     * @param  method   代理接口中的方法
      *
-     * args: 调用method传递的参数
+     * @param  args     调用method时传递的参数,如果没有参数,则args为null
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 模拟打开事务
         log.info("打开事务...");
 
-        // 如果接口中业务方法无参，则args==null。
-        TestHelper.println(method.getName() +" 接受参数", Arrays.toString(args));
+        // 如果接口方法无参,则args==null
+        TestHelper.println(method.getName() +"接受参数", Arrays.toString(args));
 
         // 调用业务代码
         Object returnVal = method.invoke(proxyTestService, args);
 
-        // 如果接口中业务代码方法返回类型为void,返回值为null
-        TestHelper.println(method.getName() +" 返回值", returnVal);
+        // 如果接口方法返回类型为void,则返回null
+        TestHelper.println(method.getName() +"返回值", returnVal);
 
         // 模拟关闭事务
         log.info("关闭事务...");

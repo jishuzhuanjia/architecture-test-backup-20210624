@@ -12,7 +12,7 @@ import org.junit.Test;
  * @finished: false
  * @finished-time:
  */
-public class ProxyTestServiceProxyFactoryTest {
+public class UnitTest {
 
     @Test
     public void getProxyTestServiceProxy(){
