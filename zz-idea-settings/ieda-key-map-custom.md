@@ -16,7 +16,7 @@ Ctrl  + Shift + Backspace           回到上一个光标位置，可能不会�
 ## Git
 fetch                           alt + shift + 7     
 pull                            alt + shift + 8     
-Show History                    alt + shift + 0     查看文件的所有历史版本
+Show History                   alt + shift + 0     查看文件的所有历史版本
 Get From Version Control        Alt + Shift + V 
 
 ## File
