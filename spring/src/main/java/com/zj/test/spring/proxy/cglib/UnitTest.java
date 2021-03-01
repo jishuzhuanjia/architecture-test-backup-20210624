@@ -3,7 +3,7 @@ package com.zj.test.spring.proxy.cglib;
 import com.zj.test.spring.proxy.service.ProxyTestService;
 import org.junit.Test;
 
-public class ProxyTestServiceCglibProxyFactoryTest {
+public class UnitTest {
 
     @Test
     public void getProxyTestService(){
