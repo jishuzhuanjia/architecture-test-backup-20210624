@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class B {
     private String name = "B";
-    @Autowired A a;
+    @Autowired C c;
 
     public String getName() {
         return name;
@@ -25,7 +25,4 @@ public class B {
         return name;
     }
 
-    public A getA() {
-        return a;
-    }
 }
