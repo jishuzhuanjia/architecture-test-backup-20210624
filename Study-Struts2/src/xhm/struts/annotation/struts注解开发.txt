@@ -1,0 +1,31 @@
+一，引入支持Struts2支持注解开发jar包：
+
+                 struts2-convention-plugin-2.1.8.1.jar（支持Struts2框架注解开发的jar包）
+
+二，Struts2使用注解开发需要遵循一些规范：
+
+              1，Action要必须继承ActionSupport父类；
+
+              2，Action所在的包名必须以  .action 结尾。
+
+三，action中常用的注解：
+
+              1，@ParentPackage:对应xml配置文件中的package的父包，一般需要继承struts-default。
+
+              2，@Namespace:对应配置文件中的nameSpace，命名空间。
+
+              3，写在方法前边的注解：
+
+@Action，这个注解对应<action>节点
+value()，表示action的请求名称，也就是<action>节点中的name属性；
+results()，表示action的多个result；这个属性是一个数组属性，因此可以定义多个Result；
+interceptorRefs()，表示action的多个拦截器。这个属性也是一个数组属性，因此可以定义多个拦截器； 
+exceptionMappings()，这是异常属性，它是一个ExceptionMapping的数组属性，表示action的异常，在使用时必须引用相应的拦截器
+ 
+    4，看一下action中最常用的results中单个result注解的配置吧：
+
+@Result，这个注解对应了<result>节点。这个注解只能应用于action类上。这个注解中也有几个属性：
+name()，表示action方法的返回值，也就是<result>节点的name属性，默认情况下是【success】；
+location()，表示view层文件的位置，可以是相对路径，也可以是绝对路径；
+type()，是action的类型，比如redirect，不指定情况下，框架默认的是dispatcher
+这些注解基本上就可以完成我们的功能了

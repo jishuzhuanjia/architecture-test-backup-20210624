@@ -1,7 +1,6 @@
 package com.zj.test.spring.annotation.autowired;
 
 import com.zj.test.spring.Application;
-import com.zj.test.spring.annotation.TestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

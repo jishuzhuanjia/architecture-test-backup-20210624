@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+    
+    
+   
+    
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<c:if test="${isChanged==null}">
+<h3 id="test">这是header.jsp的内容</h3>
+</c:if>
+<c:if test="${isChanged!=null}">
+<h3 id="test" style="color:red">这是header.jsp的内容</h3>
+</c:if>
+
+<script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+<script type="text/javascript">
+	var t = document.getElementById("test");
+	t.onclick=function(){
+		$.ajax({
+			uri:"/Study-Struts2/othertest/ajax",
+			type:"post",
+			contentType:"application/json",
+			dataType:"json";
+		    success:funcion(){
+		    	alert("已修改")
+		    }
+			
+			
+		});
+	}
+	
+</script>
+
+
+</body>
+</html>

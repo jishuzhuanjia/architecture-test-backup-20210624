@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Document</title>
+<script src="js/axios.min.js"></script>
+<script src="js/vue.min.js"></script>
+</head>
+<body>
+	<div id="app">
+		<!-- 可以看一下info响应数据结构 
+        使用response.data获取json数据或网页数据
+        -->
+		{{info}}
+
+	</div>
+
+	<script>
+        var vue = new Vue({
+            el:"#app",
+            // 添加了data()，则该属性值无效，值会被赋值为data()返回值。
+            // data:{
+            //     info:"info in data",
+            //     name:"name"
+            // }, 
+
+            //1.【data()】：通过方法创建data属性，注意，添加此方法后data属性定义无效。
+            data() {
+                console.log("data()");
+                return {
+                    info: null
+                }
+
+                //undefined
+                // console.log(this.info);
+                // return {
+                //     info:null
+                //     //info:"info in data"
+                // }
+            },
+            //创建vue实例会执行，在data()之后执行。
+            /*mounted() {
+                console.log("mounted");
+                // 【1】.get实例- 不传递参数
+                axios.get("http://127.0.0.1:5500/10.Vue%20ajax-%20axios.html")
+                // 箭头函数返回对象用({}), 多条语句要用{},一条语句用不用()都可以。
+                .then(response => this.info= response)
+                .catch(function(err){
+                    console.log(err)
+                });
+
+            }*/
+            //mounted () {
+            //    // 【1.1】.get请求 + 传递参数: 测试时需要解决跨域问题
+            //    console.log("mounted");
+            //    /* 不要从http开始写：会导致跨域 */
+            //    axios.get("/Study-Struts2/testProject/get",{
+            //    	params:{
+            //    		/* username:"xiaohongmao",
+            //    		pass:"password", */
+            //    		ID:12356
+            //    	}
+            //    	
+            //    })
+            //    .then(response => this.info = response)
+            //    .catch(function(err){
+            //        console.log(err);
+            //    });
+            //}
+            //mounted(){
+            //	//【2】.POST请求 - 无参数
+            //	axios.post("/Study-Struts2/testProject/get")
+            //	.then(response => this.info = response)
+            //	.catch(function(err){
+            //		//
+            //	})
+            //}
+            // mounted(){
+            //	/* 【2】.POST请求 - 带参数
+            //	POST请求参数会放在请求体中{username: "username"}
+            //	*/
+            //	axios.post("/Study-Struts2/testProject/get",{
+            //		/*注意：不需要写params属性  */
+            //			username:"username"
+            //	})
+            //   .then(response => this.info = response)
+            //   .catch(function(err){})
+            //}
+        });
+
+        //undefined
+        //console.log(vue.name);
+
+        //console.log(vue.info); //null
+        
+        //【3】.执行多个并发请求
+        //请求1
+        /*function request1(){
+        	axios.get("/Study-Struts2/testProject/get");
+        }*/
+        
+        //请求2
+        /*function request2(){
+        	axios.get("/Study-Struts2/testProject/get");
+        }*/
+         
+        //NO 注意： 方法要添加()，否则不会调用请求。
+        //axios.all([request1,request2]);
+        
+        //执行成功： 一次发送2个请求 
+        //spread：请求完成，回调参数无参
+        /*axios.all([request1(),request2()])
+        .then(axios.spread(function(acct,perms){
+        	//undefined
+        	//alert(acct);
+        	
+        	//undefined ： 说明函数没有参数
+        	//alert(perms)
+        	
+        	//alert("请求已完成")
+        	
+        	
+        }));*/
+        
+        //【4】.axios API
+        //可以直接调用axios函数，并传递配置来创建请求。
+        
+        //默认是get请求
+        //axios("/Study-Struts2/testProject/get")
+        
+      	//【4.1】.Get请求 + 参数
+        //axios({
+        //	method:"get",
+        //	url:"/Study-Struts2/testProject/get",
+        //	responseType:"stream",
+        //	params:{ 
+        //		username:"zj",
+        //		Id:21312
+        //	}
+        	//NO：
+        	/*success:function(){
+        		alert("1")
+        	}*/ 
+        	//这样回显
+        //}).then(response => (vue.info=response));
+          
+        //【4.2】POST请求 + 参数
+        /*axios({
+        	method:"post",
+        	url:"/Study-Struts2/testProject/get",
+        	data:{
+        		username:"xiaohongmao"
+        	}
+        });*/
+        
+        /*【有哪些方法？ 6个】
+        post
+        get
+        head
+        put
+        delete
+        patch*/
+        
+        //【5】.使用自定义配置新建axios实例
+        //实例可以调用那些请求方法，配置会合并
+        //使用较少，不多讨论
+        /*const instance = axios.create({
+        	baseURL:
+        	timeout:1000,
+        	headers:{'head':'value'}
+        });*/
+        
+       // 【response结构体】
+       //data:{}
+       //status:200
+       //statusText:"OK",
+       // headers:{},
+       //config:{}
+       
+       //【配置的默认值： 全局的
+		//axios.defaults.baseURL = ""
+		//axios.defaults.headers.common[''] = AUTH_TOKEN
+		//axios.defaults.headers.post['Content-Type]'] = "application/json"
+		
+		//【配置的优先级合并：】请求的config参数 > 实例的defaults > lib/default.js找到的默认值
+        
+		//【6】.拦截器
+       	//【6.1】.添加请求拦截器
+		//axios.interceptors.request.use(function(config){
+       		//在发送请求之前做些什么 - 请求之前
+       	//	return config;
+       	//}, function(err){
+       		//对请求错误做些什么
+       	//})
+       	
+       	/*【6.2】.添加响应拦截器
+       	axios.interceptors.response.use(function(response){
+       		//对响应数据做些什么  -  响应之后
+       		return response;
+       	},
+       	function(error){
+       		//对响应错误做些什么
+       		return Promise.reject(error)
+       	})*/
+       	
+       	/*【6.3】稍后移除拦截器
+       	var myInterceptor = axios.interceptors.request.use(fun1,fun2);
+       	axios.interceptors.request.eject(myInterceptor)*/
+       	
+       	//【6.4】.validateStatus配置定义HTTP状态码的错误范围
+       	/*axios.get("url",{
+       		validateStatus:function(status){
+       			// >=500才会reject
+       			return status < 500;
+       		}
+       	})*/
+       	
+       	/*【6.5】.使用cancel token取消请求
+       	//CancelToken是一个对象
+       	var CancelToken  = axios.CancelToken;
+       	var source= CancelToken.source()
+       	
+       	...get("",{
+       		cancelToken:source.token
+       	})
+       	
+       	取消:message参数是可选的
+       	source.cancel('')
+       	
+       	还可以这样写：传递一个函数到构造函数
+       	var cancel;  //是一个函数
+       	cancelToken:new CancelToken(function executor(c){
+       		cancel = c;
+       	}){
+       		
+       	}
+       	
+       	//取消请求  : 可以使用同一个cancel token 取消多个请求
+       	cancel();
+       	*/
+       	
+       	//【7】.使用application/x-www-form-urlencoded
+       	//因为默认情况下axios会将对象序列化成JSON字符串
+       	
+       	//【7.1】.使用URLSearchPrams API:
+       	/*const params = new URLSearchParams();
+       	params.append('username','xiaohongmao');
+       	params.append('password','123456')*/
+       	
+       	//alert(1)
+       	//请求体：username=xiaohongmao&password=123456
+       	/*axios.post("/Study-Struts2/testProject/get",params)
+       	.then(response => vue.info = response);  */
+       	
+       	/*【7.2】.URLSearchPrams并不是所有浏览器都支持
+       	还可以使用qs库
+       	const qs = require('qs');
+       	axios,post('url',qs.stringify({'bar':123}))
+       	
+       	axios({
+       		...
+       		headers:{content-type:'application/x-www-form-urlencoded'}
+       		data:qs.stringift(data)
+       		url,
+       		method:"POST"
+       	})*/
+        
+    </script>
+
+</body>
+</html>

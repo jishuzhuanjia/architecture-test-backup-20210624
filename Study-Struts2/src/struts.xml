@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 引入限制文件 -->
+<!DOCTYPE struts SYSTEM "file:///E:/dtd/struts-2.3.dtd">
+<struts>
+		<!-- ########################################### struts常用常量配置  ############################################# -->
+	<!-- 动态方法调用，默认是禁止的 -->
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+
+	<!-- 值'action,,'：表示可以以.action或者没有后缀结尾，注意ACTION，Action都不行 后缀必须添加'.',后缀是大小写区分的
+	       'action'：必须以后缀'.action'结尾
+		   'action,': 有没有.action后缀都可以,不知道,与,,的区别在哪 -->
+	<constant name="struts.action.extension" value="action,,"/>
+	
+	<!-- 开发模式：不重复热加载此配置文件，开发过程中推荐开启 -->
+	 <constant name="struts.devMode" value="true"></constant> 
+	
+	<!-- ########################################### 配置具体Action注解扫描包步骤 ############################################# -->
+	
+	<!-- 1.1.指定具体的Action注解扫描包,容易造成逻辑的混乱 -->
+	<constant name="struts.convention.action.packages" value="actions" />
+	 
+    <!-- 1.2.解决配置包的一个异常-->
+	<!-- 解决Caused by: java.lang.IllegalStateException: The action name cannot be the same as the action suffix [Action] -->
+	<!-- 这个属性指明struts.convention.package.locators.basePackage哪些子包被扫描
+	Convention 插件默认扫描继承了action类的子类和文件名以Action结尾的文件
+	默认找的包是struts, struts2, action or actions的包
+	
+	这个属性指定哪些包会被扫描，会对struts.convention.package.locators.basePackage起作用
+	比如你的包是一个controller，则必须struts.convention.package.locators的value包含controller，否则不会扫描
+	 -->
+	<constant name="struts.convention.package.locators" value="actions,struts2,test"/>
+	
+	<!-- 2.指定注解扫描包：批量-自动扫描 ：开发中使用较多-->
+	<constant name="struts.convention.package.locators.basePackage" value="xhm.struts.actions"/>
+	
+	<!-- 这个属性必须以/开头：开发中不用 -->
+	<!-- <constant name=" struts.convention.result.path" value="/jsp/action"></constant>  -->
+    
+	<!-- ########################################### struts配置文件加载顺序   ############################################# -->
+	
+    <!-- struts6个配置文件加载顺序：
+         1.default.properties
+         2.struts-default.xml
+         3.struts-plugin.xml
+         4.struts.xml  √
+         5.struts.properties  
+         6.web.xml √
+         √是我们很容易接触和修改的 -->  
+         
+    <!-- ########################################### struts分模块开发   ############################################# -->
+         
+    <!-- struts分模块团队开发包含标签：如果包含的文件不存在不会报错 -->
+    <include file="cn/xhm/xx.xml"></include>
+   
+    <!-- ########################################### package+Action配置基础   ############################################# -->
+   
+    <!--  注意：忘记extends将导致服务器启动失败  -->
+    <!--  多个相同的package最终会采取第一个 -->
+    <!--  namespace + action的name就是浏览器url项目名后的访问路径，注意的namespace不能以/结尾 
+          name：可以被其他package extends属性指定来作为父包-->
+    <package name="helloPackage1" extends="struts-default" namespace="/hello">
+        
+        <!-- ### Action method的配置   ###### -->
+        <!-- 1：默认方法名：Action的execute()方法：可以是从Action接口或ActionSupport继承，也可以为简单类定义此方法 -->
+         <action name="hello" class="xhm.struts.action.HelloAction">
+         	<!-- 默认不能转发Action需要设置type为chain -->
+             <result name="hello" type="redirect">/jsp/hello.jsp</result>  
+               
+             <!-- 动态方法访问结果映射 -->
+             <result name="ok">/jsp/hello.jsp</result>
+         </action>
+         
+         <!-- 2：指定方法名：注意method属性不能以()结尾 -->
+         <action name="hello2" class="xhm.struts.action.HelloAction" method="execute2">
+         	<result name="hello">../hello.jsp</result> 
+         </action>
+         
+         <!-- 3：通配符*：可以用在通配符可以用在action 的name,method属性和result的name属性
+                                          缺点是如果按照下面配置，要为每个方法返回methodName_ok
+			  method：数字，表示通配符的序号，从1开始 -->
+          <!-- 注意：通配符也可以用在result的name属性，但是要为方法返回具体的视图字符串 -->
+         <action name="hello_*" class="xhm.struts.action.HelloAction" method="{1}">
+         	<result name="{1}_ok">/jsp/hello.jsp</result>
+         </action>
+         
+          <!-- 4：动态方法访问：根据请求中的参数来动态查找Action类中方法
+                                            格式:namespace/[action的name][!要调用的方法名] 
+                                            注意：action的name不能添加.action后缀，否则404 -->
+         <action name="action" class="xhm.struts.action.HelloAction">
+         	<!-- 无效：因为动态方法访问会使用默认方法名的action中定义的result
+         	<result name="ok">/jsp/hello.jsp</result>  -->
+         </action>
+    </package>
+    
+    <!-- 测试-->
+   <!--  <package name="helloPackage2" extends="struts-default" namespace="/hello">
+         <action name="hello2" class="xhm.struts.action.HelloAction">
+             <result name="hello">hello.jsp</result>
+         </action>
+    </package> -->
+    
+    <!-- ########################################### 拦截器定义   ############################################# -->
+    
+    <package name="interceptorTest" namespace="/" extends="struts-default" > 
+    
+        <!-- 拦截器定义 -->
+        <interceptors>
+        	<!-- 拦截器栈：interceptor-stack -->
+            <interceptor-stack name="myInterceptorStack">
+            	<!-- 引用拦截器：也可以是拦截器栈 -->
+                <interceptor-ref name="myInterceptor2"></interceptor-ref>
+                <interceptor-ref name="myInterceptor1"></interceptor-ref>
+            </interceptor-stack>
+            
+            <!-- 单个拦截器 -->
+            <interceptor name="myInterceptor2" class="xhm.struts.interceptor.MyInterceptor2"/>
+            <interceptor name="myInterceptor1" class="xhm.struts.interceptor.MyInterceptor1"/>
+        </interceptors>
+    <!-- ########################################### 全局结果页面：可以配合异常处理映射使用  ############################################# -->
+        
+        <!-- 全局结果页面：对于本package下所有的Action都有效，可以有效的减少result的书写量，便于维护修改。
+                        注意：这个全局页面不是值每个Action默认返回的视图，而是只有当Action返回具体的视图名才会起作用。
+                       注意： 当全局页面和局部结果name相同时：会使用局部结果。-->
+        <global-results>
+        	<result type="chain">/valueAction</result>
+        </global-results>
+        
+    <!-- ########################################### 局部结果页面：只对此Action起作用  ############################################# -->
+        
+        <!-- 局部结果页面 -->
+        <action name="valueAction" class="xhm.struts.actionservlet.Action" method="value">
+            <result name="ok">value.jsp</result>
+        </action>
+        
+        <action name="valueAction2" class="xhm.struts.actionservlet.Action2" method="value">
+            <result name="ok">value.jsp</result>
+        </action>
+    
+    <!-- ########################################### result的type值讨论  ############################################# -->
+        
+        <!--
+                          转发Action的书写:直接写Action名，不能添加后缀.action，而且只能转发到此namespace下的其他Action，不能转发其他namespace下的Action
+      	 注意：不能转发到动态方法访问，因为它会将当前namespace和actionName!method分别作为新的namespace和action name。 
+        
+       	 可选值               
+                         转发：
+        1.dispatcher:转发资源请求，不能转发Action，浏览器地址不改变。
+       	 注意：不能转发action，因为它会把路径当作文件来查找，因为文件不存在，所以404。      
+       	 写法：直接写资源名会在当前namespace下，也可以写完成的路径，以/开头
+       	 
+        2.chain：必须转发Action，否则404：只能转发到本namespace或子namespace 包的Action
+       	 书写时：不能以/开头
+       	 注意：只能转发当前namespace(包括子namespace子namespace)下的其他Action，书写时只写Action的name，
+       	 不能写.action后缀(因为package没有定义以.action结尾的actionname)，而且不能转发到动态方法访问(404)。
+       	当尝试转发到其他namespace(非子namespace)下的Action：
+        There is no Action mapped for namespace [/hello] and action name [/test/hello2] associated with context path [/Study-Struts2].
+        
+                        重定向：值从项目名之后开始写
+        3.redirect：浏览器重新请求资源结果，浏览器地址发生改变。
+                        可以转发资源或Action
+                        写法：如果直接写资源名或者action名则是在当前访问页面的namespace下
+                        如当前访问/hello/hello
+                        则重定向到/hello/hello2   /   /hello/hello.jsp
+                       也可以/开头给出完整路径
+      	优点：对于Action可以重定向到其他namespace下的Action，如/test/hello
+                        
+        4.redirectAction：重定向Action,重定向其他如jsp，会出现404    -   当作Action映射来查询
+                       当/jsp/hello.jsp ：
+        There is no Action mapped for namespace [/hello/jsp] and action name [hello.jsp] associated with context path [/Study-Struts2].
+                        书写时：不能以/开头               
+                       缺点：也不可以直接跳转其他namespace，可以是子namespace
+                       注意：转发的Action写不写.action都可以，如果没有写，则会自动添加.action，最终浏览器中是以.action结尾的。如果不是子namespace，不能以/开头。
+        
+        5.stream-->
+        <action name="valueAction3" class="xhm.struts.actionservlet.Action3" method="value">
+            <result name="ok">value.jsp</result>
+        </action>
+        
+        <action name="wrapper1Action" class="xhm.struts.datawrap.Wrapper1">
+            <!-- name：实际就是逻辑视图的名字 -->
+            <result name="wrapper1">/jsp/success.jsp</result>
+        </action>
+        
+        <action name="wrapper2Action" class="xhm.struts.datawrap.Wrapper2">
+            <result name="wrapper2">/jsp/success.jsp</result>
+        </action>
+        
+        <action name="wrapper3Action" class="xhm.struts.datawrap.Wrapper3">
+            <result name="wrapper3">/jsp/success.jsp</result>
+        </action>
+        
+        <action name="wrapper4Action" class="xhm.struts.datawrap1.Wrapper4">
+            <result name="wrapper4">/jsp/success.jsp</result>
+        </action>
+        
+        <action name="wrapper5Action" class="xhm.struts.datawrap1.Wrapper5">
+            <result name="wrapper5">/jsp/success.jsp</result>
+        </action>
+        
+        <action name="wrapper6Action" class="xhm.struts.datawrap1.Wrapper6">
+            <result name="wrapper6">/jsp/success.jsp</result>
+        </action>
+        
+        
+        <!-- Action具体到方法 -->
+        <action name="valueStackAction" class="xhm.struts.valuestack.ValueStackAction">
+            <result name="ValueStackAction">/jsp/valuestack.jsp</result>
+            <!-- 为Action配置拦截器：可以引用单个拦截器或者拦截器stack -->
+            <!-- 拦截器的执行顺序按照定义的顺序：栈中的拦截器执行顺序根据栈中拦截器的定义顺序 -->
+            <interceptor-ref name="defaultStack"/>
+            <interceptor-ref name="myInterceptorStack"/>
+        </action>
+    </package>
+    
+    <!-- ########################################### Action拦截器注解方式测试  ############################################# -->
+    
+    <!-- 不用定义namespace，只是一个包，作为拦截器定义的容器。 -->
+    <package name="testInterceptorAnnotation" extends="struts-default">
+    	<interceptors>
+    		<interceptor name="myInterceptorOne" class="xhm.struts.interceptor.MyInterceptor1"/>
+    		
+    		<interceptor-stack name="myInterceptorStack">
+    			<interceptor-ref name="myInterceptorOne"></interceptor-ref>
+    		</interceptor-stack>
+    		
+    	</interceptors>
+    </package>
+    
+    <!-- 测试包 -->
+    <package name="test" extends="struts-default" namespace="/test">
+    
+    <!-- ########################################### 文件上传  ############################################# -->
+    
+    	<!-- 1.1限制上传文件类型拦截器定义1 -->
+    	<!-- 1.1.1修改默认拦截器栈，限制上传文件类型，只需要修改fileUpload -->
+    	 <!-- <interceptors>  
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="scopedModelDriven"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload">
+                	<param name="allowedTypes">image/jpeg</param>
+                	<param name="maximumSize">300000000</param>
+                </interceptor-ref>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="datetime"/>
+                <interceptor-ref name="multiselect"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="actionMappingParams"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="deprecation"/>
+            </interceptor-stack>
+        </interceptors>  -->
+        
+        <global-results>
+        	<result name="error">/exception-handle/error.jsp</result>
+        </global-results>
+        
+        <!--  2.2.全局异常处理；不需要为每个Action添加exception-mapping
+    	但是还是需要在Action中添加错误视图，且等于这里的error
+    	需要注意的是global-exception-mapping要放在所有Action的前面
+    	全局异常result可以使用全局结果里的视图
+    	当全局和局部都有时，优先采用局部结果视图。
+    	-->
+    	<global-exception-mappings>
+    		<exception-mapping result="error" exception="java.lang.NullPointerException">
+    		</exception-mapping>
+    	</global-exception-mappings>
+        
+        <!-- 1.1.2.引用默认拦截器，有此标签，Action中不需再引用
+       	 当子包定义和父包相同的拦截器栈，使用子包中的 
+       	 当文件不符合类型时，直接返回404，而且不会进入到Action，file,contentType,fileName如果为空指针不会被调用。
+       	 -->
+        <!-- <default-interceptor-ref name="defaultStack"></default-interceptor-ref> -->
+        
+    	<!-- 单文件上传Action -->
+    	<action name="fileUpload" class="xhm.struts.fileupload.FileUploadAction">
+			
+			<!-- 1.2.限定文件上传类型拦截器定义2  - 更方便
+			注意：fileUpload要在defaultStack之前
+			只有符合文件限制才会进入到Action方法中，否则直接返回input视图
+			input视图需要修改tomcat maxSwallowSize=-1
+			
+			注意：fileUpload应该在defaultStack前面书写：
+			否则doc上传成功，zip上传失败，很显然上传不正确。
+			当把fileUpload写在前面的时候，一切正常。
+			 -->
+			
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">image/jpeg</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+    		 
+    		<result name="success">/fileupload-test/success.html</result>
+    		<!-- 测试的时候使用360，会跳转到网站走丢了，换IE后正常 -->
+    		<result name="input">/fileupload-test/error.html</result>
+    	</action>
+    	
+    	<!-- 多文件上传Action -->
+    	<action name="multiFileUpload" class="xhm.struts.fileupload.MultiUploadAction">
+		
+			<interceptor-ref name="fileUpload">
+				<param name="allowedTypes">image/jpeg</param>
+				<!-- 这个是对单个文件要求 ，如果上传多个文件，只要有一个文件不符合上传失败-->
+				<param name="maximumSize">3000000</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+    		 
+    		<result name="success">/fileupload-test/success.html</result>
+    		<result name="input">/fileupload-test/error.html</result>
+    	</action>
+    	
+    <!-- ########################################### 资源包  ############################################# -->
+    	
+    	<!-- 资源包测试Action -->
+    	<action name="resourcePackage" class="xhm.struts.resourcepackage.action.ResPackageAction">
+    		<result>/resourcePackage-test/resource-package.jsp</result>
+    	</action>
+    <!-- ###########################################  国际化  ############################################# -->
+    
+    	<!-- 国际化测试 -->
+    	<action name="locale" class="xhm.struts.i18n.LocaleAction">
+    		<result>/i18n/i18n-test.jsp</result>
+    	</action>
+    	
+    <!-- ########################################### 文件下载  ############################################# -->
+    	<action name="download" class="xhm.struts.download.DownloadAction">
+    		<result type="stream">
+    			<param name="contentType">application/octet-stream</param>
+    			<param name="inputName">fileInputStream</param>
+    			
+    			<!-- 中文显示不正常，会转换成"_" - 客户端文件名：ideaIU-2019.2.1___.exe 
+    			需要在Action中转换成ISO8859-1字符串-->
+    			<!-- <param name="contentDisposition">attachment;filename="ideaIU-2019.2.1汉化版.exe"</param> -->
+    			<param name="contentDisposition">attachment;filename="${fileName}"</param>
+    			
+    			<param name="bufferSize">1024</param>
+    			<!-- 文件大小 ：单位kb:就算开发者默认下改变此属性也需要重新部署项目 -->
+    			<!-- <param name="contentLength">2048</param> -->
+    			<param name="contentLength">${fileSize}</param>
+    		</result>
+    	</action>
+    
+    <!-- ###########################################  异常处理  ############################################# -->
+    	
+    	<!-- 异常处理 
+    	默认情况下，拦截器已经实现了一个基本的处理页面，拦截器已经很棒了！-->
+	    <action name="exceptionHandle" class="xhm.struts.exception.ExceptionAction">
+	    	
+	    	<!-- 2.1.局部异常处理 -->
+	    	<!-- 2.1.1.error是发生异常后跳转的视图的名称：需要手动指定，而文件上传input视图是不需要指定的，只需要在结果中添加input
+	    	如果你想要处理所有的异常，则设置exception="java.lang.Exception"，则一旦发生异常就会跳转到error视图
+	    	 -->
+	    	<!-- <exception-mapping result="error" exception="java.lang.Exception"/> -->
+	    	<!-- 如果没有指定name，则指的是success视图 -->
+	    	<result>/exception-handle/success.jsp</result>
+	    	
+	    	<!-- 异常处理页面 -->
+	    	<result name="error">/exception-handle/error1.jsp</result>
+	    </action>
+	    
+	    <!-- 将对象的创建交由spring管理 -->
+	    <!-- <action name="loginActionBean" class="loginActionBean">
+	    	<result>/jsp/success.jsp</result>
+	    </action> -->
+    	
+    	<!-- <constant name="struts.objectFactory" value="spring"/> -->
+    	
+    </package>
+    
+    <!-- 国际化配置文件 -->
+    <constant name="struts.custom.i18n.resources" value="global" />
+    
+    <!-- 300M：如果文件大于这个值，不会返回服务器的404页面，会显示浏览器的网页走丢了页面 - 这是因为tomcat判定上传失败了，需要增加maxSwallowSize
+	    这个规定客户端上传的总数据大小：包括多个文件的大小默认2M
+    -->
+    <constant name="struts.multipart.maxSize" value="10000000"></constant>
+    <!-- <constant name="struts.multipart.savDir" value="D:/"></constant> -->
+    
+    <package name="other_test" extends="struts-default" namespace="/othertest">
+    	<action name="home" class="test.HomeAction" method="home">
+    		<result name="home">/home.jsp</result>
+    	</action>
+    </package>
+    
+    <package name="testProject" extends="struts-default" namespace="/testProject">
+    	<action name="get" class="testproject.get.GetActions" method="getWithoutParams">
+    		<result name="getWithoutParams">/success.jsp</result>
+    	</action>
+    </package>
+    
+</struts>

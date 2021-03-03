@@ -1,8 +1,6 @@
 package com.zj.test.spring.annotation.autowired;
 
-import com.zj.test.spring.annotation.TestService;
 import com.zj.test.util.TestHelper;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Component;
 
 /* @author: zhoujian
@@ -22,10 +20,11 @@ public class TestServiceImpl1 implements TestService {
         return requireTestStr;
     }
 
-    @Required
     public void setRequireTestStr(String requireTestStr) {
         this.requireTestStr = requireTestStr;
     }
+
+
 
     @Override
     public void test() {

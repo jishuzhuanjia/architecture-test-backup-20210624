@@ -1,4 +1,4 @@
-package com.zj.test.spring.annotation;
+package com.zj.test.spring.annotation.resource;
 
 /* @author: zhoujian
  * @qq: 2025513

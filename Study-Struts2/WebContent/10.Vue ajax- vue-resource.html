@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/vue.min.js"></script>
+    <script src="js/vue-resource.min.js"> </script>
+</head>
+
+<body>
+
+	<div id="app">
+		{{info}}
+	</div>
+
+    <script>
+        //window.onload = function () {
+	
+        //    var vue = new Vue({
+            	//无效：来自两个文档
+        //        el: "#app",
+        //        data: {
+        //            info: "xxx"
+        //        },
+        //        methods: {
+        //            get: function () {
+         //           	alert(1);
+                    	//【1】.get- 无参数
+                        /*this.$http.get("/Study-Struts2/testProject/get")
+                            .then(function (res) {
+                            	
+                                //body返回body
+                                //write 覆盖
+                                document.write(res.body)
+                            }, function (err) {
+                                console.log("error")
+                            })*/
+                            
+                         //【2】.get带参数
+                         //get("",{params:{}})
+  
+                        
+                    	
+        //            	 vue.get();
+        //vue.info="new info"
+         //       }
+       // };
+      
+       
+         //                this.$http.post("/Study-Struts2/testProject/get");
+    </script>
+    
+    <script type="text/javascript">
+        var vue = new Vue({
+        	el:"#app",
+        	data:{
+        		info:"213"
+        	},
+        	methods:{
+        		get:function()
+        		{
+        			// //【3.POST请求】
+        			//this.$http.post("/Study-Struts2/testProject/get");
+        			
+        			//NO
+        			//this.$http.post("/Study-Struts2/testProject/get",{username:"xxx"});
+        			
+        			//OK
+        			//this.$http.post("/Study-Struts2/testProject/get",{username:"xxx"},{emulateJSON:true});
+        			
+        			
+        			
+        		}
+        	 
+        	}
+        });
+        
+        //vue.get();
+        
+        // 【4】.全局vue对象使用http
+        Vue.http.get("/Study-Struts2/testProject/get").then(xx,xx);
+        
+        //多一个jsonp
+        
+        /*【5】.response结构
+        url
+        body
+        headers
+        status
+        statusText
+        ok: 200~299为true
+        
+        text() 这是哪个方法是响应体
+        json()
+        blob()*/
+    </script>
+
+</body>
+
+</html>

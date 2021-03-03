@@ -1,4 +1,4 @@
-package com.zj.test.spring.annotation.autowired;
+package com.zj.test.spring.annotation.resource;
 
 import com.zj.test.util.TestHelper;
 import org.springframework.stereotype.Component;
@@ -11,11 +11,15 @@ import org.springframework.stereotype.Component;
  * @finished: false
  * @finished-time:
  */
-@Component("testServiceImpl2")
+@Component("resource-testServiceImpl2")
 public class TestServiceImpl2 implements TestService {
     @Override
     public void test() {
         TestHelper.println("TestServiceImpl2: Hello");
+    }
 
+    @Override
+    public String toString() {
+        return "TestServiceImpl2";
     }
 }
