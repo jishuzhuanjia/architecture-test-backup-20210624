@@ -9,6 +9,20 @@
     <artifactId>architecture-test</artifactId>
     <name>architecture-test</name>
 
+    <developers>
+        <developer>
+            <id>zhou jian</id>
+            <url>none</url>
+            <email>2025513@qq.com</email>
+            <organization>none</organization>
+            <roles>
+                <role>developer</role>
+                <role>architecture</role>
+                <role>tester</role>
+            </roles>
+        </developer>
+    </developers>
+
     <!--Sub Modules-->
     <!--start-->
     <modules>
@@ -346,7 +360,7 @@
                 <scope>provided</scope>
             </dependency>
 
-           <!-- fastjson: JSONObject-->
+            <!-- fastjson: JSONObject-->
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
