@@ -26,6 +26,7 @@ public class RandomTest {
      *
      * 1.1.public int nextInt()
      * 随机返回一个int值，所有2^32个int值都以(近似)相等的概率产生。
+     * 因此随机产生的int值可为负数。
      *
      * 1.2.public int nextInt(int bound)
      * 返回[0,bound)中任意一个int值。
@@ -54,6 +55,13 @@ public class RandomTest {
             //java.lang.IllegalArgumentException: bound must be positive
             //TestHelper.println("nextInt", random.nextInt(-5));
 
+            // 可产生负数
+            //TestHelper.println("nextInt(2)", random.nextInt());
+
+            // !Random.nextInt()
+            // !nextInt()
+            // [0,bound)
+            // 这里的话可产生0/1
             TestHelper.println("nextInt(2)", random.nextInt(2));
             try {
                 Thread.sleep(200);

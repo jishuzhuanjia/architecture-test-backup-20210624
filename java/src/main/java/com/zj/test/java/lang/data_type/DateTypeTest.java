@@ -11,7 +11,7 @@ import org.junit.Test;
  * @finished: 1
  * @finished-time: 2020年11月4日 16:51:07
  */
-public class DataTypeTest {
+public class DateTypeTest {
 
     /**
      * 1.进制
