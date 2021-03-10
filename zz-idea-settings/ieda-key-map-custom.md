@@ -10,6 +10,10 @@ alt + shft + 4              新建Module
 alt + 5             reimport某个Module(这个命令需要Maven窗口激活并选中某个Module才有效)
 alt + shift + 5     reimport所有Module(可以在任何情况下执行)
 
+## 3.窗口
+alt + shift + F5            Close Others
+alt + shift + F6            Close All
+
 ## 跳转
 ctrl  + shift + backspace       回到上一个光标位置，可能不会切换文件。
 
