@@ -1,26 +1,27 @@
 # 以下为自定义快捷键
 
-## 1.新建
-alt + shift + 1             新建类
-alt + shift + 2             新建文件
-alt + shift + 3             新建package/文件夹
-alt + shft + 4              新建Module
+## 1.新建(New)
+Java Class                      alt + shift + 1           
+File                            alt + shift + 2           
+Package/Directory               alt + shift + 3            
+Module                          alt + shift + 4
 
 ## 2.Maven
-alt + 5             reimport某个Module(这个命令需要Maven窗口激活并选中某个Module才有效)
-alt + shift + 5     reimport所有Module(可以在任何情况下执行)
+Reimport A Module               alt + 5             这个命令需要Maven窗口激活并选中某个Module才有效             
+Reimport All Modules            alt + shift + 5     可以在任何情况下执行                                 
 
 ## 3.窗口
-alt + shift + F5            Close Others
-alt + shift + F6            Close All
+Close                           ctrl + F4           关闭当前打开文件tab
+Close Others                    alt + shift + F5            
+Close All                       alt + shift + F6            
 
 ## 跳转
-ctrl  + shift + backspace       回到上一个光标位置，可能不会切换文件。
+Back                            ctrl  + shift + backspace       回到上一个光标位置，可能不会切换文件。                
 
 ## Git
-fetch                           alt + shift + 7     
-pull                            alt + shift + 8     
-Show History                    alt + shift + 0     查看文件的所有历史版本
+Fetch                           alt + shift + 7     
+Pull                            alt + shift + 8     
+Show History                    alt + shift + 0                 查看文件的所有历史版本
 Get From Version Control        alt + shift + v 
 
 ## File
