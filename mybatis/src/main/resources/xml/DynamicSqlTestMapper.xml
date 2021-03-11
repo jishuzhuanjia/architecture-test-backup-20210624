@@ -57,6 +57,7 @@
 		</foreach>
 	</select>
 
+	<!--choose when-->
 	<!--3.choose + when 测试
 	常常用where包围choose内容，以避免and多余导致的语法错误。
 
@@ -83,6 +84,9 @@
 	测试场景：
 	通过bId或book_name查找书籍,如果bId和book_name参数同时存在，则通过bId查询,
 	如果bId和book_name参数都没有，则默认返回书名为价值的书。
+
+	注：
+	经测试choose可被嵌套在<if></if>中，等待写demo再次测试。
 	-->
 	<select id="selectByWhereAndChoose" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
 		select bId,book_name as bookName,author_name as authorName,create_time from <include refid="table_name"/>
