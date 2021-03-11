@@ -18,6 +18,7 @@ import java.util.List;
  * @version: 1.0
  * @finish-time: 2020年9月21日 15:18:03
  */
+/*-----------------------------mapper.jar使用demo-------------------------------------*/
 @RestController
 @RequestMapping("test/mybatis/mapperjar")
 public class MapperJarTestController {
