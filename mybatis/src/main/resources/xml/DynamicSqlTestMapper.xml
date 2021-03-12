@@ -134,4 +134,26 @@
             </if>
         </where>;<!--最后一条sql语句的结束符';'是可选的-->
     </select>
+
+    <!--多sql测试-->
+    <!--select中多sql测试-->
+    <!--经测试：select只会返回第一条select查询的结果,会按照该select返回字段自动完成映射，
+    如果没有映射字段，则返回的结果个数正确，但属性都为null-->
+    <select id="selectByMultiSql"
+            parameterType="com.mybatis.dynamicsql.po.BookPO"
+            resultType="com.mybatis.dynamicsql.po.BookPO">
+        <!--经测试，只要sql大小不超过最大sql大小的情况下，sql个数没有限制。-->
+        <!--经测试：多条语句之间必须用;隔开，且最后一条sql语句的结束符';'是可选的。-->
+        <!--经测试：可以同时执行增删改查操作-->
+        select book_name as bookName from book where book_name=#{bookName};
+        select book_name as bookName from book where book_name='蛤蟆先生去看心理医生';
+        INSERT INTO `book` (`book_name`, `author_name`, `create_time`) VALUES ('insert测试', 'insert测试', NOW());
+        INSERT INTO `book` (`book_name`, `author_name`, `create_time`) VALUES ('insert测试', 'insert测试', NOW());
+        INSERT INTO `book` (`book_name`, `author_name`, `create_time`) VALUES ('insert测试', 'insert测试', NOW());
+        INSERT INTO `book` (`book_name`, `author_name`, `create_time`) VALUES ('insert测试', 'insert测试', NOW());
+        INSERT INTO `book` (`book_name`, `author_name`, `create_time`) VALUES ('insert测试', 'insert测试', NOW());
+        INSERT INTO `book` (`book_name`, `author_name`, `create_time`) VALUES ('insert测试', 'insert测试', NOW());
+        update book set author_name="周健" where author_name='insert测试';
+        delete from book where book_name="未知"
+    </select>
 </mapper>

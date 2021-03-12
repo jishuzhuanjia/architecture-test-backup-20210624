@@ -78,4 +78,15 @@ public class UnitTest {
         List<BookPO> bookPOS = testMapper.selectByIfAndChoose(bookPO);
     }
 
+    /**
+     * ---------------------------多sql测试---------------------------
+     * 5.测试: select 多sql测试
+     */
+    @Test
+    public void selectMultiSqlTest(){
+        BookPO bookPO = new BookPO();
+        bookPO.setBookName("我的二本学生");
+
+        List<BookPO> bookPOS = testMapper.selectByMultiSql(bookPO);
+   }
 }

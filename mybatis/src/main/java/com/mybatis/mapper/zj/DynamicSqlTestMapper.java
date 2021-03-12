@@ -32,4 +32,9 @@ public interface DynamicSqlTestMapper {
     public List<BookPO> selectByIfAndChoose(BookPO book);
 
 
+    /**
+     * ---------------------------多sql测试---------------------------
+     * 6.<select></select>中多sql语句测试
+     */
+    public List<BookPO> selectByMultiSql(BookPO book);
 }
