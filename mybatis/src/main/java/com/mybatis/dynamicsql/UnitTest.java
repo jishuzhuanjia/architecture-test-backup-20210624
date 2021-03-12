@@ -12,7 +12,8 @@ package com.mybatis.dynamicsql;
 import com.mybatis.TestApplication;
 import com.mybatis.dynamicsql.po.BookPO;
 import com.mybatis.mapper.zj.DynamicSqlTestMapper;
-import com.mybatis.TestHelper;
+import com.zj.test.util.TestHelper;
+import com.zj.test.util.TimeHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +61,11 @@ public class UnitTest {
      */
     @Test
     public void test3() {
-        TestHelper.startTest("mybatis动态语句choose测试");
 
+        TestHelper.startTest("mybatis动态语句choose测试");
+        TimeHelper.start();
         List<BookPO> 我的二本学生 = testMapper.selectByWhereAndChoose("我的二本学生", 2);
+        TimeHelper.finish();
         TestHelper.finishTest();
     }
 

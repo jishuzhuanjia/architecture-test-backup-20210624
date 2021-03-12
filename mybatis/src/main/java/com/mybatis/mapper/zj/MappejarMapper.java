@@ -8,6 +8,6 @@ import com.mybatis.UserPO;
 tk.mybatis.mapper.MapperException: 无法获取实体类test.po.User对应的表名!
 */
 //@Mapper
-public interface Test005Mapper extends BaseMapper<UserPO> {
+public interface MappejarMapper extends BaseMapper<UserPO> {
 
 }

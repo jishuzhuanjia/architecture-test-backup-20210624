@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.mybatis.mapper.zj.Test005Mapper;
+import com.mybatis.mapper.zj.MappejarMapper;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +20,8 @@ import java.util.Map;
 @RestController
 public class SpringMVCUtilTestController {
 
-    @Autowired Test005Mapper mapper;
+    @Autowired
+    MappejarMapper mapper;
 
     @RequestMapping("test1")
     public RespBean<List<UserPO>> test1(@RequestBody ReqBean<Map> param) {

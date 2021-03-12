@@ -2,7 +2,7 @@ package com.mybatis.pagehelper;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.mybatis.mapper.zj.Test005Mapper;
+import com.mybatis.mapper.zj.MappejarMapper;
 import com.mybatis.UserPO;
 import com.mybatis.TestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class Test005Controller {
 
     @Autowired
-    Test005Mapper test005Mapper;
+    MappejarMapper mappejarMapper;
 
     @RequestMapping("test005")
     public PageInfo<Map<Object, Object>> test003(Integer pageNum, Integer pageSize) {
@@ -31,6 +31,6 @@ public class Test005Controller {
         Example example = new Example(UserPO.class);
         example.createCriteria().andGreaterThan("id",5);
 
-        return PageHelper.startPage(1,5).doSelectPageInfo(()->test005Mapper.selectByExample(example));
+        return PageHelper.startPage(1,5).doSelectPageInfo(()-> mappejarMapper.selectByExample(example));
     }
 }
