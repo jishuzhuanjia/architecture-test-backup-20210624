@@ -119,7 +119,6 @@
         select bId,book_name as bookName,author_name as authorName,create_time from
         <include refid="table_name"/>
         <where>
-
             <if test="bookName != null and bookName !=  ''">
                 <!--choose里可以同时没有when和otherwise
                 otherwise是可选的，但是必须在when后面，否则dtd限制报错，并且启动也会报错-->
