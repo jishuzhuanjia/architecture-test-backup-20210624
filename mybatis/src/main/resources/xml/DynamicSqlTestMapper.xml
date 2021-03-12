@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.zj.test.mybatis.mapper.zj.DynamicSqlTestMapper">
+<mapper namespace="com.mybatis.mapper.zj.DynamicSqlTestMapper">
 
     <sql id="table_name">
 		book
 	</sql>
 
     <!--1.where + if 标签测试-->
-    <select id="selectWithIf" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+    <select id="selectWithIf" resultType="com.mybatis.dynamicsql.po.BookPO">
         select * from
         <include refid="table_name"/>
 
@@ -50,7 +50,7 @@
 
     应在<foreach></foreach>之间添加值引用表达式
     -->
-    <select id="selectWithForeach" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+    <select id="selectWithForeach" resultType="com.mybatis.dynamicsql.po.BookPO">
         select * from
         <include refid="table_name"/>
         where book_name in
@@ -90,7 +90,7 @@
     注：
     经测试choose可被嵌套在<if></if>中，等待写demo再次测试。
     -->
-    <select id="selectByWhereAndChoose" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+    <select id="selectByWhereAndChoose" resultType="com.mybatis.dynamicsql.po.BookPO">
         select bId,book_name as bookName,author_name as authorName,create_time from
         <include refid="table_name"/>
 
@@ -114,8 +114,8 @@
     </select>
 
     <!--4.choose + if 实现根据书名精确或模糊查找-->
-    <select id="selectByIfAndChoose" parameterType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO"
-            resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+    <select id="selectByIfAndChoose" parameterType="com.mybatis.dynamicsql.po.BookPO"
+            resultType="com.mybatis.dynamicsql.po.BookPO">
         select bId,book_name as bookName,author_name as authorName,create_time from
         <include refid="table_name"/>
         <where>
@@ -132,6 +132,6 @@
                     </otherwise>
                 </choose>
             </if>
-        </where>
+        </where>;<!--最后一条sql语句的结束符';'是可选的-->
     </select>
 </mapper>

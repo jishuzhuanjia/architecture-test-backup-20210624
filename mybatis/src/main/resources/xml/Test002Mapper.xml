@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="test.com.zj.test.mybatis.mapper.zj.Test002Mapper">
+<mapper namespace="test.com.mybatis.mapper.zj.Test002Mapper">
 
 	<select id="testSelect" resultType="map">
 		select * from user limit 1
