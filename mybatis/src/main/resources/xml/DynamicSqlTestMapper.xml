@@ -2,19 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.zj.test.mybatis.mapper.zj.DynamicSqlTestMapper">
 
-	<sql id="table_name">
+    <sql id="table_name">
 		book
 	</sql>
 
-	<!--1.where + if 标签测试-->
-	<select id="selectWithIf" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
-		select * from <include refid="table_name"/>
+    <!--1.where + if 标签测试-->
+    <select id="selectWithIf" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+        select * from
+        <include refid="table_name"/>
 
-		/* 这是一段注释,不会影响到执行 */
-		<where>
+        /* 这是一段注释,不会影响到执行 */
+        <where>
 
-			<!--
-			1.1.where只能去除前and，不能移除后and，当有连续的前and时，只会移除第一个
+            <!--
+            1.1.where只能去除前and，不能移除后and，当有连续的前and时，只会移除第一个
 
             1.2.if test条件的书写：
             test中非空判断要使用==或!=，不能使用is not null和is null
@@ -27,86 +28,110 @@
             因为/**/在mybatis 的mapper.xml中不是总是有效的,因此
             如果想要添加注释请始终使用 <!开头的注释 注释 -->
 
-			<!--这是一段注释,不会被包含到最终sql语句中-->
-			<!--/*这是一段注释,会被包含到最终sql语句中,会导致语法错误*/-->
-			<!-- ##这是一段注释,会被包含到最终sql语句中,会导致语法错误 -->
-			<if test="bookName != null">
-				<!--/*这是一段注释，会报错*/-->
-				and book_name=#{bookName}
-			</if>
-			<if test="authorName!=null">
-				and author_name=#{authorName}
-			</if>
-		</where>
-	    limit 5;
-	</select>
+            <!--这是一段注释,不会被包含到最终sql语句中-->
+            <!--/*这是一段注释,会被包含到最终sql语句中,会导致语法错误*/-->
+            <!-- ##这是一段注释,会被包含到最终sql语句中,会导致语法错误 -->
+            <if test="bookName != null">
+                <!--/*这是一段注释，会报错*/-->
+                and book_name=#{bookName}
+            </if>
+            <if test="authorName!=null">
+                and author_name=#{authorName}
+            </if>
+        </where>
+        limit 5;
+    </select>
 
-	<!--2.in + foreach标签测试
-	foreach标签属性：
-	item: 指定collection中元素的引用名
-	open,close: 字符串拼接开始、结束字符串
-	separator: 分隔符
+    <!--2.in + foreach标签测试
+    foreach标签属性：
+    item: 指定collection中元素的引用名
+    open,close: 字符串拼接开始、结束字符串
+    separator: 分隔符
 
-	应在<foreach></foreach>之间添加值引用表达式
-	-->
-	<select id="selectWithForeach" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
-		select * from <include refid="table_name"/>
-		where book_name in
-		<foreach collection="list" open="(" close=")" separator="," item="bookname">
-			#{bookname}
-		</foreach>
-	</select>
+    应在<foreach></foreach>之间添加值引用表达式
+    -->
+    <select id="selectWithForeach" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+        select * from
+        <include refid="table_name"/>
+        where book_name in
+        <foreach collection="list" open="(" close=")" separator="," item="bookname">
+            #{bookname}
+        </foreach>
+    </select>
 
-	<!--choose when-->
-	<!--3.choose + when 测试
-	常常用where包围choose内容，以避免and多余导致的语法错误。
+    <!--choose when-->
+    <!--3.choose + when 测试
+    常常用where包围choose内容，以避免and多余导致的语法错误。
 
-	choose常用标签组合使用(相当于java中的switch,case,default):
-	<choose>
-		<when>
-		</when>
-		<when>
-		</when>
-		...
-		<otherwise>
-		</otherwise>
-	</choose>
+    choose常用标签组合使用(相当于java中的switch,case,default):
+    <choose>
+        <when>
+        </when>
+        <when>
+        </when>
+        ...
+        <otherwise>
+        </otherwise>
+    </choose>
 
-	标签意义:
-	choose相当于switch
-	when相当于case
-	otherwise相当于default
+    标签意义:
+    choose相当于switch
+    when相当于case
+    otherwise相当于default
 
-	注：
+    注：
     1.多个when标签按照书写顺序进行判断,当test为true时不会继续判断后面的when标签。
-	2.otherwise标签必须写在所有when标签的后面，且至多只有一个。
+    2.otherwise标签必须写在所有when标签的后面，且至多只有一个。
 
-	测试场景：
-	通过bId或book_name查找书籍,如果bId和book_name参数同时存在，则通过bId查询,
-	如果bId和book_name参数都没有，则默认返回书名为价值的书。
+    测试场景：
+    通过bId或book_name查找书籍,如果bId和book_name参数同时存在，则通过bId查询,
+    如果bId和book_name参数都没有，则默认返回书名为价值的书。
 
-	注：
-	经测试choose可被嵌套在<if></if>中，等待写demo再次测试。
-	-->
-	<select id="selectByWhereAndChoose" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
-		select bId,book_name as bookName,author_name as authorName,create_time from <include refid="table_name"/>
+    注：
+    经测试choose可被嵌套在<if></if>中，等待写demo再次测试。
+    -->
+    <select id="selectByWhereAndChoose" resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+        select bId,book_name as bookName,author_name as authorName,create_time from
+        <include refid="table_name"/>
 
-		<where>
-			<choose>
-				<when test="bId!=null">
-			        and bId = #{bId}
-				</when>
+        <where>
+            <choose>
+                <when test="bId!=null">
+                    and bId = #{bId}
+                </when>
 
-				<when test="bookName!=null">
-					and book_name = #{bookName}
-				</when>
+                <when test="bookName!=null">
+                    and book_name = #{bookName}
+                </when>
 
-				<!--如果没有传递参数，默认返回书名为价值的书
-				由于xml限制，otherwise标签必须在when后面，且最多只有一个。-->
-				<otherwise>
-					and book_name='价值'
-				</otherwise>
-			</choose>
-		</where>
-	</select>
+                <!--如果没有传递参数，默认返回书名为价值的书
+                由于xml限制，otherwise标签必须在when后面，且最多只有一个。-->
+                <otherwise>
+                    and book_name='价值'
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <!--4.choose + if 实现根据书名精确或模糊查找-->
+    <select id="selectByIfAndChoose" parameterType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO"
+            resultType="com.zj.test.mybatis.controller.zj.dynamicsql.po.BookPO">
+        select bId,book_name as bookName,author_name as authorName,create_time from
+        <include refid="table_name"/>
+        <where>
+
+            <if test="bookName != null and bookName !=  ''">
+                <!--choose里可以同时没有when和otherwise
+                otherwise是可选的，但是必须在when后面，否则dtd限制报错，并且启动也会报错-->
+                <choose>
+                    <when test="bookNameIsExact != null and bookNameIsExact==1">
+                        and book_name=#{bookName}
+                    </when>
+                    <otherwise>
+                        and book_name like CONCAT('%',#{bookName},'%')
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -17,9 +17,20 @@ import java.util.Date;
 @Getter
 public class BookPO {
     private Integer bId;
+
+    /**
+     * 书名，可模糊可精确查找，这取决于bookNameIsExact字段
+     */
     private String bookName;
     private String authorName;
     Date create_time;
+
+    /**
+     * 根据书名精确/模糊查找：
+     * 为null或为0 - 模糊查找
+     * 为1 - 精确查找
+     */
+    Integer bookNameIsExact;
 
 
     public Integer getbId() {

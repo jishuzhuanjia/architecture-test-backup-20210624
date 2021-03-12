@@ -25,4 +25,11 @@ public interface DynamicSqlTestMapper {
      * 3.choose + when + otherwise测试
      */
     public List<BookPO> selectByWhereAndChoose(@Param("bookName") String bookName, @Param("bId")Integer bId);
+
+    /**
+     * 4.if choose嵌套测试
+     */
+    public List<BookPO> selectByIfAndChoose(BookPO book);
+
+
 }
