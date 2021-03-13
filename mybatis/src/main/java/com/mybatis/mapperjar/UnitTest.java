@@ -126,6 +126,7 @@ public class UnitTest {
          */
         TestHelper.printSubTitle("mapper.insertUseGenerateKeys");
         UserPO inertUser4 = new UserPO();
+        // 会被忽略
         inertUser4.setId(1314112);
         //inertUser4.setPassword("123456-insertUseGeneratedKeys");
         mapper.insertUseGeneratedKeys(inertUser4);
