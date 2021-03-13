@@ -9,10 +9,10 @@ package com.mybatis.dynamicsql;
  * @finished-time:
  */
 
+import com.zj.test.util.TestHelper;
 import com.zj.test.util.TestResultTips;
 import com.mybatis.dynamicsql.po.BookPO;
 import com.mybatis.mapper.zj.DynamicSqlTestMapper;
-import com.mybatis.TestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

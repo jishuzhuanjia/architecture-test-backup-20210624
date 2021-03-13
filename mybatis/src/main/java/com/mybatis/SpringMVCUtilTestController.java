@@ -5,6 +5,7 @@ package com.mybatis;
  * @version: 1.0
  */
 
+import com.zj.test.util.TestHelper;
 import com.zj.util.springmvc.reqeust.bean.ReqBean;
 import com.zj.util.springmvc.response.bean.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ public class SpringMVCUtilTestController {
 
     @Autowired
     MappejarMapper mapper;
-
     @RequestMapping("test1")
     public RespBean<List<UserPO>> test1(@RequestBody ReqBean<Map> param) {
         TestHelper.startTest("spring-util测试");
