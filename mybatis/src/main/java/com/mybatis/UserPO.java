@@ -34,7 +34,7 @@ public class UserPO implements Serializable {
     //001.如果指定的列名在数据库中不存在，会报错：
     //java.sql.SQLSyntaxErrorException: Unknown column 'username1' in 'field list'
     @Column(name = "username")
-    private String name;
+    private String username;
 
     // 002.注意：如果不指定列名，列数据库中必须存在和属性名一样的列，否则报错：
     // java.sql.SQLSyntaxErrorException: Unknown column 'password1' in 'field list'
@@ -66,12 +66,12 @@ public class UserPO implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -110,7 +110,7 @@ public class UserPO implements Serializable {
     public String toString() {
         return "UserPO{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", age=" + age +
                 '}';

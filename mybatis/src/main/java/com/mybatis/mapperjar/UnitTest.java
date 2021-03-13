@@ -13,9 +13,6 @@ import com.mybatis.mapper.zj.MappejarMapper;
 import com.mybatis.UserPO;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /* @author: zhoujian
  * @create-time: 2020/9/18 17:29
  * @description: mapper.jar crud测试
@@ -30,7 +27,7 @@ public class UnitTest {
     MappejarMapper mapper;
 
     /**
-     * 1.增
+     * 1.增(insert)
      * 测试：向user表插入数据
      *
      * 相关方法：
@@ -124,70 +121,92 @@ public class UnitTest {
         和insert(T)一样，会插入null字段
         会忽略实体主键字段的值，使用表自增主键分配的值,换言之，不能手动设置主键值。
          */
-        TestHelper.printSubTitle("mapper.insertUseGenerateKeys");
+        /*TestHelper.printSubTitle("mapper.insertUseGenerateKeys");
         UserPO inertUser4 = new UserPO();
         // 会被忽略
         inertUser4.setId(1314112);
         //inertUser4.setPassword("123456-insertUseGeneratedKeys");
-        mapper.insertUseGeneratedKeys(inertUser4);
+        mapper.insertUseGeneratedKeys(inertUser4);*/
     }
 
-    // 2.删除：删除user表中的数据
-    @RequestMapping("test2")
-    public String test2() {
-        TestHelper.startTest("mapper.jar删除测试");
-        // delete(po): 将po中的所有字段组合成where ... and...and...语句，进行多条件删除。
-        // 2.1.delete(po)根据主键删除记录 - delete根据主键删除某条数据。
-        UserPO deleteUser1 = new UserPO();
-        //如果只有主键属性，则相当于根据主键删除记录。
-        deleteUser1.setId(10);
-        //deleteUser1.setPassword("111");
-        // 2.1.1.delete(po)返回类型为int，为此次删除的行数，如果没有删除，则返回0.
-        int affectRows1 = mapper.delete(deleteUser1);
-        TestHelper.println("mapper.delete(): 根据主键删除记录数: " + affectRows1);
-
-        /*2.2.delete(po)根据某个字段删除记录 - 可以批量删除
-         *传递的PO对象的属性字段会作为条件进行删除
-         * 下面的测试就相当于:
-         * delete from user where username="333"
-         * 因此delete方法可以实现批量删除。
+    /**
+     * 2.删除(delete)
+     * 测试：删除user表中的数据
+     *
+     * 相关方法：
+     * 2.1.int delete(T record)
+     * 根据条件删除，可批量
+     * 条件删除: 将po中的所有字段组合成where ... and...and...语句，进行多条件删除，因此可批量删除
+     *
+     * 返回值：为此次删除的行数，如果没有删除，则返回0
+     *
+     * 注意：
+     * 1.如果只有主键属性，则相当于根据主键删除记录
+     * 2.如果不设置任何字段的值，则会全量删除表中的数据，相当于truncate table，开发中需要格外注意
+     *-----------------------------------------------------------------------------------
+     *
+     * 2.2.int deleteByExample(Object example)
+     * 根据条件删除，可批量，不同的是可以设置排序
+     * 注意：
+     * 1.andEqualTo: property为DO类字段名，而不是表字段名
+     * 2.主键字段也可以作为删除条件
+     * -----------------------------------------------------------------------------------
+     *
+     * 2.3.int deleteByPrimaryKey(Object key)
+     * 根据主键删除，经测试，可以传递的参数类型:
+     * 1.int/Integer,需要传递主键值。
+     * 2.PO类型,需要对@Id属性进行赋值,会作为deleteByPrimaryKey的主键条件。
+     *
+     */
+    @Test
+    public void deleteTest() {
+        /**
+         * 2.1.int delete(T record)
+         * 条件删除: 将po中的所有字段组合成where ... and...and...语句，进行多条件删除，因此可批量删除
          *
-         *组合字段删除：下面的代码就相当于delete from user where username="333" and password="110"
-         * Test005User deleteUser2 = new Test005User();
-         * deleteUser2.setName("333");
-         * deleteUser2.setPassword("110");
-         * int affectRows2 = mapper.delete(deleteUser2);
-         * 也可以实现批量删除。
-         * */
-        UserPO deleteUser2 = new UserPO();
-        deleteUser2.setName("333");
-        int affectRows2 = mapper.delete(deleteUser2);
-        TestHelper.println("mapper.delete(): 根据非主键字段删除记录数: " + affectRows2);
+         * 返回值：为此次删除的行数，如果没有删除，则返回0
+         *
+         * 注意：
+         * 1.如果只有主键属性，则相当于根据主键删除记录
+         * 2.如果不设置任何字段的值，则会全量删除表中的数据，相当于truncate table，开发中需要格外注意
+         *
+         */
+        /*// 2.1.demo: 删除id为26，名为zhoujian的记录。
+        UserPO deleteUser1 = new UserPO();
+        // 如果不设置任何字段，则是表数据全量查询，开发中需要格外注意。
+        deleteUser1.setId(27);
+        deleteUser1.setName("zhoujian");
+        TestHelper.println("mapper.delete(deleteUser1)删除记录数",mapper.delete(deleteUser1));*/
 
-        /*2.3.deleteByExample的使用*/
-
+        /**
+         * 2.2.int deleteByExample(Object example)
+         *
+         * 注意：
+         * 1.andEqualTo: property为DO类字段名，而不是表字段名
+         * 2.主键字段也可以作为删除条件
+         */
+        /*// 2.2.deleteByExample的使用
         Example example = new Example(UserPO.class);
-        // 删除username==username且password=111的记录
-        example.createCriteria().andEqualTo("name", "testUser")
+        // 删除username=testUser且password=111的记录
+        example.createCriteria().andEqualTo("username", "testUser")
                 .andEqualTo("password", "111");
-        int affectRows3 = mapper.deleteByExample(example);
-        // deleteByExample(example): 根据条件删除记录数: 3
-        TestHelper.println("deleteByExample(example): 根据条件删除记录数: " + affectRows3);
+        TestHelper.println("deleteByExample(example): 根据条件删除记录数" , mapper.deleteByExample(example));*/
 
-        /*2.4.deleteByPrimaryKey的使用
-         * 可以从传递的参数类型:
+        /**
+         * 2.3.int deleteByPrimaryKey(Object key)
+         * 根据主键删除，经测试，可以传递的参数类型:
          * 1.int/Integer,需要传递主键值。
          * 2.PO类型,需要对@Id属性进行赋值,会作为deleteByPrimaryKey的主键条件。
          * */
-        /*Integer deletePirmaryKey = 12;
-        int affectRows4 = mapper.deleteByPrimaryKey(deletePirmaryKey);*/
-        UserPO deletePirmaryKeyUser = new UserPO();
-        deletePirmaryKeyUser.setId(11);
-        int affectRows4 = mapper.deleteByPrimaryKey(deletePirmaryKeyUser);
-        TestHelper.println("deleteByPrimaryKey(): 根据主键删除记录数: " + affectRows4);
+        /*// 经测试: 主键可以是Integer类型
+        Integer deletePirmaryKey = 1239;*/
+        /*// 经测试: 主键可以是int类型
+        int deletePirmaryKey = 1241;*/
 
-        TestHelper.finishTest();
-        return TestResultTips.SEE_AT_DATABASE;
+        // 经测试：主键可以通过DO @Id字段传递
+        /*UserPO userPO = new UserPO();
+        userPO.setId(1242);
+        TestHelper.println("deleteByPrimaryKey(): 根据主键删除记录数: " , mapper.deleteByPrimaryKey(userPO));*/
     }
 
     /*3.改(更新)
@@ -223,7 +242,7 @@ public class UnitTest {
         /*.andEqualTo("id",83)*/;
 
         UserPO updatePO = new UserPO();
-        updatePO.setName("myname");
+        updatePO.setUsername("myname");
         updatePO.setPassword("4567890");
 
         // updateByExample: 设置主键字段是多余的，主键不会被更新。
@@ -266,7 +285,7 @@ public class UnitTest {
 
         TestHelper.startTest("mapper.jar select(po) 查询测试");
         UserPO selectPO = new UserPO();
-        selectPO.setName("myname");
+        selectPO.setUsername("myname");
         selectPO.setAge(14);
         // 4.1.select(po): 会将po对象中的属性值作为查询的条件
         // 返回符合条件的PO列表
@@ -312,7 +331,7 @@ public class UnitTest {
 
         // 003.只有id字段有效，其他字段不会被添加到查询条件。
         //此时设置其他的属性无效
-        selectPO2.setName("xasdadaw2qe232r12");
+        selectPO2.setUsername("xasdadaw2qe232r12");
         TestHelper.println("查询到的值: " + mapper.selectByPrimaryKey(selectPO2));
         TestHelper.finishTest();
         return TestResultTips.SEE_AT_DATABASE;
@@ -350,7 +369,7 @@ public class UnitTest {
         002.使用场景：用在查询结果只有一条的场景，如通过主键或者多主键查询，要保证结果只有一条数据。*/
         TestHelper.printSubTitle("selectOne测试: ");
         UserPO selectOne = new UserPO();
-        selectOne.setName("myname");
+        selectOne.setUsername("myname");
 
         //将主键作为查询的条件，可以保证查询的结果只有一条，不会抛出异常
         //selectOne.setId(88);
