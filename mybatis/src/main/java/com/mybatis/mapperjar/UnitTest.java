@@ -30,17 +30,32 @@ public class UnitTest {
     MappejarMapper mapper;
 
     /*1.增
+     * 测试：向user表插入数据
      *
-     * 向user表插入数据
+     * 相关方法：
+     * 1.int insert(T record)
+     * 会插入所有的字段，包括那些null值的字段
+     * 注意：
+     * 1.当插入null值时，需要保证数据库对应表字段是可NULL的，否则插入报错
+     * 2.如果指定主键会使用指定的主键，缺点是可能主键已存在，会导致插入报错，如果不指定，会使用表自增分配的主键，优点是不会主键重复。
+     *
+     * 2.int insertSelective(T record)
+     * 会插入所有非null字段，有多少个非null字段insert语句就有多少个列：
+     * INSERT INTO user  ( username ) VALUES( ? )
+     * 注意：持久化对象中null的字段对应的表字段需要有默认值，否则插入报错,
+     *
+     * 对于1,2方法，表字段只要设置可为空就可满足，因为可为空会自动设置默认值NULL。同时满足1，2方法的注意项。
+     *
+     * 3.int insertList(java.util.List<? extends T> recordList)
+     * 批量插入，和insert(T)一样,会插入null值，因此限制和insert(T)相同
+     * 最终SQL(包含所有非主键列),形如:
+     * SQL: INSERT INTO user  ( username,password,age,last_login_time )  VALUES   ( ?,?,?,? ) , ( ?,?,?,? ) , ( ?,?,?,? )
+     *
      * */
     @Test
     public void test1() {
-        /*TestHelper.startTest("mapper.jar insert测试");
-        TestHelper.startSubTest("insert(po)测试");
-        UserPO insertUser = new UserPO();
-        insertUser.setName("user-mapperjar-insert(T record)");
-        mapper.insert(insertUser);*/
-        /*1.1.insert(po): 将po对象的值插入到数据库表中，包括那些值为null的属性。
+        /*
+        1.1.insert(po): 将po对象的值插入到数据库表中，包括那些值为null的属性。
         使用注意点：
         1.经测试：insert(po)会将null值插入到数据库，因此只能用来插入那些字段可为null的字段：
         对于那些表字段不能为空的字段，要保证插入的对象对应字段不为null,
@@ -48,8 +63,17 @@ public class UnitTest {
         Cause: java.sql.SQLIntegrityConstraintViolationException: Column 'password' cannot be null
         如果表中字段可以为空，则PO类属性是否为空都可以。
         */
+        /*TestHelper.printSubTitle("mapper.jar insert测试");
+        TestHelper.startSubTest("insert(T)测试");
+        UserPO insertUser = new UserPO();
+        insertUser.setId(1234);
+        insertUser.setName("user-insert(T)");
+        // 表中该字段NOT NULL,必须赋值，否则报错：
+        // Cause: java.sql.SQLIntegrityConstraintViolationException: Column 'password' cannot be null
+        insertUser.setPassword("123456");
+        mapper.insert(insertUser);*/
 
-        // 1.3.insertSelective使用: 只会插入非null的字段,最终插入语句只会包含非null字段。
+        // 1.2.insertSelective使用: 只会插入非null的字段,最终插入语句只会包含非null字段。
         // 但是不被包含的字段应有默认值，否则会报错。
         /*
         需要注意的是只有有默认值的字段才可以不赋值。
@@ -59,37 +83,42 @@ public class UnitTest {
 
         // 使用场景：如果某些字段有默认值，我们希望插入默认值，而不是被null覆盖，则使用insertSelective插入数据
         // last_login_time有默认值CURRENT_TIMESTAMP
-        TestHelper.startSubTest("mapper.insertSelective()测试");
+        /*TestHelper.startSubTest("mapper.insertSelective()测试");
         UserPO insertUserPO = new UserPO();
         insertUserPO.setName("user-mapperjar-insertSelective(T record)");
         // 此时password我们设置为not null
         //insertUserPO.setPassword("123456");
 
         // 最终SQL: INSERT INTO user  ( username ) VALUES( ? )
-        mapper.insertSelective(insertUserPO);
+        mapper.insertSelective(insertUserPO);*/
 
-        //1.4.mapper.insertList
-        // 每条数据的插入相当于insert(po)，会覆盖字段默认值，null值也会被插入。
+        /*
+        1.3.mapper.insertList
+        每条数据的插入相当于insert(po)，和insert(po)限制相同：插入null值时，表字段需要是可NULL的。
+        */
         /*TestHelper.printSubTitle("mapper.insertList测试");
         List<UserPO> insertList = new ArrayList<>();
         UserPO insertUser1, insertUser2, insertUser3;
         insertUser1 = new UserPO();
-        insertUser1.setPassword("111");
+        insertUser1.setPassword("password-insertList1");
         insertUser2 = new UserPO();
-        insertUser2.setPassword("111");
+        insertUser2.setPassword("password-insertList2");
         insertUser3 = new UserPO();
-        insertUser3.setPassword("111");
+        insertUser3.setPassword("password-insertList3");
         insertList.add(insertUser1);
         insertList.add(insertUser2);
         insertList.add(insertUser3);
         mapper.insertList(insertList);*/
 
-        //作用未知，暂不讨论
+        /*
+        1.4.insertUseGeneratedKeys(T record)
+        会忽略实体主键字段的值，使用表自增主键分配的值,换言之，不能手动设置主键值。
+         */
         /*TestHelper.printSubTitle("mapper.insertUseGenerateKeys");
         UserPO inertUser4 = new UserPO();
-        inertUser4.setPassword("123456");
-        TestHelper.println("插入条数: " ,mapper.insertUseGeneratedKeys(inertUser4));*/
-        TestHelper.finishTest();
+        inertUser4.setId(131411);
+        inertUser4.setPassword("123456-insertUseGeneratedKeys");
+        mapper.insertUseGeneratedKeys(inertUser4);*/
     }
 
     // 2.删除：删除user表中的数据
