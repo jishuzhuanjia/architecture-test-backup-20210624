@@ -36,7 +36,7 @@ public class UnitTest {
      * 注意：
      * 1.当插入null值时，需要保证数据库对应表字段是可NULL的，否则插入报错。
      * 2.如果指定主键会使用指定的主键，缺点是可能主键已存在，会导致插入报错，如果不指定，会使用表自增分配的主键，优点是不会主键重复。
-     *
+     *-------------------------------
      * 2.int insertSelective(T record)
      * 插入一条记录：会插入所有非null字段，有多少个非null字段insert语句就有多少个列：
      * INSERT INTO user  ( username ) VALUES( ? )
@@ -46,12 +46,12 @@ public class UnitTest {
      * Navicat会为可为空的字段设置默认值NULL,
      * 手动ddl语句来创建时，需要手动添加DEFAULT NULL。
      * 养成设置默认值的好习惯，哪怕默认值是NULL。
-     *
+     *-------------------------------
      * 3.int insertList(java.util.List<? extends T> recordList)
      * 批量插入，和insert(T)一样,会插入null值，因此限制和insert(T)相同
      * 最终SQL(包含所有非主键列),形如:
      * SQL: INSERT INTO user  ( username,password,age,last_login_time )  VALUES   ( ?,?,?,? ) , ( ?,?,?,? ) , ( ?,?,?,? )
-     *
+     *-------------------------------
      * 4.int insertUseGeneratedKeys(T record)
      * 插入一条记录，和insert(T)不同的是: 会忽略指定的主键值。
      * 注意：
@@ -150,7 +150,7 @@ public class UnitTest {
      * 注意：
      * 1.andEqualTo: property为DO类字段名，而不是表字段名
      * 2.主键字段也可以作为删除条件
-     * -----------------------------------------------------------------------------------
+     *-----------------------------------------------------------------------------------
      *
      * 2.3.int deleteByPrimaryKey(Object key)
      * 根据主键删除，经测试，可以传递的参数类型:
