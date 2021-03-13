@@ -53,7 +53,7 @@ public class UnitTest {
      *
      * */
     @Test
-    public void test1() {
+    public void insertTest() {
         /*
         1.1.insert(po): 将po对象的值插入到数据库表中，包括那些值为null的属性。
         使用注意点：
