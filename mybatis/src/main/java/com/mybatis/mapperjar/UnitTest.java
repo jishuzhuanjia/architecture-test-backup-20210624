@@ -29,27 +29,36 @@ public class UnitTest {
     @Autowired
     MappejarMapper mapper;
 
-    /*1.增
+    /**
+     * 1.增
      * 测试：向user表插入数据
      *
      * 相关方法：
      * 1.int insert(T record)
-     * 会插入所有的字段，包括那些null值的字段
+     * 插入一条记录：会插入所有的字段，包括那些值为null值字段。
      * 注意：
-     * 1.当插入null值时，需要保证数据库对应表字段是可NULL的，否则插入报错
+     * 1.当插入null值时，需要保证数据库对应表字段是可NULL的，否则插入报错。
      * 2.如果指定主键会使用指定的主键，缺点是可能主键已存在，会导致插入报错，如果不指定，会使用表自增分配的主键，优点是不会主键重复。
      *
      * 2.int insertSelective(T record)
-     * 会插入所有非null字段，有多少个非null字段insert语句就有多少个列：
+     * 插入一条记录：会插入所有非null字段，有多少个非null字段insert语句就有多少个列：
      * INSERT INTO user  ( username ) VALUES( ? )
-     * 注意：持久化对象中null的字段对应的表字段需要有默认值，否则插入报错,
+     * 注意：对象中值为null的字段对应的表字段需要有默认值，否则插入报错,
      *
-     * 对于1,2方法，表字段只要设置可为空就可满足，因为可为空会自动设置默认值NULL。同时满足1，2方法的注意项。
+     * 对于1,2方法，表字段只要设置可为空,默认值NULL就可满足：
+     * Navicat会为可为空的字段设置默认值NULL,
+     * 手动ddl语句来创建时，需要手动添加DEFAULT NULL。
+     * 养成设置默认值的好习惯，哪怕默认值是NULL。
      *
      * 3.int insertList(java.util.List<? extends T> recordList)
      * 批量插入，和insert(T)一样,会插入null值，因此限制和insert(T)相同
      * 最终SQL(包含所有非主键列),形如:
      * SQL: INSERT INTO user  ( username,password,age,last_login_time )  VALUES   ( ?,?,?,? ) , ( ?,?,?,? ) , ( ?,?,?,? )
+     *
+     * 4.int insertUseGeneratedKeys(T record)
+     * 插入一条记录，和insert(T)不同的是: 会忽略指定的主键值。
+     * 注意：
+     * 1.和insert(T)一样，会插入null字段，和insert(T)一样的限制。
      *
      * */
     @Test
@@ -112,13 +121,14 @@ public class UnitTest {
 
         /*
         1.4.insertUseGeneratedKeys(T record)
+        和insert(T)一样，会插入null字段
         会忽略实体主键字段的值，使用表自增主键分配的值,换言之，不能手动设置主键值。
          */
-        /*TestHelper.printSubTitle("mapper.insertUseGenerateKeys");
+        TestHelper.printSubTitle("mapper.insertUseGenerateKeys");
         UserPO inertUser4 = new UserPO();
-        inertUser4.setId(131411);
-        inertUser4.setPassword("123456-insertUseGeneratedKeys");
-        mapper.insertUseGeneratedKeys(inertUser4);*/
+        inertUser4.setId(1314112);
+        //inertUser4.setPassword("123456-insertUseGeneratedKeys");
+        mapper.insertUseGeneratedKeys(inertUser4);
     }
 
     // 2.删除：删除user表中的数据
