@@ -322,7 +322,7 @@ public class UnitTest {
      * 4.1.List<T> select(T)
      * 会将非空属性作为查询的条件,如果只将主键字段作为条件,相当于selectByPrimaryKey(Object)
      *-------------------------------------------------
-     * 4.2.selectByExample(Object)
+     * 4.2.--selectByExample(Object)
      * 根据example条件查询并返回符合条件的记录
      *-------------------------------------------------
      * 4.3.List<T> selctAll()
@@ -393,15 +393,17 @@ public class UnitTest {
         return TestResultTips.SEE_AT_DATABASE;
     }
 
-    /*5.mapper.jar计数方法
+    /**
+     * 5.mapper.jar计数方法
 
-     *selectCount(PO): 每个非空字段会作为条件,查询符合条件的记录条数
-     *selectCountByExample(): 根据Example条件查询符合条件的记录条数
+     * selectCount(PO): 每个非空字段会作为条件,查询符合条件的记录条数
      *
-     *selectOne(po): 查询符合条件的至多唯一一条数据
+     * selectCountByExample(): 根据Example条件查询符合条件的记录条数
+     *
+     * selectOne(po): 查询符合条件的至多唯一一条数据,查询的结果不能超过一个,否则报错
      * */
-    @RequestMapping("test5")
-    public String tesqt5() {
+    @Test
+    public void countTest() {
         TestHelper.startTest("mapper.jar 计数函数测试");
 
         //5.1.selectCount(PO): 每个非空字段会作为条件,查询符合条件的记录条数
@@ -433,7 +435,5 @@ public class UnitTest {
 
         TestHelper.finishTest();
         // mapper.selectCountByExample()
-
-        return TestResultTips.SEE_AT_DATABASE;
     }
 }
