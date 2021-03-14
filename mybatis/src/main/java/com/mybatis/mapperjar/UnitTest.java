@@ -1,6 +1,6 @@
 package com.mybatis.mapperjar;
 
-import com.mybatis.TestApplication;
+import com.mybatis.MybatisApplication;
 import com.zj.test.util.TestHelper;
 import com.zj.test.util.TestResultTips;
 import org.junit.Test;
@@ -8,10 +8,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RequestMapping;
 import com.mybatis.mapper.zj.MappejarMapper;
 import com.mybatis.UserPO;
-import tk.mybatis.mapper.entity.Example;
 
 /* @author: zhoujian
  * @create-time: 2020/9/18 17:29
@@ -20,7 +18,7 @@ import tk.mybatis.mapper.entity.Example;
  * @finish-time: 2020年9月21日 15:18:03
  */
 /*-----------------------------mapper.jar使用demo-------------------------------------*/
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(classes = MybatisApplication.class)
 @RunWith(SpringRunner.class)
 public class UnitTest {
     @Autowired

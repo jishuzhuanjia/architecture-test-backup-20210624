@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import com.mybatis.TestApplication;
+import com.mybatis.MybatisApplication;
 import com.mybatis.UserPO2;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.Map;
  * @description:
  * @version: 1.0
  */
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(classes = MybatisApplication.class)
 @RunWith(SpringRunner.class)
 public class MapperAnnotationTestJUnit {
     @Autowired MapperAnnotationMapper testMapper;

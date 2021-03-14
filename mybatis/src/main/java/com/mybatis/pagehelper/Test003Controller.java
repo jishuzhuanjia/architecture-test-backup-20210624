@@ -1,7 +1,7 @@
 package com.mybatis.pagehelper;
 
 import com.github.pagehelper.PageHelper;
-import com.mybatis.mapper.zj.Test003Mapper;
+import com.mybatis.mapper.zj.PageHelperTestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/test/mybatis/pagehelper")
 public class Test003Controller {
     @Autowired
-    Test003Mapper mapper;
+    PageHelperTestMapper mapper;
 
     @RequestMapping("test003")
     public List<Map<Object, Object>> test003(Integer pageNum, Integer pageSize) {

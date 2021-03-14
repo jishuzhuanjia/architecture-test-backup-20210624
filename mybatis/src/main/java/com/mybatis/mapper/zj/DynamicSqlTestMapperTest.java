@@ -1,6 +1,6 @@
 package com.mybatis.mapper.zj;
 
-import com.mybatis.TestApplication;
+import com.mybatis.MybatisApplication;
 import com.mybatis.dynamicsql.po.BookPO;
 import com.zj.test.util.TestHelper;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(classes = MybatisApplication.class)
 @RunWith(SpringRunner.class)
 class DynamicSqlTestMapperTest {
 

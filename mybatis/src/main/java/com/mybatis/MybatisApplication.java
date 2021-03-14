@@ -16,9 +16,9 @@ import tk.mybatis.spring.annotation.MapperScan;
 //tk.mybatis.mapper.MapperException: 无法获取实体类test.po.User对应的表名!
 //注：之前的mybatis xml和mapper的开发模式仍然有效。
 @MapperScan("com.mybatis.mapper")
-public class TestApplication {
+public class MybatisApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TestApplication.class);
+        SpringApplication.run(MybatisApplication.class);
     }
 }

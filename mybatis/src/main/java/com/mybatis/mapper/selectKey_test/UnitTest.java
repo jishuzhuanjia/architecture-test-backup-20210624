@@ -1,6 +1,6 @@
 package com.mybatis.mapper.selectKey_test;
 
-import com.mybatis.TestApplication;
+import com.mybatis.MybatisApplication;
 import com.mybatis.mapper.selectKey_test.po.UserPO;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @finished: false
  * @finished-time:
  */
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(classes = MybatisApplication.class)
 @RunWith(SpringRunner.class)
 public class UnitTest {
     @Autowired

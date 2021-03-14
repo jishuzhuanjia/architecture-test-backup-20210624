@@ -9,7 +9,7 @@ package com.mybatis.dynamicsql;
  * @finished-time:
  */
 
-import com.mybatis.TestApplication;
+import com.mybatis.MybatisApplication;
 import com.mybatis.dynamicsql.po.BookPO;
 import com.mybatis.mapper.zj.DynamicSqlTestMapper;
 import com.zj.test.util.TestHelper;
@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest(classes = TestApplication.class)
+@SpringBootTest(classes = MybatisApplication.class)
 @RunWith(SpringRunner.class)
 public class UnitTest {
 

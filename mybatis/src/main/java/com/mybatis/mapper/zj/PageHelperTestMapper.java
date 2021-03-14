@@ -7,7 +7,7 @@ import java.util.Map;
 // 如果mapper文件不书写在@MapperScan指定的包中，需要添加该注解
 // 不能用于mapper jar的mapper扫描
 //@Mapper
-public interface Test003Mapper {
+public interface PageHelperTestMapper {
 
     // 测试PageHelper插件
     public List<Map<Object,Object>> testPageHelper();
