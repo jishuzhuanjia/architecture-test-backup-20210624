@@ -3,6 +3,7 @@ package com.mybatis.pagehelper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.PageSerializable;
 import com.mybatis.MybatisApplication;
 import com.mybatis.mapper.zj.PageHelperTestMapper;
 import com.zj.test.util.TestHelper;
@@ -15,6 +16,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.sql.Time;
 import java.util.Map;
 
@@ -164,5 +168,34 @@ public class UnitTest {
             mapper.testPageHelper();
         });
         TimeHelper.finish();
+
+    }
+
+    /**
+     * 5.测试: api
+     *
+     * PageSerializable<E> doSelectPageSerializable(ISelect select
+     * 返回可序列化的查询结果封装类，PageSerializable只有total和list属性，比Page封装的信息更少。
+     * doSelectPageInfo 和 doSelectPage返回的封装类也是可以序列化的,可能是doSelectPageSerializable封装数据更少，便于传输。
+     *
+     */
+    @Test
+    public void doSelectPageSerializableTest(){
+        PageInfo<Object> objectPageInfo = PageHelper.startPage(0, 1).doSelectPageInfo(() -> {
+            mapper.testPageHelper();
+        });
+
+        // doSelectPageInfo,doSelectPage也可以序列化
+        try {
+            ObjectOutputStream objectOutputStream =new ObjectOutputStream(new FileOutputStream("C:\\Users\\Zhou Jian\\Desktop\\1.txt"));
+            objectOutputStream.writeObject(objectPageInfo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        PageSerializable<Object> objectPageSerializable = PageHelper.startPage(0, 1).doSelectPageSerializable(() -> {
+            mapper.testPageHelper();
+        });
+
     }
 }
