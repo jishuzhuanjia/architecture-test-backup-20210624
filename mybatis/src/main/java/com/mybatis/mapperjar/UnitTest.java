@@ -322,23 +322,23 @@ public class UnitTest {
      * 4.1.List<T> select(T)
      * 会将非空属性作为查询的条件,如果只将主键字段作为条件,相当于selectByPrimaryKey(Object)
      *-------------------------------------------------
-     * 4.2.T selectByPrimaryKey(Object o)
-     * 根据主键查询记录
-     * o的类型可以是int/Integer,DO类
-     * 如果传递参数是DO类型,除主键字段外，其他的字段不会作为查询的条件
+     * 4.2.selectByExample(Object)
+     * 根据example条件查询并返回符合条件的记录
      *-------------------------------------------------
      * 4.3.List<T> selctAll()
      * 查询表中所有的记录
      *-------------------------------------------------
-     * 4.4.selectByExample(Object)
-     * 根据example条件查询并返回符合条件的记录
+     * 4.4.T selectByPrimaryKey(Object o)
+     * 根据主键查询记录
+     * o的类型可以是int/Integer,DO类
+     * 如果传递参数是DO类型,除主键字段外，其他的字段不会作为查询的条件
      *
      * 2020年9月21日 22:21:25
      * 2021年3月14日 11:03:00
      * */
 
-    @RequestMapping("test4")
-    public String test4() {
+    @Test
+    public String selectTest() {
 
         TestHelper.startTest("mapper.jar select(po) 查询测试");
         UserPO selectPO = new UserPO();
