@@ -312,20 +312,29 @@ public class UnitTest {
         updatePO.setId(1243);//设置需要更新数据的主键
         // 也会将null值序列化到表中
         TestHelper.println("updateByPrimaryKeySelective(updatePO)更新记录数",mapper.updateByPrimaryKeySelective(updatePO));*/
+
     }
 
-    /*4.查
-     *查询的方法较多，请注意比较
+    /**
+     * 4.查
+     * 查询的方法较多，请注意比较
      *
-     *List<T> select(T): 会将非空属性作为查询的条件,如果只将主键字段作为条件,相当于
-     *   selectByPrimaryKey(Object)
-     *
-     *T selectByPrimaryKey(Object o): 根据主键查询返回记录,其他的字段不会作为查询的条件
-     *
-     *List<T> selctAll(): 返回表中所有的记录
-     *List<T> mapper.selectByExample(Object): 根据example条件查询并返回符合条件的记录
+     * 4.1.List<T> select(T)
+     * 会将非空属性作为查询的条件,如果只将主键字段作为条件,相当于selectByPrimaryKey(Object)
+     *-------------------------------------------------
+     * 4.2.T selectByPrimaryKey(Object o)
+     * 根据主键查询记录
+     * o的类型可以是int/Integer,DO类
+     * 如果传递参数是DO类型,除主键字段外，其他的字段不会作为查询的条件
+     *-------------------------------------------------
+     * 4.3.List<T> selctAll()
+     * 查询表中所有的记录
+     *-------------------------------------------------
+     * 4.4.selectByExample(Object)
+     * 根据example条件查询并返回符合条件的记录
      *
      * 2020年9月21日 22:21:25
+     * 2021年3月14日 11:03:00
      * */
 
     @RequestMapping("test4")
