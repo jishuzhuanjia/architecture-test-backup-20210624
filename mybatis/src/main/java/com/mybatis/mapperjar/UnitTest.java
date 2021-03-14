@@ -209,61 +209,109 @@ public class UnitTest {
         TestHelper.println("deleteByPrimaryKey(): 根据主键删除记录数: " , mapper.deleteByPrimaryKey(userPO));*/
     }
 
-    /*3.改(更新)
-     *updateByExample(po,object): 根据Example查询符合条件的记录，并将po的属性值更新到表中
-     *参数:
-     *  po: 用来更新值的po对象
-     *  object: Example对象
-     *注意:
-     *  1.空值null也会被插入到表中，这意味着Null也会覆盖表字段原来的值
-     *  2.不管po是否设置了主键字段，主键字段都不会被更新到表中,会被忽略
+    /**
+     * 3.改(update)
+     * 相关方法
      *
-     *updateByExampleSelective: 与updateByExample不同的是: null属性不会被更新到表中
+     * 3.1.updateByExample(po,object)
+     * 根据条件批量更新数据
      *
-     *updateByPrimaryKey(po): 根据主键更新，null值会被插入表
-     *updateByPrimaryKeySelective(): 根据主键更新，null值不会被插入表
+     * 参数:
+     * po: 用来更新值的po对象
+     * object: Example对象
+     *
+     * 注意:
+     * 1.updateByExample会将null值序列化到表中,因此表对应字段需要是可NULL的
+     * 2.po对象的主键字段不会被更新到表中，因此为po对象赋值主键是多余的操作。
+     *--------------------------------------------------------------
+     *
+     * 3.2.updateByExampleSelective
+     * 根据条件批量更新数据
+     *
+     * 与updateByExample不同的是，只会更新po的非null字段到表中,并且也不会将id字段序列化到表中
+     *--------------------------------------------------------------
+     *
+     * 3.3.updateByPrimaryKey(po): 根据主键更新，null值会被插入表
+     *
+     * 根据主键更新数据,需要注意的是也会将po中的null值更新到表中
+     *
+     * 注：
+     * 1.po的id字段是需要更新数据的主键。
+     *--------------------------------------------------------------
+     *
+     * 3.4.updateByPrimaryKeySelective(): 根据主键更新，null值不会被插入表
+     *
+     * 根据主键更新，与updateByPrimaryKey不同的是，只有po中的非null值才会被更新到表中
      *
      * 2020年9月21日 22:30:01
+     * 2021年3月14日 10:55:43
      * */
-    @RequestMapping("test3")
-    public String test3() {
-        // 3.1.updateByExample(po,object) 2020年9月21日 13:58:49
-        // po: po对象，其属性值将会被更新到表中字段。
-        // object: 带有查询条件的Example对象
-        // 会忽略对主键(@Id字段)的更新,因此对主键字段进行赋值是多余的操作。
-        // po对象中的表属性都会被写入到表中，即使是null，会覆盖表中已有的数据。
+    @Test
+    public void updateTest() {
+        /**
+         3.1.updateByExample(po,object) 2020年9月21日 13:58:49
+         条件更新
 
-        TestHelper.startTest("mapper.jar: updateByExample的使用");
+         po: 序列化到表的对象，其属性值将会被更新到表中字段
+         object: 带有查询条件的Example对象
+
+         注意:
+         1.updateByExample会将null值序列化到表中,因此表对应字段需要是可NULL的
+         2.po对象的主键字段不会被更新到表中，因此为po对象赋值主键是多余的操作。
+         */
         // 设置where条件
-        Example example = new Example(UserPO.class);
+        /*Example example = new Example(UserPO.class);
         example.createCriteria()
-                .andEqualTo("name", "zhoujian")
-                .andEqualTo("password", "123456")
-        /*.andEqualTo("id",83)*/;
+                .andEqualTo("username", "zhoujian");
+        //.andEqualTo("id",1243);// 可以将主键字段作为条件
 
+        // 更新po对象
         UserPO updatePO = new UserPO();
-        updatePO.setUsername("myname");
-        updatePO.setPassword("4567890");
+        updatePO.setPassword("password-updateByExample");
+        updatePO.setId(88);// 设置主键字段是多余的，主键不会被更新到表
+        TestHelper.println("updateByExample(updatePO, example)修改记录数",mapper.updateByExample(updatePO, example));*/
 
-        // updateByExample: 设置主键字段是多余的，主键不会被更新。
-        updatePO.setId(88);
-        int affectRows1 = mapper.updateByExample(updatePO, example);
-        TestHelper.println("修改的行数: " + affectRows1);
-        TestHelper.finishTest();
+        /**
+         * 3.2.int updateByExampleSelective(po,example)
+         * 条件更新
+         *
+         * 与updateByExample不同的是，只会更新po的非null字段到表中,并且也不会将id字段序列化到表中
+         */
+        /*Example example = new Example(UserPO.class);
+        example.createCriteria()
+                .andEqualTo("username", "zhoujian");
 
-        // 3.2.mapper.updateByExampleSelective()测试 2020年9月21日 13:58:40
-        // 如果为po对象中的表属性为null，不会更新到表中。
-        TestHelper.startTest("mapper.updateByExampleSelective()测试");
-        Example example2 = new Example(UserPO.class);
-        example2.createCriteria().andEqualTo("name", "zhoujian")
-                .andEqualTo("111");
-        TestHelper.println("修改的行数", mapper.updateByExampleSelective(updatePO, example2));
-        TestHelper.finishTest();
+        // 更新po对象
+        UserPO updatePO = new UserPO();
+        updatePO.setPassword("password-updateByExampleSelective");
+        updatePO.setId(88);// 设置主键字段是多余的，主键不会被更新到表
+        TestHelper.println("updateByExampleSelective(updatePO, example)修改记录数",mapper.updateByExampleSelective(updatePO,example));*/
 
-        //  3.3.updateByPrimaryKey
+        /**
+         * 3.3.int updateByPrimaryKey(po)
+         * 根据主键更新数据,需要注意的是也会将po中的null值更新到表中
+         *
+         * 注：
+         * 1.po的id字段是需要更新数据的主键。
+         */
         // mapper.updateByPrimaryKey();
-        // 略
-        return TestResultTips.SEE_AT_DATABASE;
+        /*UserPO updatePO = new UserPO();
+        updatePO.setPassword("password-updateByPrimaryKey");
+        updatePO.setId(1243);//设置需要更新数据的主键
+        // 也会将null值序列化到表中
+        TestHelper.println("updateByPrimaryKey(updatePO)更新记录数",mapper.updateByPrimaryKey(updatePO));*/
+
+
+        /**
+         * 3.4.int updateByPrimaryKeySelective(po)
+         *
+         * 根据主键更新，与updateByPrimaryKey不同的是，只有po中的非null值才会被更新到表中
+         */
+        /*UserPO updatePO = new UserPO();
+        updatePO.setPassword("password-updateByPrimaryKey");
+        updatePO.setId(1243);//设置需要更新数据的主键
+        // 也会将null值序列化到表中
+        TestHelper.println("updateByPrimaryKeySelective(updatePO)更新记录数",mapper.updateByPrimaryKeySelective(updatePO));*/
     }
 
     /*4.查
