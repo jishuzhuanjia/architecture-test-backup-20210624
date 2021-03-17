@@ -35,6 +35,7 @@ public class UnitTest {
     @Autowired
     PageHelperTestMapper mapper;
 
+    /* -----------------------------------------doSelectPageInfo---------------------------------------- */
     /**
      --------------------------------------PageInfo属性说明--------------------------------------
      @author: zhoujian
@@ -98,13 +99,14 @@ public class UnitTest {
      pageSize: <=0,则不分页查询，进行全量查询，返回所有数据,并且返回PageInfo对象pageNum和pageSiz都将是0.
      */
     @Test
-    public void doSelectPageInfoTest() {
+    public void doSelectPageInfo() {
         // 将查询结果封装到PageInfo
         // 默认count=true,会计算PageInfo中total,prePage,nextPage,hasNextPage,hasPreviousPage等字段的值...
         // 如果设置count=false,将不会计算这些字段的值
         PageInfo<Object> objectPageInfo = PageHelper.startPage(1, 10,false).doSelectPageInfo(() -> mapper.testPageHelper());
     }
 
+    /* -----------------------------------------doSelectPage---------------------------------------- */
     /**
      * 3.Page<E> doSelectPage(ISelect select)
      * Page较PageInfo而言，不支持对于导航的统计，只统计总数(total)和总页数(pages)
@@ -147,6 +149,7 @@ public class UnitTest {
         TestHelper.println("Page<Object>", objects);
     }
 
+    /* -----------------------------------------doCount---------------------------------------- */
     /**
      * 4.API测试
      * ----------------------------------------doCount------------------------------------
@@ -199,6 +202,7 @@ public class UnitTest {
         });
     }
 
+    /* -----------------------------------------startPage---------------------------------------- */
     /**
      * 6.测试: startPage(..)测试
      *
