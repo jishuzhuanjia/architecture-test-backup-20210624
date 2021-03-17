@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.PageSerializable;
+import com.github.pagehelper.page.PageMethod;
 import com.mybatis.MybatisApplication;
 import com.mybatis.mapper.zj.PageHelperTestMapper;
 import com.zj.test.util.TestHelper;
@@ -196,6 +197,60 @@ public class UnitTest {
         PageSerializable<Object> objectPageSerializable = PageHelper.startPage(0, 1).doSelectPageSerializable(() -> {
             mapper.testPageHelper();
         });
+    }
 
+    /**
+     * 6.测试: startPage(..)测试
+     *
+     */
+    @Test
+    public void startPage(){
+        /*
+        1.startPage(int pageNum,int pageSize)
+        分页查询
+         */
+        /*PageInfo<Object> objectPageInfo = PageMethod.startPage(0, 10).doSelectPageInfo(() ->
+                mapper.testPageHelper()
+        );*/
+
+        /*
+        2.startPage(int pageNum,int pageSize,boolean count)
+        count: 是否统计total,pages等额外字段
+         */
+        /*PageInfo<Object> objectPageInfo2 = PageMethod.startPage(0, 10,false).doSelectPageInfo(() ->
+                mapper.testPageHelper()
+        );*/
+
+        /*
+        3.startPage(int pageNum,int pageSize,String  orderBy)
+        分页 + 排序
+
+        返回结果会纠正请求中pageNum0 为 1，因为默认reasonable=true
+
+        oderBy使用举例:
+        1.last_login_time           -       按照last_login_time升序
+        2.last_login_time desc      -       按照last_login_time降序
+        3.last_login_time asc       -       按照last_login_time升序
+         */
+        PageInfo<Object> objectPageInfo3 = PageMethod.startPage(0, 10,"last_login_time").doSelectPageInfo(() ->
+                mapper.testPageHelper()
+        );
+
+        /*
+        4.startPage(int pageNum,int pageSize,boolean count,Boolean reasonable,Boolean pageSizeZero)
+        reasonable: 分页合理化，如如果想要纠正请求pageNum 0 为1 ，需要显示设置reasonable=true
+        pageSizeZero: true且pageSize=0时返回全部结果，false时分页,null时用默认配置,如果为true,但pageSize不为0，则按照pageSize返回个数
+        如果pageSize为0且pageSizeZero为null，返回所有记录
+
+        使用技巧
+        1.可以在调用startPage(int pageNum,int pageSize,boolean count,Boolean reasonable,Boolean pageSizeZero)
+        后再继续使用fluent api设置order by等.
+
+        2.注意: 如果全量返回，则设置order_by无效。
+         */
+        PageInfo<Object> objectPageInfo4 = PageMethod.startPage(1, 0,
+                false,true,false).setOrderBy("last_login_time desc").doSelectPageInfo(() ->
+                mapper.testPageHelper()
+        );
     }
 }
