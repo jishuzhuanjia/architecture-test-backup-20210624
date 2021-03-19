@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.PageSerializable;
 import com.github.pagehelper.page.PageMethod;
 import com.mybatis.MybatisApplication;
+import com.mybatis.UserPO;
 import com.mybatis.mapper.zj.PageHelperTestMapper;
 import com.zj.test.util.TestHelper;
 import com.zj.test.util.TimeHelper;
@@ -256,5 +257,13 @@ public class UnitTest {
                 false,true,false).setOrderBy("last_login_time desc").doSelectPageInfo(() ->
                 mapper.testPageHelper()
         );
+    }
+
+    public static void main(String[] args) {
+        String s="xxx";
+        UserPO user = new UserPO();
+        user.setId(20);
+        user.setPassword("asdsadsad");
+
     }
 }
