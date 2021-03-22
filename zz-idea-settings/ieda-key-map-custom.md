@@ -23,9 +23,10 @@ Back                            ctrl  + shift + backspace       回到上一个�
 
 ## Git
 Fetch                           alt + shift + 7     
-Pull                            alt + shift + 8     
+Pull                            alt + shift + 8                 merge分支到当前分支 
+Reset Head                      alt + shift + 9                 撤回提交
 Show History                    alt + shift + 0                 查看文件的所有历史版本
-Get From Version Control        alt + shift + v 
+Get From Version Control        alt + shift + v                 克隆git仓库到本地
 
 ## File
 Invalidate Caches/Restart       alt + shift + F1
