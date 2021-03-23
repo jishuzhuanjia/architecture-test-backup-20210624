@@ -259,11 +259,4 @@ public class UnitTest {
         );
     }
 
-    public static void main(String[] args) {
-        String s="xxx";
-        UserPO user = new UserPO();
-        user.setId(20);
-        user.setPassword("asdsadsad");
-
-    }
 }
