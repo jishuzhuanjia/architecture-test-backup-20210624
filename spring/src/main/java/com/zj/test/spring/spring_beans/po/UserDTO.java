@@ -1,6 +1,8 @@
 package com.zj.test.spring.spring_beans.po;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -10,10 +12,10 @@ import lombok.Data;
  * @finished: false
  * @finished-time:
  */
-@Data
+@Getter
 public class UserDTO {
-    String username;
-    String password;
-    Integer age;
-    String phone;
+    public String username;
+    public String password;
+    public Integer age;
+    public String phone;
 }

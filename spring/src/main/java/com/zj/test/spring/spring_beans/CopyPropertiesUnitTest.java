@@ -22,12 +22,21 @@ public class CopyPropertiesUnitTest {
     /**
      * 1.copyProperties()测试
      *
+     * 1.1.需要属性名相同 + 同类型(包装类和简单类视为同一类型)
+     * 【一些转换总结】
      * <p>
-     * 使用注意点：
-     * <ul>
-     *     <li>1.只能复制同名、且类型相同的属性。</li>
-     * </ul>
-     * </p>
+     * int <-> Integer
+     * <p>
+     * short 不能转 int
+     * Short 不能转 int
+     * <p>
+     * int/Integer 不能转 boolean
+     * <p>
+     * 注意包装类转换到简单类型要防止null，否则：
+     * Exception in thread "main" org.springframework.beans.FatalBeanException: Could not copy property 'j' from source to target; nested exception is java.lang.IllegalArgumentException
+     *
+     * 1.2.1.属性注意需要注意的点
+     * source类必须要有getter方法，target必须要有getter和setter方法，否则映射值会失败
      * */
     @Test
     public void copyProperties() {
@@ -39,16 +48,16 @@ public class CopyPropertiesUnitTest {
          * 1.source、target为对象。
          * 2.只会映射同名同类型的属性。
          * */
-        /*
+
         UserDTO userDTO = new UserDTO();
-        userDTO.setUsername("zhoujian");
-        userDTO.setPassword("312");
-        userDTO.setAge(25);
-        userDTO.setPhone("15156444479");
+        userDTO.username="zhoujian";
+        userDTO.password="312";
+        userDTO.age=25;
+        userDTO.phone="15156444479";
 
         UserDO userDO = new UserDO();
         BeanUtils.copyProperties(userDTO, userDO);
-        TestHelper.println("userDO",userDO);*/
+        TestHelper.println("userDO",userDO);
 
         /**
          * 002.copyProperties(source,target,editable)

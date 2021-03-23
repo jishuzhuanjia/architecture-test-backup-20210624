@@ -2,6 +2,7 @@ package com.zj.test.spring.spring_beans.po;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 /* @author: zhoujian
  * @qq: 2025513
@@ -11,7 +12,8 @@ import lombok.Getter;
  * @finished: false
  * @finished-time:
  */
-@Data
+@Setter
+@Getter
 public class UserDO extends UserDOEditable {
     String username;
     String password;
