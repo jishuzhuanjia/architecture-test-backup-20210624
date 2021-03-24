@@ -13,7 +13,9 @@ Reimport All Modules            alt + shift + 5     可以在任何情况下执�
 ## 3.窗口
 Close                           ctrl + F4           关闭当前打开文件tab
 Close Others                    alt + shift + F5            
-Close All                       alt + shift + F6            
+Close All                       alt + shift + F6     
+
+Clear all                       alt + shift + K     清空控制台输出       
 
 ## 编译/运行
 Rebuild Project                 ctrl + alt + shift + F9         重新编译项目

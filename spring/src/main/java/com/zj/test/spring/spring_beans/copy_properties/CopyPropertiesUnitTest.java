@@ -1,4 +1,4 @@
-package com.zj.test.spring.spring_beans;
+package com.zj.test.spring.spring_beans.copy_properties;
 
 import com.zj.test.spring.spring_beans.po.UserDO;
 import com.zj.test.spring.spring_beans.po.UserDOEditable;
