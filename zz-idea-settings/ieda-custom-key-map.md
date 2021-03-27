@@ -7,8 +7,9 @@ Package/Directory               alt + shift + 3
 Module                          alt + shift + 4
 
 ## 2.Maven
-Reimport A Module               alt + 5             这个命令需要Maven窗口激活并选中某个Module才有效             
-Reimport All Modules            alt + shift + 5     可以在任何情况下执行                                 
+Reimport A Module                       alt + 5                 这个命令需要Maven窗口激活并选中某个Module才有效             
+Reimport All Modules                    alt + shift + 5         可以在任何情况下执行                                 
+Download Sources and Documentation      alt + shift + F12       下载源码和文档
 
 ## 3.窗口
 Close                           ctrl + F4                   关闭当前打开文件tab
