@@ -22,6 +22,7 @@ import org.apache.xmlbeans.XmlException;
 import org.junit.Test;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -324,5 +325,28 @@ public class PoiDemos {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * 7.demo: 读取txt文本
+     *
+     */
+    @Test
+    public void txt2String() {
+        File file = new File(filesDir,"poi-test.txt");
+        StringBuffer buffer = new StringBuffer();
+        try {
+            InputStreamReader input = new InputStreamReader(new FileInputStream(file), "utf8");
+            BufferedReader reader = new BufferedReader(input);
+
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line).append('\n');
+            }
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        TestHelper.println(buffer.toString());
     }
 }
