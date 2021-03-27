@@ -11,11 +11,14 @@ Reimport A Module               alt + 5             这个命令需要Maven窗�
 Reimport All Modules            alt + shift + 5     可以在任何情况下执行                                 
 
 ## 3.窗口
-Close                           ctrl + F4           关闭当前打开文件tab
-Close Others                    alt + shift + F5            
-Close All                       alt + shift + F6     
+Close                           ctrl + F4                   关闭当前打开文件tab
+Close Others                    alt + shift + F5            关闭除当前tab的其他所有tab     
+Close All                       alt + shift + F6            关闭所有tab页
 
-Clear all                       alt + shift + K     清空控制台输出       
+Close All to the Left           ctrl + alt + shift + F5     关闭当前tab左边的所有tab
+Close All to the Right          ctrl + alt + shift + F6     关闭当前tab右边的所有tab
+
+Clear all                       alt + shift + K             清空控制台输出       
 
 ## 编译/运行
 Rebuild Project                 ctrl + alt + shift + F9         重新编译项目
