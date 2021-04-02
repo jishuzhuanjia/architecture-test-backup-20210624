@@ -26,8 +26,15 @@ public class User {
 
     //@JsonFormat(pattern = "yyyy-MM-dd",name="loginTime") // zj,没有效果
 
-    // name: 最终序列化的字段名
-    // 注意: format优先级小于
+    /**
+     * @JSONField:
+     *
+     * format: 日期序列化的格式
+     * name: 可以指定字段序列化后的字段名
+     * serialize: 是否序列化，默认true
+     *
+     * 注: 优先级小于toJSONStringWithDateFormat dateFormat
+     */
     //@JSONField(format="yyyy-MM-dd")
     Date lastLoginTime;
 }
