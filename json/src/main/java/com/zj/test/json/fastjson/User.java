@@ -23,7 +23,11 @@ public class User {
 
     String username;
     String password;
-    //@JsonFormat(pattern = "yyyy-MM-dd") // zj,没有效果
+
+    //@JsonFormat(pattern = "yyyy-MM-dd",name="loginTime") // zj,没有效果
+
+    // name: 最终序列化的字段名
+    // 注意: format优先级小于
     //@JSONField(format="yyyy-MM-dd")
     Date lastLoginTime;
 }

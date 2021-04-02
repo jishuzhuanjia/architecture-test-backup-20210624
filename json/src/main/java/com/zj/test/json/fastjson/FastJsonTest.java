@@ -241,6 +241,9 @@ public class FastJsonTest {
      * 2.对属性统一处理:
      * JSON.toJSONStringWithDateFormat(..)
      * 3.修改JSON默认序列化格式,使用规则SerializerFeature.WriteDateUseDateFormat进行控制。
+     *
+     * 注意:
+     * toJSONStringWithDateFormat dataFormat优先级小于@JSONField
      */
     @Test
     public void dateTimeToJson() {
