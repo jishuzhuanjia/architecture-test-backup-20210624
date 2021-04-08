@@ -10,6 +10,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/10/20 10:09
@@ -115,5 +118,21 @@ public class CopyPropertiesUnitTest {
         User2 user2 = new User2();
         BeanUtil.map(user,null);
         TestHelper.println(user2);*/
+    }
+
+    /**
+     * 3.测试是否能将po类转换成Map类型
+     *
+     * 结果
+     * 不能
+     */
+    @Test
+    public void test2(){
+        UserDTO user = new UserDTO();
+        user.username="zhou";
+        user.password="123";
+        Map map = new HashMap<>();
+        BeanUtils.copyProperties(user,map);
+        TestHelper.println("map",map);
     }
 }

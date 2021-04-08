@@ -1,8 +1,6 @@
 package com.zj.test.json.fastjson;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 import com.alibaba.fastjson.parser.Feature;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -288,4 +286,20 @@ public class FastJsonTest {
         JSONObject.DEFFAULT_DATE_FORMAT = "yyyy-MM|dd";
         TestHelper.println(JSON.toJSONString(user, SerializerFeature.WriteDateUseDateFormat));
     }
+
+    /**
+     * 测试：JSON.toJSONString是否能将map转换成json
+     *
+     * 测试结果：OK
+     */
+    @Test
+    public void map2JSON(){
+        Map<String,Object> map = new HashMap<>();
+        map.put("username","zhoujian");
+        map.put("password","123456");
+        map.put("age",25);
+
+        TestHelper.println("JSON.toJSONString(map)",JSON.toJSONString(map));
+    }
+
 }

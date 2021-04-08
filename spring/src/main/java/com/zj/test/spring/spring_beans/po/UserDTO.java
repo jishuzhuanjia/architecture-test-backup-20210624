@@ -13,6 +13,7 @@ import lombok.Setter;
  * @finished-time:
  */
 @Getter
+@Setter
 public class UserDTO {
     public String username;
     public String password;
