@@ -100,4 +100,20 @@ public class CopyPropertiesUnitTest {
         BeanUtils.copyProperties(userDTO, userDO,"password");
         TestHelper.println("userDO",userDO);*/
     }
+
+    /**
+     * 2.BeanUtils.copyProperties(Object  source,Object  target) source target null 值测试
+     *
+     * 结果：不能为null，否则BeanUtils会报错：Target must not be null
+     */
+    @Test
+    public void test(){
+        /*User user = new User();
+        user.setUsername("zhou");
+        user.setPassword("123456");
+
+        User2 user2 = new User2();
+        BeanUtil.map(user,null);
+        TestHelper.println(user2);*/
+    }
 }
