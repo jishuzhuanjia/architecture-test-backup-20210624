@@ -127,12 +127,20 @@ public class CopyPropertiesUnitTest {
      * 不能
      */
     @Test
-    public void test2(){
+    public void testObject2Map(){
         UserDTO user = new UserDTO();
         user.username="zhou";
         user.password="123";
         Map map = new HashMap<>();
         BeanUtils.copyProperties(user,map);
         TestHelper.println("map",map);
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void test3(){
+
     }
 }
