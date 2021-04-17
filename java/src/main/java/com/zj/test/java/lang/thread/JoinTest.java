@@ -63,7 +63,7 @@ public class JoinTest {
          指定的线程会继续执行，不会被强制停止。
          */
         try {
-            subThread.join(1000);
+            subThread.join(1000,999999);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
