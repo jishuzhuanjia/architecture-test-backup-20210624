@@ -35,7 +35,7 @@ public class JoinTest {
         subThread.start();
 
         /*try {
-         *//*在一个线程中调用另外一个线程对象的join方法
+         *//*在一个线程中调用另外一个线程对象的join方法，以等待线程执行完成，
             实际是通过thread.isAlive() 和 wait()来实现
             推荐不要对线程实例使用wait(),notify 和 notifyAll();
             如果线程没有调用start()则无操作。

@@ -137,13 +137,14 @@ public class ThreadLocalTest {
             threadLocal.set("new value");
             TestHelper.println(Thread.currentThread().getName() + "最新值", threadLocal.get());
             threadLocal.remove();
+            TestHelper.println(Thread.currentThread().getName() + "最新值", threadLocal.get());
             // remove后调用 set 不会调用initialValue
             threadLocal.set("new value2");
             TestHelper.println(Thread.currentThread().getName() + "最新值", threadLocal.get());
 
             threadLocal.remove();
             // remove后再get，会调用initialValue
-            TestHelper.println(Thread.currentThread().getName() + "最新值", threadLocal.get());
+            TestHelper.println(Thread.currentThread().getName() + "remove后", threadLocal.get());
         }).start();
 
         // 等待线程1修改完毕
