@@ -15,16 +15,13 @@ import com.zj.test.util.TestHelper;
  */
 public class JoinTest {
 
-    /**
-     *
-     */
     public static void main(String[] args) {
+        // 子任务线程
         Thread subThread = new Thread(new Runnable() {
-
             @Override
             public void run() {
-                for (int i = 0; i < 500000000; i++) {
-                    TestHelper.println("subThread: ", i);
+                for (int i = 1; i <= 1000; i++) {
+                    TestHelper.println("subThread进度", i/(double)1000);
                     try {
                         Thread.sleep(300);
                     } catch (InterruptedException e) {
@@ -52,14 +49,18 @@ public class JoinTest {
         }*/
 
         /**
-         会等待指定的线程执行1s，如果到1s指定的线程没有执行完毕
-         则会继续执行主线程后面的代码
-         需要注意的是: 即使指定的时间子线程没有执行完成，但是还在运行，不会被强制关闭。
-         */
-        /*
-        一直等待
-        subThread.join();
-        subThread.join(0)
+         join()
+         会等待指定的线程执行完成
+
+         永久等待：
+         subThread.join(0);
+         或
+         subThread.join();
+
+         等待指定的时间(ms)：
+         subThread.join(1000);
+         如果指定的时间内指定线程没有执行完成，会继续执行后面的代码。
+         指定的线程会继续执行，不会被强制停止。
          */
         try {
             subThread.join(1000);
@@ -67,7 +68,7 @@ public class JoinTest {
             e.printStackTrace();
         }
 
-        System.out.println("the sub thread is finished!");
+        System.out.println("mainThread继续执行");
 
         /*
         死亡状态(执行完)的线程不能重新开始
@@ -75,11 +76,10 @@ public class JoinTest {
         */
 
         /*
-        如果线程正在运行状态:
+        如果start正在运行状态的线程:
         Exception in thread "main" java.lang.IllegalThreadStateException
         at java.lang.Thread.start(Thread.java:708)
         at com.zj.test.java.lang.thread.JoinTest.main(JoinTest.java:74)
         */
-        subThread.start();
     }
 }
