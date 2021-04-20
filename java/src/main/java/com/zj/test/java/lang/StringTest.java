@@ -1,6 +1,7 @@
 package com.zj.test.java.lang;
 
 import com.zj.test.util.TestHelper;
+import lombok.ToString;
 import org.junit.Test;
 
 /* @author: zhoujian
@@ -14,28 +15,42 @@ import org.junit.Test;
 public class StringTest {
 
     /**
-     * author: 2025513
+     * 1.public static String valueOf(Object)测试
+     * 将对象转换成String对象
      *
-     * 1.public static String valueOf(* obj)测试
-     * 【作用】
      *
-     * 【测试结果】
+     * 原理：该方法会调用Object对象的toString方法获取返回值
      *
-     * 【结论】
-     *
-     * 【优点】
-     * 【缺点】
+     * 注意：想要获取正确的返回值，需要对自定义的类型实现toString方法
      */
     @Test
     public void valueOf(){
         Object sObject = null;
-        //Object -> return (obj == null) ? "null" : obj.toString();
+        // String.valueOf(null): null
         TestHelper.println("String.valueOf(null)",String.valueOf(sObject));
 
-        // int -> return Integer.toString(i);
+        // String.valueOf(1111): 1111
         TestHelper.println("String.valueOf(1111)",String.valueOf(1111));
 
-        // boolean -> return b ? "true" : "false";
+        // String.valueOf(false): false
         TestHelper.println("String.valueOf(false)",String.valueOf(false));
+
+        Integer i = 13;
+        TestHelper.println("String.valueOf(13)",String.valueOf(i));
+
+        User user = new User();
+        user.username="zhou jian";
+        user.password="123456";
+        String.valueOf(user);
+        // 如果没有覆盖默认toString: user: com.zj.test.java.lang.StringTest$User@2f333739
+        // 覆盖后(这里使用的lombok插件生成toString):
+        // user: StringTest.User(username=zhou jian, password=123456)
+        TestHelper.println("user",user);
+    }
+
+    @ToString
+    class User {
+        String username;
+        String password;
     }
 }
