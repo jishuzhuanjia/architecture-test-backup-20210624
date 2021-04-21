@@ -17,6 +17,15 @@ import java.util.Map;
 
 // 测试表: user
 // 使用注解的好处，可以不用添加mapper.xml文件。
+
+/**
+ 1.myabtis默认字段映射规则：
+ 表字段名 和 po属性名一致时，才会映射值，如：
+ 列                   po属性
+ regist_ts           registTs        -- 不能映射,registTs最终为null
+ regist_ts           regist_ts       -- OK
+ */
+
 public interface MapperAnnotationMapper {
 
     /*
@@ -47,7 +56,7 @@ public interface MapperAnnotationMapper {
     小技巧：如果将Map作为查询的returnType，可以接受任何的columnName，并绑定值到Map:
     columnName: value
     */
-    @Results(id="resultMap1",value={
+    @Results(id = "resultMap1", value = {
             // 注意：PO必须要有property指定的属性(Map可以没有)，否则会报错。
             // column可以没有，不会报错
             @Result(column = "username", property = "name", jdbcType = JdbcType.VARCHAR
@@ -83,7 +92,7 @@ public interface MapperAnnotationMapper {
     value: 要复用的@Results id
      */
     @Select("select * from user")
-    @ResultMap(value="resultMap1")
+    @ResultMap(value = "resultMap1")
     public List<UserPO2> selectAllColumnsWithMap2();
 
     /*004:该方法返回类型需要和@One属性的类型一致，否则报错。

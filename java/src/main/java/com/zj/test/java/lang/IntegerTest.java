@@ -148,5 +148,8 @@ public class IntegerTest {
         Integer i132=Integer.valueOf("13");
         // true
         TestHelper.println("i13==i132",i13==i132);
+
+        Integer integer = Integer.valueOf(null);
+
     }
 }

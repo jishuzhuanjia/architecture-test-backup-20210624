@@ -2,10 +2,14 @@ package com.mybatis;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
+import java.util.Date;
 
 @Setter
 @Getter
+@ToString
 public class UserPO2 implements Serializable {
     private Integer id;
     private String name;
@@ -20,14 +24,5 @@ public class UserPO2 implements Serializable {
     * */
     private UserPO.Banji ppp;
 
-    @Override
-    public String toString() {
-        return "UserPO2{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", password='" + password + '\'' +
-                ", ppp=" + ppp +
-                '}';
-    }
+    private Date regist_ts;
 }
