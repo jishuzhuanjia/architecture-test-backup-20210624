@@ -7,15 +7,60 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-/***/
-@Component
+/**
+ * 【kafka区别】
+ * 一、topic下引入partition的作用：
+ * topic是逻辑的概念，partition是物理的概念。
+ * 为了性能考虑，如果topic内的消息只存于一个broker，那这个broker会成为瓶颈，无法做到水平扩展。
+ * kafka通过算法尽可能的把partition分配到集群的不同服务器上。
+ * partition也可以理解为segment的封装。一个partition对应多个segment。一个segment包含一个数据文件和一个索引文件
+ *
+ *
+ * 二、kafka分区分配策略
+ * partition.assignment.strategy= range（默认值） 或 roundrobin
+ *
+ * 1.range策略：按照范围分配分区，分配给消费者线程的分区号是连续的
+ *
+ * partition的个数除于消费者线程的总数来决定每个消费者线程消费几个分区。
+ * 如果除不尽，那么前面几个消费者线程将会多消费一个分区。
+ * 假设有3个消费者11个分区
+ * C1-0 将消费 0, 1, 2, 3 分区
+ * C1-2 将消费 4, 5, 6, 7 分区
+ * C1-3 将消费 8, 9, 10 分区
+ *
+ * 2.roundrobin策略：分区按照hashcode排序，消费者按照字母排序
+ * 假设有3个消费者11个分区
+ * C1-0 将消费 0, 3, 6, 9 分区
+ * C1-2 将消费 1, 4, 7, 10 分区
+ * C1-3 将消费 2, 5, 8 分区
+ *
+ * 注意：
+ * 1、一个分区只能被一个消费者线程消费。
+ * 2、新的api中预留了自己实现分配策略的可能性class org.apache.kafka.clients.consumer.RangeAssignor
+ *
+ *
+ * 三、分区修改命令
+ * ./kafka-topics.sh --alter --topic topic1 --zookeeper zkip:2181/kafka --partitions 6
+ *
+ *
+ * 【java代码中如何合理使用@KakfaListener】
+ * 1.每个@KakfaListener执行一个特定的任务，并指定concurrency参数。
+ * 2.对多个@KafkaListener添加相同groupId参数后，这几个@KafkaListener将作为一个消费者集群，消息会被某个@KafkaListener消费。
+ */
+//@Component
 @Slf4j
 public class KafkaConsumer {
 
+    /**
+     * KafkaListener注解属性：
+     * topics：监听的topic，可指定多个
+     * groupId：消费者集群id
+     * containerFactory：配置类中生成的containerFactory
+     *
+     */
     @KafkaListener(topics = KafkaProducer.TOPIC_TEST, groupId = "agroup",containerFactory = "simpleFactory")
     public void topic_test0(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 
@@ -117,6 +162,8 @@ public class KafkaConsumer {
      *
      * 【结论】
      * 1.相同groupId的消费者集群对每个消息只消费一次。
+     * 实际上同一项目中相同groupId的消费者只有一个是有用的。
+     *
      * 2.消费者集群可以降低消费者宕机几率,提高并发处理消息的能力。
      *
      *

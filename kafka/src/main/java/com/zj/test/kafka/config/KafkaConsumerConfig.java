@@ -18,55 +18,23 @@ import org.springframework.kafka.listener.ContainerProperties;
 import java.util.HashMap;
 import java.util.Map;
 
-/* @author: zhoujian
- * @qq: 2025513
- * @create-time: 2020/12/29 17:31
- * @description: kafka Consumer配置
- * @version: 1.0
- * @finished: false
- * @finished-time:
+/**
+ * author: zhoujian
+ * qq: 2025513
+ * create-time: 2020/12/29 17:31
+ * description: kafka Consumer配置类
+ * version: 1.0
+ * finished: false
+ * finished-time:
  */
 @Configuration
 @EnableKafka
 @Slf4j
 public class KafkaConsumerConfig {
     public KafkaConsumerConfig() {
-        log.info("Initializing Kafka");
+        log.info("Initializing kafka Consumer config");
     }
 
-    /**
-     * 【kafka区别】
-     * 一、topic下引入partition的作用：
-     * topic是逻辑的概念，partition是物理的概念。
-     * 为了性能考虑，如果topic内的消息只存于一个broker，那这个broker会成为瓶颈，无法做到水平扩展。kafka通过算法尽可能的把partition分配到集群的不同服务器上。
-     * partition也可以理解为segment的封装。一个partition对应多个segment。一个segment包含一个数据文件和一个索引文件
-     *
-     * 二、kafka分区分配策略：
-     *
-     * partition.assignment.strategy= range（默认值） 或 roundrobin
-     *
-     * range策略:分区顺序排序，消费者按照字母排序。
-     * partitions的个数除于消费者线程的总数来决定每个消费者线程消费几个分区。如果除不尽，那么前面几个消费者线程将会多消费一个分区。
-     * 假设有3个消费者11个分区
-     * C1-0 将消费 0, 1, 2, 3 分区
-     * C1-2 将消费 4, 5, 6, 7 分区
-     * C1-3 将消费 8, 9, 10 分区
-     * roundrobin策略：分区按照hashcode排序，消费者按照字母排序
-     * 假设有3个消费者11个分区
-     * C1-0 将消费 0, 3, 6, 9 分区
-     * C1-2 将消费 1, 4, 7, 10 分区
-     * C1-3 将消费 2, 5, 8 分区
-     *
-     * 注意：
-     * 1、一个分区只能被一个消费者线程消费。
-     * 2、新的api中预留了自己实现分配策略的可能性class org.apache.kafka.clients.consumer.RangeAssignor
-     *
-     * 三、分区修改./kafka-topics.sh --alter --topic topic1 --zookeeper zkip:2181/kafka --partitions 6
-     *
-     * 【java代码中如何合理使用@KakfaListener】
-     * 1.每个@KakfaListener执行一个特定的任务，并指定concurrency参数。
-     * 2.对多个@KafkaListener添加groupId参数后，这几个@KafkaListener将作为一个消费者集群，消息会被某个@KafkaListener消费。
-     */
     @Bean(name = "simpleFactory")
     KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<Integer, String>> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<Integer, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
@@ -128,6 +96,8 @@ public class KafkaConsumerConfig {
         */
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        // 经测试，基本上这个设置没什么卵用
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "default-groupId");
         // 设置group id
         // 只要不更改group.id，每次重新消费kafka，都是从上次消费结束的地方继续开始，不论"auto.offset.reset”属性设置的是什么 - 待验证
         props.put("group.id", "lsp001");
