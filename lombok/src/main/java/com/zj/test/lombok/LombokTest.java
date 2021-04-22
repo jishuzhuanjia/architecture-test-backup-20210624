@@ -1,5 +1,6 @@
 package com.zj.test.lombok;
 
+import com.zj.test.util.TestHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -111,5 +112,44 @@ public class LombokTest {
     @Test
     public void trace() {
         log.trace("this is a message of level trace");
+    }
+
+    /** ----------------------------------------- lombok注解测试 ---------------------------------------- */
+    /**
+     *
+     * 1.@Setter/@Getter
+     * 生成setter/getter方法
+     *
+     * 用法
+     * 1.用在Type上，则为所有属性生成setter/getter方法。
+     *
+     * 2.用在属性上，可以为特定的属性添加setter/getter方法。
+     *
+     * 2.@ToString，生成toString()方法，格式如下：
+     * User(username=username, password=password)
+     *
+     * 4.@EqualsAndHashCode
+     * 实现hasCode()和equals()方法
+     *
+     *
+     * 5.@Data
+     * 相当于上面4个注解
+     */
+    @Test
+    public void setter(){
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword("password");
+
+
+        TestHelper.println(user);
+        TestHelper.println(user.hashCode());
+
+
+        User user2= new User();
+        user2.setUsername("username");
+        user2.setPassword("password");
+        // true
+        TestHelper.println("user.equals(user2)",user.equals(user2));
     }
 }
