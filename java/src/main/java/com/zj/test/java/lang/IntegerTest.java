@@ -74,7 +74,7 @@ public class IntegerTest {
      *
      * 作用：比较两个对象的int值
      *
-     * 返回：如果Obj不是Integer实例，返回false,否则返回两者init值是否相同。
+     * 返回：如果Obj不是Integer实例，返回false,否则返回两者int值是否相同。
      *
      * 注意：不会比较对象的引用，只是比较值(区别于==)
      */
@@ -101,6 +101,8 @@ public class IntegerTest {
      * Integer.parseInt("11 ")
      * Integer.parseInt("1 1")
      *
+     * 16进制字符串需要移除0x前缀
+     * 解析8进制: 8进制字符串开头的0是可选的，不会报错
      */
     @Test
     public void parseInt(){

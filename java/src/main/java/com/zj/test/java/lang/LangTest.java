@@ -17,7 +17,7 @@ public class LangTest {
      * 1.Integer对象比较
      *
      * 结论: 自动装箱得到的Integer对象,只要值在-128~127之间，只要值相等，则引用相同。
-     * 因为Integer.IntegerCache缓存了值在128~127之间的Integer对象，如果值在此期间，则直接返回
+     * 因为IntegerCache缓存了值在128~127之间的Integer对象，如果值在此期间，则直接返回
      * 缓存中的Integer对象。
      *
      * 需要注意的是，通过构造函数Integer(value)构造的对象是新的对象，而不是从缓存中获取。
@@ -98,7 +98,7 @@ public class LangTest {
     }
 
     // 可克隆的类
-    public static class User{
+    public static class User implements Cloneable{
         String username;
         String password;
         int age;
