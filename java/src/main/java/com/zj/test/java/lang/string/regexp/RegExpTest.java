@@ -7,8 +7,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *正则表达式测试类
+ * <p>
+ * 正则表达式测试类
  * 讨论正则表达式语法 和 String对象支持正则的三个方法测试: matches(),split(),replaceAll()
+ * </p>
  *
  * 规律: 只有matches()方法中的正则表达式'^','$'是可选的，其他3种方式都不能带
  *
@@ -54,7 +56,7 @@ public class RegExpTest {
      * {m,n}                数词,表示[m,n]个
      * {n}                  表示数次n,固定次数
      *
-     * ?                    出现0/1次,自此处，以下数词都不需要{}包围
+     * ?                    出现0/1次
      * +                    >=1次
      * *                    >=0次
      *
@@ -81,12 +83,14 @@ public class RegExpTest {
      * */
 
     /**
-     *测试1: 正则表达式使用：找出所有电话号码
-     *表达式不能写^$,否则会被当做查找的内容
+     *测试1: 正则表达式Pattern的使用：找出所有电话号码
+     *Pattern.compile("\\d{11}")表达式不能写^$,否则会被当做查找的内容
      * */
     @Test
     public void findTels() {
+
         String testStr = "13951998372xx1515644447921321xx15156911119";
+        TestHelper.startTest("查找" + testStr +"中所有的11位手机号");
 
         //导入java.util下的Pattern
 
@@ -97,8 +101,9 @@ public class RegExpTest {
 
         正则表达式中的'\'需要使用转义字符。
          */
+        // 错误的写法：不需要^和$，否则会被当做查找的内容
         //Pattern pattern  = Pattern.compile("^\\d{11}$");
-        Pattern pattern = Pattern.compile("^\\d{11}$");
+        Pattern pattern = Pattern.compile("\\d{11}");
 
         /*
         2. 获取Matcher对象：负责匹配
@@ -140,8 +145,10 @@ public class RegExpTest {
     }
 
     /**
-     *测试2: 支持正则表达式的String方法
-     * matches()        判断字符串是否符合RegExp,需要注意的是它并不是用来查找子串的
+     *测试2: 支持正则表达式的String方法测试
+     *
+     * matches()
+     * 判断字符串是否符合RegExp,需要注意的是它并不是用来查找子串的
      *
      * 验证用户输入
      *
@@ -174,23 +181,20 @@ public class RegExpTest {
      * 参数是用来分隔的字符串正则表达式
      * 正则表达式也可以是普通的字符串
      *
-     *  replaceAll()
-     *  此方法的正则表达式也不能写'^'和'$',否则会被当做查找的内容
      *  */
     @Test
     public void split() {
+        TestHelper.startTest("String.split正则测试");
         String test = "16651622365ex15156911119ef13951998372";
 
-        //1.[] 和 {}之间不能有空格
+        //1.[] 和 {}之间不能有空格,否则会作为匹配的内容
         //如果无法进行分组则返回原串
-        //不能写 ^ $　　
+        //不能写 ^ $,否则会作为匹配的内容
         String regEx = "[a-zA-Z]{2}";
 
         //空白也可以作为结果
         //注意:参数的正则表达式指的是用来分隔的字符串。
         String[] tels = test.split(regEx);
-
-        //System.out.println(Arrays.toString(tels));
 
         for (String tel : tels) {
             System.out.println(tel);
@@ -209,12 +213,13 @@ public class RegExpTest {
      */
     @Test
     public void replaceAll() {
+        TestHelper.startTest("String.replaceAll正则测试");
         String test = "16651622365ex15156911119ef13951998372";
 
         TestHelper.println(test.replaceAll("[a-zA-Z]{2}", ","));
 
         // 不能添加'^'和'$'，否则会被当做内容进行匹配
-        TestHelper.println(test.replaceAll("^[a-zA-Z]{2}$", ","));
+        //TestHelper.println(test.replaceAll("^[a-zA-Z]{2}$", ","));
     }
 
     /**
@@ -253,8 +258,11 @@ public class RegExpTest {
 
         // 空白匹配 \s
         TestHelper.println("\" \".matches(\"\\\\s\")", " ".matches("\\s"));//true
-        TestHelper.println("\"    \".matches(\"\\\\s\")", "    ".matches("\\s"));//false
+        // 制表符，通过键盘Tab键键出
+        TestHelper.println(" .matches(\"\\\\s\")", " ".matches("\\s"));//true
+        // 换行符\n
         TestHelper.println("\"\\n\".matches(\"\\\\s\")", "\n".matches("\\s"));//true
+        // 制表符，通过转移字符表示
         TestHelper.println("\"\\t\".matches(\"\\\\s\")", "\t".matches("\\s"));//true
     }
 }
