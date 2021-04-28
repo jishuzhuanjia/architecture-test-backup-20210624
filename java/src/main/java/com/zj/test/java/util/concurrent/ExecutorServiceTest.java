@@ -3,6 +3,7 @@ package com.zj.test.java.util.concurrent;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -16,7 +17,7 @@ import java.util.concurrent.*;
  */
 
 /**
- * --------------------------------Executors的4种线程池(从线程数量和功能上划分)-----------------------
+ * --------------------------------Executors提供的的4种线程池(从线程数量和功能上划分)-----------------------
  *
  * 1.CachedThreadPool(会根据任务数，动态调整线程池线程数量)。
  * 初始核心线程数为0，当新任务被加入时，如果有可用的空闲线程，
@@ -35,6 +36,10 @@ import java.util.concurrent.*;
  * 2.FixedThreadPool
  * 线程池中线程数量保持不变，当一个任务执行失败时，会创建新的线程替代失败的线程继续执行其他的任务。
  *
+ * new ThreadPoolExecutor(nThreads, nThreads,
+ *                                       0L, TimeUnit.MILLISECONDS,
+ *                                       new LinkedBlockingQueue<Runnable>(),
+ *                                       threadFactory)
  * 【核心参数值】
  * corePoolSize==maxPoolSize
  * keepAliveTime: 0ms
@@ -84,7 +89,7 @@ import java.util.concurrent.*;
  * 综上： Executors提供的4种线程池，都可能会导致OOM。
  * ------------------------------------------------------------------------------------------
  */
-public class ThreadPoolTypeTest {
+public class ExecutorServiceTest {
 
     /**
      * 1.线程池常用api
@@ -120,14 +125,14 @@ public class ThreadPoolTypeTest {
      */
     @Test
     public void fixedThreadPool() {
-        //ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10);
+        // 1.ThreadFactory测试
+        /*AtomicInteger count = new AtomicInteger();
+        // 默认情况下,FixedThreadPool不会一下创建nThreads个线程，只有当没有空闲线程且没有达到nThreads线程数时，才会创建新线程去执行任务。
 
-        //int count = 0;
-        // nThreads为多少，就会调用多少次threadFactory.newThread()
-        // 这里不能实现对线程名的编号,因为不使用lambda来实现ThreadFactory接口。
-        /*
         ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10, (r) -> {
+            TestHelper.println("ThreadFactory创建了一个线程");
 
+            count.getAndIncrement();
             Thread thread = new Thread(r);
             thread.setName("fixed-thread_pool-" + count);
             // Variable used in lambda expression should be final or effectively final
@@ -135,13 +140,32 @@ public class ThreadPoolTypeTest {
             //count ++;
             return thread;
         });
-        */
 
-        int[] count = {0};
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            fixedThreadPool.execute(()->{
+                TestHelper.println("正在执行task" + finalI);
+             try {
+                 Thread.sleep(200);
+             } catch (InterruptedException e) {
+                 e.printStackTrace();
+             }
+            });
+
+        }
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        int[] count = {1};
         // 使用内部类来为线程指定带有序号的线程名
         ExecutorService fixedThreadPool = Executors.newFixedThreadPool(10, new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {
+                TestHelper.println("ThreadFactory创建一个线程.");
                 Thread thread = new Thread(r);
                 thread.setName("fixed-thread-pool-thread-" + count[0]);
                 count[0]++;
@@ -150,11 +174,10 @@ public class ThreadPoolTypeTest {
             }
         });
 
-        // 提交一个任务
+        // 提交任务task1
         fixedThreadPool.execute(() -> {
             while (true) {
-                TestHelper.println("execute task-1" + Thread.currentThread().getName() + "  is running,by execute");
-
+                TestHelper.println("is running task-1");
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
@@ -164,11 +187,12 @@ public class ThreadPoolTypeTest {
 
         });
 
-        for (int i = 0; i < 3; i++) {
+        // 启动3个线程
+        for (int i = 2; i < 5; i++) {
             int finalI = i;
             fixedThreadPool.submit(() -> {
                 while (true) {
-                    TestHelper.println("submit task-" + (finalI + 1) + Thread.currentThread().getName() + "  is running,by submit");
+                    TestHelper.println("is running task-" + finalI);
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
@@ -177,11 +201,14 @@ public class ThreadPoolTypeTest {
                 }
             });
         }
+        // 还剩6个线程
 
-        // submit执行任务并返回返回值demo
+        // 2.submit执行任务并返回返回值demo
+        // Future<T> submit(Callable<T> task);
         Future<Integer> submit = fixedThreadPool.submit(() -> {
             int i = 1314 * 520;
             Thread.sleep(10000);
+            TestHelper.println("计算值", i);
             return i;
         });
 
@@ -193,17 +220,14 @@ public class ThreadPoolTypeTest {
             // 到达timeout时间, 线程没有返回值, 会打断等待状态, 抛出java.util.concurrent.TimeoutException,继续执行后面的代码
             // 0: 立即打断,执行后面的代码
 
-            TestHelper.println("线程1返回值: " + submit.get(0, TimeUnit.SECONDS));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
+            TestHelper.println("线程5返回值: " + submit.get());
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 
-        TestHelper.println("线程1返回值后，执行的代码");
+        TestHelper.startTest("submit(@NotNull Runnable task)测试");
 
+        // submit(@NotNull Runnable task)测试
         // Future<?> submit(Runnable task)测试
         // 传递Runnable
         // 和Callable<T>参数不同的是,如果指定时间内返回了,则future.get()总是为null
@@ -220,20 +244,17 @@ public class ThreadPoolTypeTest {
         });
 
         try {
-            TestHelper.println("submit(Runnable task)返回数据 " + future.get(2, TimeUnit.SECONDS));
+            // [main] - submit(Runnable task)返回数据: null
+            TestHelper.println("submit(Runnable task)返回数据", future.get(6000, TimeUnit.SECONDS));
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (TimeoutException e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
         }
 
-        TestHelper.println("code after submit(Runnable task)返回数据");
 
+        TestHelper.startTest("<T> Future<T> submit(Runnable task, T result)");
         // <T> Future<T> submit(Runnable task, T result)测试
-        // return: 当执行时间内线程执行完成, 会作为返回数据。
+        // return: 当执行时间内线程执行完成, 会作为返回数据。可为null
         Future<Object> submit1 = fixedThreadPool.submit(new Runnable() {
             @Override
             public void run() {
@@ -244,23 +265,18 @@ public class ThreadPoolTypeTest {
                 }
 
             }
-        }, null);
+        }, "Hello World");
 
         try {
-            TestHelper.println("submit(Runnable task, T result)返回数据: " + submit1.get(2, TimeUnit.SECONDS));
+            TestHelper.println("submit(Runnable task, T result)返回数据: " + submit1.get());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
-        } catch (TimeoutException e) {
-            e.printStackTrace();
         }
-        TestHelper.println("code after submit(Runnable task, T result)返回数据");
 
-
-        // 防止主线程结束
         try {
-            Thread.sleep(10000000);
+            new CountDownLatch(1).await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -376,6 +392,9 @@ public class ThreadPoolTypeTest {
     /**
      * 2.3.ScheduledThreadPool
      *
+     * (corePoolSize, Integer.MAX_VALUE, 0, NANOSECONDS,
+     *               new DelayedWorkQueue())
+     *
      * ScheduledExecutorService newScheduledThreadPool(int corePoolSize)
      * 创建一个线程池，该线程池可以安排任务在给定的延迟后运行或定期执行。
      *
@@ -384,6 +403,7 @@ public class ThreadPoolTypeTest {
      */
     @Test
     public void newScheduledThreadPool() {
+        TestHelper.startTest("ScheduledThreadPool");
         // corePoolSize—保留在池中的线程数，即使它们是空闲的
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
 
@@ -421,6 +441,7 @@ public class ThreadPoolTypeTest {
      */
     @Test
     public void newScheduledThreadPool2() {
+        TestHelper.startTest("scheduleAtFixedRate");
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
 
         // initialDelay: 第一次执行的延迟
@@ -434,30 +455,28 @@ public class ThreadPoolTypeTest {
         即: 当任务耗时大于period周期时,任务的间隔将不是period
         并且不会并发执行
         当任务耗时小于period，会等待到period才会执行下一个任务, 这样就使得任务像是周期执行。
+
+        当任务周期大于period时，则任务完成后会立即调用周期代码。     -- 2021年4月28日 21:32:39
+
+        period是调用run()方法的时间间隔
+
         */
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                TestHelper.println("周期代码执行了...");
+                // period是周期任务开始执行时的时间差
+                TestHelper.println(new Date() + "周期代码1执行了...");
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }, 5, 2, TimeUnit.SECONDS);
 
-        /*
-        创建并执行一个周期性操作，该操作在给定的初始延迟之后首先启用，然后在一个执行的终止和下一个执行的开始之间使用给定的延迟。
-        如果任务的任何执行遇到异常，则禁止后续执行。否则，任务将仅通过执行程序的取消或终止而终止。
-
-        即: 多个任务之间的间隔是固定的，会等待上一个线程执行完成,等待delay后执行下一个任务。
-        */
-        scheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                TestHelper.println("周期代码2执行了...");
-
-            }
-        }, 1, 2, TimeUnit.SECONDS);
-
         try {
-            Thread.sleep(Integer.MAX_VALUE);
+            Thread.sleep(60000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -465,6 +484,8 @@ public class ThreadPoolTypeTest {
 
     /**
      * 2.4.newSingleThreadExecutor
+     *
+     * ThreadPoolExecutor(1, 1,0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>())
      *
      * 创建一个执行器，该执行器使用单个工作线程操作一个未绑定队列。
      * (但是请注意，如果这个线程在关闭之前由于执行失败而终止，那么在需要执行后续任务时，一个新的线程将取代它。)
@@ -479,12 +500,12 @@ public class ThreadPoolTypeTest {
         for (int i = 0; i < 100; i++) {
             int finalI = i;
             singleThreadExecutor.execute(() -> {
-                TestHelper.println("task " + finalI + " is processing");
+                TestHelper.println("task-" + finalI + " is processing");
             });
         }
 
         try {
-            Thread.sleep(Integer.MAX_VALUE);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
