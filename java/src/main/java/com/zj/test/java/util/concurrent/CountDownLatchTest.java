@@ -8,12 +8,14 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-/* @author: zhoujian
- * @qq: 2025513
+/**
+ * <p>
+ * 倒计时门闩 - 线程同步工具
+ * </p>
+ *
+ * @author: zhoujian
  * @create-time: 2020/11/17 13:17
- * @description: 倒计时门闩测试
- * @version: 1.0
- * @finished: 1
+ * @description:
  * @finished-time: 2020年11月17日 14:42:04
  */
 public class CountDownLatchTest {
@@ -32,11 +34,22 @@ public class CountDownLatchTest {
      *
      * {@code CountDownLatch}的一个有用特点是，它不要求调用{@code countDown}的线程在继续执行之前等待计数为零，
      * 它只是阻止任何调用{@link #await await}的线程继续执行，直到所有线程都通过。
+     *
+     * 计时到达0时，将会开门，届时所有调用await()等待的线程都将会继续执行。
      */
 
-
+    /**
+     * CountDownLatch同步应用demo
+     */
     class Worker implements Runnable {
+        /**
+         * 开始信号，计数为0开始工作
+         */
         private final CountDownLatch startSignal;
+
+        /**
+         * 结束信号，计数为0所有任务完成
+         */
         private final CountDownLatch doneSignal;
 
         Worker(CountDownLatch startSignal, CountDownLatch doneSignal) {
@@ -46,6 +59,8 @@ public class CountDownLatchTest {
 
         public void run() {
             try {
+                // 由于主线程countDown很快，这里看到的值可能为0
+                TestHelper.println("当前开始倒计时",startSignal.getCount());
                 startSignal.await();
                 doWork();
                 doneSignal.countDown();
@@ -54,7 +69,7 @@ public class CountDownLatchTest {
         }
 
         void doWork() {
-            TestHelper.println(Thread.currentThread().getName() + " is working...");
+            TestHelper.println("开始任务...");
         }
     }
 
@@ -68,14 +83,8 @@ public class CountDownLatchTest {
      * 2.可以用来监控多线程任务的结束。
      *
      * 【测试结果】
-     * main thread: is running...,sub thread can not run!
-     * main thread: is running...,sub thread can run!
-     * Thread-0 is working...
-     * Thread-3 is working...
-     * Thread-2 is working...
-     * Thread-4 is working...
-     * Thread-1 is working...
-     * main thread: all task completed!!!
+     *
+     *
      * 【结论】
      * 1.public long getCount()  获取当前倒计时计数
      *
@@ -87,33 +96,26 @@ public class CountDownLatchTest {
     @Test
     public void demo1() {
         // 控制任务开始的倒计时门闩
-        CountDownLatch startSignal = new CountDownLatch(1);
+        CountDownLatch startSignal = new CountDownLatch(5);
         // 控制任务进度的倒计时门闩
         CountDownLatch doneSignal = new CountDownLatch(5);
 
-        // 创建任务线程并启动
-        for (int i = 0; i < 5; ++i)
-            new Thread(new Worker(startSignal, doneSignal)).start();
+        for (int i = 0; i < 5; i++) {
+            new Thread(new Worker(startSignal,doneSignal)).start();
+            // 减少倒计时，当所有任务就绪后，任务开始执行
+            startSignal.countDown();
+        }
 
-        // don't let run yet
-        // doSomethingElse();模拟
-        TestHelper.println("main thread: is running...,sub thread can not run!");
-
-        // let all threads proceed
-        startSignal.countDown();
-
-        // 调用countDown()后，不会阻止本线程执行
-        TestHelper.println("main thread: is running...,sub thread can run!");
-
+        TestHelper.println("等待所有任务完成.................");
         try {
-            // 等待所有任务完成
             doneSignal.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TestHelper.println("main thread: all task completed!!!");
-    }
+        TestHelper.println("任务全部完成.");
 
+
+    }
 
     class WorkerRunnable implements Runnable {
         private final CountDownLatch doneSignal;

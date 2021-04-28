@@ -79,13 +79,14 @@ public class FutureTaskTest {
                     // 不能尝试获取被取消任务的返回结果,否则:
                     // CancellationException
                     TestHelper.println("小伙伴喊道", futureTask.get());
+                    TestHelper.println("开始寻找");
                     break;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-                TestHelper.println("开始寻找");
+                break;
             } else {
 
             /*
@@ -95,6 +96,11 @@ public class FutureTaskTest {
             true: 立即中断执行。
             */
                 TestHelper.println("等一下，还没躲好呢");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 //TestHelper.println(futureTask.cancel(false));
                 // 对于cancel(true)和cancel(false),都返回了true。
                 //TestHelper.println(futureTask.isDone());// true
@@ -104,12 +110,14 @@ public class FutureTaskTest {
             }
 
         }
+
+        TestHelper.println("futureTask.isDone()",futureTask.isDone());
     }
 
     /**
      * 2.while(true)性能损耗测试
      *
-     * cpu占用率达到了50%，非常恐怖，会造成系统的不稳定。
+     * cpu使用率骤增90%~50%，非常恐怖，会造成系统的不稳定。
      */
     @Test
     public void test2() {
@@ -201,7 +209,7 @@ public class FutureTaskTest {
      * 【缺点】
      */
     @Test
-    public void FutureTask2(){
+    public void FutureTask2() {
         Runnable runnable = () -> {
             try {
                 Thread.sleep(5000);
@@ -214,13 +222,13 @@ public class FutureTaskTest {
         作为任务执行完成后的返回值, 可以为null , 通过 futureTask.get() 获取。
          */
         String result = "runnable finished...";
-        FutureTask<String> futureTask = new FutureTask<String>(runnable,result);
+        FutureTask<String> futureTask = new FutureTask<String>(runnable, result);
 
         new Thread(futureTask).start();
 
-        while(true){
+        while (true) {
 
-            if(futureTask.isDone()){
+            if (futureTask.isDone()) {
                 try {
                     TestHelper.println(futureTask.get());
                 } catch (InterruptedException e) {
@@ -230,8 +238,7 @@ public class FutureTaskTest {
                 }
 
                 break;
-            }else
-            {
+            } else {
                 TestHelper.println("任务还没执行完成");
                 try {
                     Thread.sleep(1000);
