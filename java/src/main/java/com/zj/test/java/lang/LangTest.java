@@ -199,9 +199,9 @@ public class LangTest {
 
     // 可克隆的类
     public static class User implements Cloneable{
-        String username;
-        String password;
-        int age;
+        public String username;
+        public String password;
+        public int age;
 
         @Override
         public Object clone() throws CloneNotSupportedException {

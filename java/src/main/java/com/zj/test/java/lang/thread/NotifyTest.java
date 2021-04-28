@@ -38,7 +38,7 @@ public class NotifyTest {
      * 1.线程调用调用notify()/notifyAll()后不会释放锁，会继续执行。
      *
      * 2.线程调用wait()会立即释放锁并释放cup资源。
-     *
+     * 或者等到线程将synchronized代码块中的代码执行完，会自动释放锁
      */
     @Test
     public void test1() {
