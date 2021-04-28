@@ -1,7 +1,5 @@
 package com.zj.test.mp;
 
-import com.baomidou.mybatisplus.core.toolkit.AES;
-import com.zj.test.util.TestHelper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

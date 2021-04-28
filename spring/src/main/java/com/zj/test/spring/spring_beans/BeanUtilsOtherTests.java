@@ -41,7 +41,7 @@ public class BeanUtilsOtherTests {
     public void isSimpleValueType() {
 
         TestHelper.startTest("BeanUtils.isSimpleValueType");
-        TestHelper.printSubTitle("基础类型");
+        TestHelper.startTest("基础类型");
         //基础类型
         TestHelper.println("isSimpleValueType(byte.class)", BeanUtils.isSimpleValueType(byte.class));
         TestHelper.println("isSimpleValueType(short.class)", BeanUtils.isSimpleValueType(short.class));
@@ -52,7 +52,7 @@ public class BeanUtilsOtherTests {
         TestHelper.println("isSimpleValueType(char.class)", BeanUtils.isSimpleValueType(char.class));
         TestHelper.println("isSimpleValueType(boolean.class)", BeanUtils.isSimpleValueType(boolean.class));
 
-        TestHelper.printSubTitle("包装类");
+        TestHelper.startTest("包装类");
         // 包装类
         TestHelper.println("isSimpleValueType(Byte.class)", BeanUtils.isSimpleValueType(Byte.class));
         TestHelper.println("isSimpleValueType(Short.class)", BeanUtils.isSimpleValueType(Short.class));
@@ -64,18 +64,18 @@ public class BeanUtilsOtherTests {
         TestHelper.println("isSimpleValueType(Boolean.class)", BeanUtils.isSimpleValueType(Boolean.class));
 
         //数组
-        TestHelper.printSubTitle("数组类型");
+        TestHelper.startTest("数组类型");
         TestHelper.println("isSimpleValueType(int[].class)", BeanUtils.isSimpleValueType(int[].class));
         TestHelper.println("isSimpleValueType(Integer[].class)", BeanUtils.isSimpleValueType(Integer[].class));
         TestHelper.println("isSimpleValueType(String[].class)", BeanUtils.isSimpleValueType(String[].class));
         TestHelper.println("isSimpleValueType(C1[].class)", BeanUtils.isSimpleValueType(C1[].class));
 
         // String类型
-        TestHelper.printSubTitle("String类型");
+        TestHelper.startTest("String类型");
         TestHelper.println("isSimpleProperty(String.class)", BeanUtils.isSimpleValueType(String.class));
 
         // 自定义类型
-        TestHelper.printSubTitle("自定义类型C1");
+        TestHelper.startTest("自定义类型C1");
         TestHelper.println("isSimpleProperty(C1.class)", BeanUtils.isSimpleValueType(C1.class));
     }
 
@@ -111,7 +111,7 @@ public class BeanUtilsOtherTests {
     @Test
     public void isSimpleProperty() {
         TestHelper.startTest("BeanUtils.isSimpleProperty");
-        TestHelper.printSubTitle("基础类型");
+        TestHelper.startTest("基础类型");
         //基础类型
         TestHelper.println("isSimpleProperty(byte.class)", BeanUtils.isSimpleProperty(byte.class));
         TestHelper.println("isSimpleProperty(short.class)", BeanUtils.isSimpleProperty(short.class));
@@ -122,7 +122,7 @@ public class BeanUtilsOtherTests {
         TestHelper.println("isSimpleProperty(char.class)", BeanUtils.isSimpleProperty(char.class));
         TestHelper.println("isSimpleProperty(boolean.class)", BeanUtils.isSimpleProperty(boolean.class));
 
-        TestHelper.printSubTitle("包装类");
+        TestHelper.startTest("包装类");
         // 包装类
         TestHelper.println("isSimpleProperty(Byte.class)", BeanUtils.isSimpleProperty(Byte.class));
         TestHelper.println("isSimpleProperty(Short.class)", BeanUtils.isSimpleProperty(Short.class));
@@ -134,18 +134,18 @@ public class BeanUtilsOtherTests {
         TestHelper.println("isSimpleProperty(Boolean.class)", BeanUtils.isSimpleProperty(Boolean.class));
 
         // String类型
-        TestHelper.printSubTitle("String类型");
+        TestHelper.startTest("String类型");
         TestHelper.println("isSimpleProperty(String.class)", BeanUtils.isSimpleProperty(String.class));
 
         //数组
-        TestHelper.printSubTitle("数组类型");
+        TestHelper.startTest("数组类型");
         TestHelper.println("isSimpleProperty(int[].class)", BeanUtils.isSimpleProperty(int[].class));
         TestHelper.println("isSimpleProperty(Integer[].class)", BeanUtils.isSimpleProperty(Integer[].class));
         TestHelper.println("isSimpleProperty(String[].class)", BeanUtils.isSimpleProperty(String[].class));
         TestHelper.println("isSimpleProperty(C1[].class)", BeanUtils.isSimpleProperty(C1[].class));
 
         // 自定义类型
-        TestHelper.printSubTitle("自定义类型C1");
+        TestHelper.startTest("自定义类型C1");
         TestHelper.println("isSimpleProperty(C1.class)", BeanUtils.isSimpleProperty(C1.class));
     }
 }

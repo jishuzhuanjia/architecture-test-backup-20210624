@@ -1,23 +1,19 @@
 package testproject.get;
 
-import java.util.Enumeration;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts2.ServletActionContext;
 
-import freemarker.cache.StrongCacheStorage;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 public class GetActions  {
 	
 	/*
-	 * GETÇëÇó²âÊÔ£¬²»´ø²ÎÊý
+	 * GETï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * */
 	public String getWithoutParams() {
 		System.out.println("getWithoutParams");
 		
-		//»ñÈ¡²ÎÊý
+		//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
 		HttpServletRequest request = ServletActionContext.getRequest();
 		Enumeration<String> parameterNames = request.getParameterNames();
 		while(parameterNames.hasMoreElements()) {

@@ -1,19 +1,20 @@
 package xhm.struts.actionservlet;
 
+import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.apache.struts2.ServletActionContext;
-import com.opensymphony.xwork2.ActionSupport;
 
-/*2.Ê¹ÓÃÔ­Éúapi²Ù×÷Óò¶ÔÏó·½·¨ºÍÓò
+/*2.Ê¹ï¿½ï¿½Ô­ï¿½ï¿½apiï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó·½·ï¿½ï¿½ï¿½ï¿½ï¿½
  * ServletActionContext
  * 
- *ServletActionContext¿ÉÒÔÖ±½Ó»ñÈ¡µÄÓò
+ *ServletActionContextï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ó»ï¿½È¡ï¿½ï¿½ï¿½ï¿½
  *ServletContext
  *HttpServletRequest
  *PageContext
- *×¢£ºsesion¿ÉÒÔÍ¨¹ýHttpServletRequestÖ±½Ó»ñÈ¡
+ *×¢ï¿½ï¿½sesionï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½HttpServletRequestÖ±ï¿½Ó»ï¿½È¡
  *
  *
  * */
@@ -22,24 +23,24 @@ public class Action2 extends ActionSupport {
 
 	public String value() {
 		
-		//1.»ñÈ¡ServletContext - applicationScope
+		//1.ï¿½ï¿½È¡ServletContext - applicationScope
 		ServletContext sc = ServletActionContext.getServletContext();
 		sc.setAttribute("application", "application");
 		
-		/*2.»ñÈ¡HttpSession - sessionScope
-		 *ServletActionContextÃ»ÓÐÖ±½Ó»ñÈ¡HttpSessionµÄ·½·¨£º
-		 *Í¨¹ýHttpServletRequest·½·¨getSession()
+		/*2.ï¿½ï¿½È¡HttpSession - sessionScope
+		 *ServletActionContextÃ»ï¿½ï¿½Ö±ï¿½Ó»ï¿½È¡HttpSessionï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½
+		 *Í¨ï¿½ï¿½HttpServletRequestï¿½ï¿½ï¿½ï¿½getSession()
 		 * */
 		HttpSession session = ServletActionContext.getRequest().getSession();
 		session.setAttribute("session", "session");
 		
-		//3.»ñÈ¡HttpServletRequest - requestScope
+		//3.ï¿½ï¿½È¡HttpServletRequest - requestScope
 		HttpServletRequest request = ServletActionContext.getRequest();
 		request.setAttribute("request", "request");
 		
-		/*4.»ñÈ¡PageContext- pageContext
+		/*4.ï¿½ï¿½È¡PageContext- pageContext
 		PageContext pc = ServletActionContext.getPageContext();
-		´ËÊ±pc¿ÕÖ¸Õë£¬²»ÍÆ¼ö´Ë´¦¶ÔpageContextÓò½øÐÐ¸³Öµ¡£*/
+		ï¿½ï¿½Ê±pcï¿½ï¿½Ö¸ï¿½ë£¬ï¿½ï¿½ï¿½Æ¼ï¿½ï¿½Ë´ï¿½ï¿½ï¿½pageContextï¿½ï¿½ï¿½ï¿½Ð¸ï¿½Öµï¿½ï¿½*/
 		//pc.setAttribute("pageContext", "pageContext");
 		return "ok";
 	}

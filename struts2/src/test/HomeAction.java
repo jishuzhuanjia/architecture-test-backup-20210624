@@ -1,11 +1,9 @@
 package test;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.struts2.interceptor.ServletRequestAware;
 
-import javassist.compiler.ast.Variable;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 public class HomeAction implements ServletRequestAware{
 	ServletRequest request;

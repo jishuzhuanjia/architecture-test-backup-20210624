@@ -1,15 +1,14 @@
 package com.mybatis.mapperjar;
 
 import com.mybatis.MybatisApplication;
+import com.mybatis.UserPO;
+import com.mybatis.mapper.zj.MappejarMapper;
 import com.zj.test.util.TestHelper;
-import com.zj.test.util.TestResultTips;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import com.mybatis.mapper.zj.MappejarMapper;
-import com.mybatis.UserPO;
 
 /* @author: zhoujian
  * @create-time: 2020/9/18 17:29
@@ -67,7 +66,7 @@ public class UnitTest {
         Cause: java.sql.SQLIntegrityConstraintViolationException: Column 'password' cannot be null
         如果表中字段可以为空，则PO类属性是否为空都可以。
         */
-        /*TestHelper.printSubTitle("mapper.jar insert测试");
+        /*TestHelper.startTest("mapper.jar insert测试");
         TestHelper.startSubTest("insert(T)测试");
         UserPO insertUser = new UserPO();
         insertUser.setId(1234);
@@ -100,7 +99,7 @@ public class UnitTest {
         1.3.mapper.insertList
         每条数据的插入相当于insert(po)，和insert(po)限制相同：插入null值时，表字段需要是可NULL的。
         */
-        /*TestHelper.printSubTitle("mapper.insertList测试");
+        /*TestHelper.startTest("mapper.insertList测试");
         List<UserPO> insertList = new ArrayList<>();
         UserPO insertUser1, insertUser2, insertUser3;
         insertUser1 = new UserPO();
@@ -119,7 +118,7 @@ public class UnitTest {
         和insert(T)一样，会插入null字段
         会忽略实体主键字段的值，使用表自增主键分配的值,换言之，不能手动设置主键值。
          */
-        /*TestHelper.printSubTitle("mapper.insertUseGenerateKeys");
+        /*TestHelper.startTest("mapper.insertUseGenerateKeys");
         UserPO inertUser4 = new UserPO();
         // 会被忽略
         inertUser4.setId(1314112);
@@ -367,19 +366,19 @@ public class UnitTest {
         // 001.传递参数类型可以为int/Integer
         TestHelper.startTest("mapper.jar selectByPrimaryKey(Object)测试");
         //传递参数类型为int
-        TestHelper.printSubTitle("传递参数类型为int");
+        TestHelper.startTest("传递参数类型为int");
         UserPO userPO = mapper.selectByPrimaryKey(84);
         // 查询到的值: UserPO{id=84, name='myname', password='4567890', age=null}
         TestHelper.println("查询到的值: " + userPO);
 
         // 传递参数类型为Integer
-        TestHelper.printSubTitle("传递参数类型为Integer");
+        TestHelper.startTest("传递参数类型为Integer");
         UserPO userPO2 = mapper.selectByPrimaryKey(Integer.valueOf(83));
         // 查询到的值: UserPO{id=84, name='myname', password='4567890', age=null}
         TestHelper.println("查询到的值: " + userPO2);
 
         // 002.传递参数类型还可以为PO类
-        TestHelper.printSubTitle("传递参数类型为PO类");
+        TestHelper.startTest("传递参数类型为PO类");
         UserPO selectPO2 = new UserPO();
         selectPO2.setId(90);
 
@@ -388,7 +387,7 @@ public class UnitTest {
         selectPO2.setUsername("xasdadaw2qe232r12");
         TestHelper.println("查询到的值: " + mapper.selectByPrimaryKey(selectPO2));
         TestHelper.finishTest();
-        return TestResultTips.SEE_AT_DATABASE;
+        return "请在数据库查看结果";
     }
 
     /**
@@ -408,7 +407,7 @@ public class UnitTest {
         //PO作为查询的条件，每个字段都作为一个条件
         //主键也可以作为条件
         //可以有一个或多个条件
-        TestHelper.printSubTitle("查询一个条件:");
+        TestHelper.startTest("查询一个条件:");
         UserPO selectCountPO = new UserPO();
         //selectCountPO.setName("myname");
         selectCountPO.setId(88);
@@ -423,7 +422,7 @@ public class UnitTest {
         org.apache.ibatis.exceptions.TooManyResultsException: Expected one result (or null) to be returned by selectOne(), but found: 4
 
         002.使用场景：用在查询结果只有一条的场景，如通过主键或者多主键查询，要保证结果只有一条数据。*/
-        TestHelper.printSubTitle("selectOne测试: ");
+        TestHelper.startTest("selectOne测试: ");
         UserPO selectOne = new UserPO();
         selectOne.setUsername("myname");
 

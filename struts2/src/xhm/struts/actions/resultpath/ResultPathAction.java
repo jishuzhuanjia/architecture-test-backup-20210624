@@ -1,12 +1,11 @@
 package xhm.struts.actions.resultpath;
 
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Result;
 
-import com.opensymphony.xwork2.ActionSupport;
 
-
-@Result(name="success",location="hello.jsp")/*classÈ«¾ÖÒ³Ãæ*/
+@Result(name="success",location="hello.jsp")/*classÈ«ï¿½ï¿½Ò³ï¿½ï¿½*/
 public class ResultPathAction extends ActionSupport{
 
 	/**

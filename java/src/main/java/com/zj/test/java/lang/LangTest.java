@@ -25,6 +25,7 @@ public class LangTest {
      * */
     @Test
     public void test1() {
+
         Integer integer1 = -128;
         Integer integer2 = -128;
         // true
@@ -55,6 +56,102 @@ public class LangTest {
         Integer integer12 = 11;
         // false
         TestHelper.println(integer11 == integer12);
+
+    }
+
+    /**
+     * Long对象比较测试
+     *
+     * cache数组缓存的Long对象数值范围和Integer一样，也是[-128,127)
+     * ==比较结论和Integer相同
+     */
+    @Test
+    public void testLong(){
+        Long long1 = 1L;
+        Long long2 = 1L;
+        TestHelper.println("long1==long2",long1==long2);
+
+        // 上临界值测试
+        // 127
+        Long long3 = 127L;
+        Long long4 = 127L;
+        //true
+        TestHelper.println("long3==long4",long3==long4);
+
+        //128
+        Long long5 = 128L;
+        Long long6 = 128L;
+        //false
+        TestHelper.println("long5==long6",long5==long6);
+
+        //下临界测试
+        // -128
+        Long long7 = -128L;
+        Long long8 = -128L;
+        //true
+        TestHelper.println("long7==long8",long7==long8);
+
+        Long long9 = -129L;
+        Long long10 = -129L;
+        // false
+        TestHelper.println("long9==long10",long9==long10);
+
+    }
+
+    /**
+     * ==比较运算符
+     * 在Java中,如果是基本数据类型,则 == 比较的是值;如果是对象类型,则 == 比较的是对象的地址。
+     *
+     *不同类型==测试: 基础类型之间可以直接比较，不需要类型转换
+     *
+     * 除了boolean，基础类型之间可以相互比较==，不需要类型转换，
+     */
+    @Test
+    public void test(){
+        // 1.==用来比较对象
+        User user1 = new User();
+        user1.username="zhou jian";
+
+        User user2 = user1;
+        // true
+        TestHelper.println("user1==user2",user1==user2);
+
+        user2 = new User();
+        user2.username="zhou jian";
+        // false
+        TestHelper.println("user1==user2",user1==user2);
+
+        // 2.==用来比较基础类型
+        int i1=3;
+        int i2=3;
+        // true
+        TestHelper.println("i1==i2",i1==i2);
+
+        short s1 = 3;
+        // true
+        TestHelper.println("i1==s1",i1==s1);
+
+        TestHelper.startTest("不同类型==");
+
+        // 3.不同类型==测试: 基础类型之间可以直接比较，不需要类型转换
+
+        // 字面量超过int范围，需要强转long
+        long l = 11112213233333L;
+        short s = 13;
+        int i = 1333333;
+        double d = 13;
+        char c = 'a';
+        boolean b = false;
+        TestHelper.println(l==s);
+        TestHelper.println(l==i);
+        TestHelper.println(s==d);
+        TestHelper.println(c==d);
+        TestHelper.println(c==l);
+        // Operator '==' cannot be applied to 'boolean', 'long'
+        //TestHelper.println(b==l);
+        // Operator '==' cannot be applied to 'boolean', 'short'
+        //TestHelper.println(b==s);
+
     }
 
     /**
@@ -77,24 +174,27 @@ public class LangTest {
     @Test
     public void test2() {
         // 1.&: 运算的位都为1，则结果为1，否则为0
-        // 13&17
+        // 13&17            -- 如何快速改写成2进制？ 首先找到比13小的最接近13的以2为底的指数，在这里是2^3，写成1000，再将余数补齐
         // 1101&10001
         // 预计结果应该是:00001,即为1
-        TestHelper.println("13&17", 13 & 17); // 1
+        // 实际：1
+        TestHelper.println("13&17", 13 & 17);
 
-        // 2.|:运算的位中只要有1则结果为1,否则为0
+        //2.|:运算的位中只要有1则结果为1,否则为0
         //结果应为11101,即16+8+4+1=29
-        TestHelper.println("13&17", 13 | 17);// 29
+        //正确：29
+        TestHelper.println("13&17", 13 | 17);
 
         // 3.~: 0换成1，1换成0
-        // int值经过~运算后的结果规律：
-        // 当int值value>=0，则结果为-(value+1)
-        // 当int值value<0时，则结果为-value-1
-        TestHelper.println("~17", ~17);// -18
+        // int值经过~运算后的结果规律：-value-1
+        // 正确：-18
+        TestHelper.println("~17", ~17);
 
-        //4.^
+        //4.^：异或，运算位不相同返回1，否则返回0
         // 1101 ^ 10001 -> 11100(28)
-        TestHelper.println("13^17", 13 ^ 17); // 28
+        // 预计结果：11100 -> 16 + 8 +4=28
+        // 正确: 28
+        TestHelper.println("13^17", 13 ^ 17);
     }
 
     // 可克隆的类

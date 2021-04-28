@@ -1,7 +1,7 @@
 package com.zj.test.mp.test.code_generator.teacher_module.service;
 
-import com.zj.test.mp.test.code_generator.teacher_module.entity.Teacher;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zj.test.mp.test.code_generator.teacher_module.entity.Teacher;
 
 /**
  * <p>

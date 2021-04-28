@@ -9,10 +9,9 @@ package com.mybatis.dynamicsql;
  * @finished-time:
  */
 
-import com.zj.test.util.TestHelper;
-import com.zj.test.util.TestResultTips;
 import com.mybatis.dynamicsql.po.BookPO;
 import com.mybatis.mapper.zj.DynamicSqlTestMapper;
+import com.zj.test.util.TestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +35,7 @@ public class DynamiSqlTestController {
         selectPO.setBookName("价值");
         TestHelper.println("查询到的数据: " + testMapper.selectWithIf(selectPO));
         TestHelper.finishTest();
-        return TestResultTips.SEE_AT_CONSOLE;
+        return "请在控制台查看结果";
     }
 
     /*2.foreach标签 + in测试*/
@@ -49,6 +48,6 @@ public class DynamiSqlTestController {
         nameList.add("价值");
         TestHelper.println("查询到的数据: " + testMapper.selectWithForeach(nameList));
         TestHelper.finishTest();
-        return TestResultTips.SEE_AT_CONSOLE;
+        return "请在控制台查看结果";
     }
 }

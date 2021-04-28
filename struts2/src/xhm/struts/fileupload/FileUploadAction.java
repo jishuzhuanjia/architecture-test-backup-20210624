@@ -1,8 +1,8 @@
 package xhm.struts.fileupload;
 
-import java.io.File;
-
 import com.opensymphony.xwork2.ActionSupport;
+
+import java.io.File;
 /*
  * 文件上传：经过默认过滤器栈defaultStack的org.apache.struts2.interceptor.FileUploadInterceptor
  * 会传递三个文件相关参数，他们的命名格式如下：

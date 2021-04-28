@@ -4,10 +4,8 @@ package com.zj.test.mp.test.code_generator.teacher_module.controller;
 import com.zj.test.mp.mapper.TeacherMapper1;
 import com.zj.test.util.TestHelper;
 import com.zj.test.util.TestResultTips;
-import junit.framework.TestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 /**

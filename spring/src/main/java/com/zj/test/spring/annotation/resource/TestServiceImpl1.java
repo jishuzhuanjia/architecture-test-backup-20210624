@@ -1,14 +1,7 @@
 package com.zj.test.spring.annotation.resource;
 
 import com.zj.test.util.TestHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.xml.ws.RequestWrapper;
 
 /* @author: zhoujian
  * @qq: 2025513

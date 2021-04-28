@@ -3,8 +3,6 @@ package com.zj.test.jpa.entity;
 import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
-import javax.persistence.*;
-
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2021/1/13 16:52

@@ -110,7 +110,7 @@ public class CollectionStreamTest {
         TestHelper.println("ageList", testList.stream().map((i) ->
                 i.getAge()
         ).collect(Collectors.toList()));
-        TestHelper.printSubTitle("检查原来的测试list是否被修改:");
+        TestHelper.startTest("检查原来的测试list是否被修改:");
         // 002.从测试的结果可以看出，stream()不会修改原来的list内容。
         TestHelper.println("现在的测试list: " + testList);
 
@@ -163,7 +163,7 @@ public class CollectionStreamTest {
      */
     @Test
     public void test3() {
-        TestHelper.printSubTitle("list.stream().distinct()测试");
+        TestHelper.startTest("list.stream().distinct()测试");
         List<ListStreamTestUserPO> testList = new ArrayList<>(5);
         ListStreamTestUserPO po1 = new ListStreamTestUserPO();
         po1.setUsername("zhou");

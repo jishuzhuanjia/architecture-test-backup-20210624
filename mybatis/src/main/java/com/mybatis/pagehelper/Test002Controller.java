@@ -1,6 +1,5 @@
 package com.mybatis.pagehelper;
 
-import com.zj.test.util.TestResultTips;
 import com.mybatis.pagehelper.impl.Test002Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +22,6 @@ public class Test002Controller {
     @RequestMapping("test002")
     public String test1(){
         test002Impl.test();
-        return TestResultTips.SEE_AT_CONSOLE;
+        return "请在控制台查看结果";
     }
 }

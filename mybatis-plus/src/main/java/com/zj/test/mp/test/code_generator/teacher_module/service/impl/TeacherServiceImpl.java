@@ -1,9 +1,9 @@
 package com.zj.test.mp.test.code_generator.teacher_module.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zj.test.mp.test.code_generator.teacher_module.entity.Teacher;
 import com.zj.test.mp.test.code_generator.teacher_module.mapper.TeacherMapper;
 import com.zj.test.mp.test.code_generator.teacher_module.service.ITeacherService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**

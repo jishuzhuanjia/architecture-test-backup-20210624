@@ -1,14 +1,11 @@
 package test.frame.json;
 
+import com.google.gson.*;
+import org.junit.Test;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.logging.Logger;
-import org.junit.Test;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
 
 /**
  * @time 2019年12月19日 下午5:35:04

@@ -1,18 +1,17 @@
 package actions.test;
 
 
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.ParentPackage;
 import org.apache.struts2.convention.annotation.Result;
 
-import com.opensymphony.xwork2.ActionSupport;
 
 
-
-/* 通过 struts.convention.action.packages 来指定
- * 需要添加@Namespace 注解，否则任何namespace都可以访问此Action
+/* 通锟斤拷 struts.convention.action.packages 锟斤拷指锟斤拷
+ * 锟斤拷要锟斤拷锟紷Namespace 注锟解，锟斤拷锟斤拷锟轿猴拷namespace锟斤拷锟斤拷锟皆凤拷锟绞达拷Action
  * 
- * 子包不会充当namespace
+ * 锟接帮拷锟斤拷锟斤拷涞眓amespace
  * */
 @ParentPackage("struts-default")
 public class TestAction extends ActionSupport {

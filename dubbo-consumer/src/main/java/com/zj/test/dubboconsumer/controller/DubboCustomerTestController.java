@@ -1,7 +1,6 @@
 package com.zj.test.dubboconsumer.controller;
 
 import com.zj.test.dubboconsumer.service.DubboConsumerTestService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

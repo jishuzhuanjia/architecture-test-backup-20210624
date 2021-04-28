@@ -1,17 +1,17 @@
 package xhm.struts.fileupload;
 
+import com.opensymphony.xwork2.ActionSupport;
+
 import java.io.File;
 import java.util.List;
 
-import com.opensymphony.xwork2.ActionSupport;
-
-/*¶àÎÄ¼þÉÏ´«
+/*ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ï´ï¿½
  * 
  * 
- * Ö»ÓÐµ±Ã¿Ò»¸öÎÄ¼þ¶¼·ûºÏÉÏ´«ÒªÇó£¬ÉÏ´«²ÅÄÜ³É¹¦¡£
+ * Ö»ï¿½Ðµï¿½Ã¿Ò»ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½Òªï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ï¿½Ü³É¹ï¿½ï¿½ï¿½
  * 
- * ´ËÊ±ActionÖÐÐ´·¨£º
- * ²»Í¬Ãû±íµ¥ÔªËØÐ´·¨£º       ----------·½Ê½1pojo
+ * ï¿½ï¿½Ê±Actionï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½       ----------ï¿½ï¿½Ê½1pojo
  * File uploadFile1;
  * String uploadFile1ContentType;
  * String uploadFile1FileName;
@@ -20,24 +20,24 @@ import com.opensymphony.xwork2.ActionSupport;
  * String uploadFile2FileName;
  * 
  * 
- * Í¬ÃûÐ´·¨£º
- * 1.ÁÐ±í£º¿ÉÒÔ²»ÐèÒªÊµÀý»¯   -------------·½Ê½2 
+ * Í¬ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½
+ * 1.ï¿½Ð±ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ÒªÊµï¿½ï¿½ï¿½ï¿½   -------------ï¿½ï¿½Ê½2 
  * List<File> file
  * List<String> finleContentType
  * List<String> fileFilleName
- * ×¢£ºÇ°¶Ë¿ÉÒÔÓÐ¶à¸ö²»Í¬file
+ * ×¢ï¿½ï¿½Ç°ï¿½Ë¿ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½Í¬file
  * 
- * 2.Êý×é:¿ÉÒÔ²»ÐèÒªÊµÀý»¯   -------------·½Ê½3
+ * 2.ï¿½ï¿½ï¿½ï¿½:ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ÒªÊµï¿½ï¿½ï¿½ï¿½   -------------ï¿½ï¿½Ê½3
  * File[] uploadFile1;
  * String[] uploadFile1ContentType;
  * String[] uploadFile1FileName;
  * 
- * ¾­²âÊÔ£º·½Ê½2ºÍ·½Ê½3¿ÉÒÔÓÐ¶à¸ö¶¨Òå£¬Ç°¶Ë¿ÉÒÔÒýÓÃ¶à¸ö
- *       ·½Ê½1ºÍ2£¬3¿ÉÒÔ»ìºÏÊ¹ÓÃ
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½Ê½2ï¿½Í·ï¿½Ê½3ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½å£¬Ç°ï¿½Ë¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½
+ *       ï¿½ï¿½Ê½1ï¿½ï¿½2ï¿½ï¿½3ï¿½ï¿½ï¿½Ô»ï¿½ï¿½Ê¹ï¿½ï¿½
  * 
- *µ±Ö»ÊÇ¶¨ÒåpojoÊ±£¬Ç°¶ËÓÐ¶à¸öinput»áÔõÃ´Ñù£¿
- *´ËÊ±²»Í¬µÄÎÄ¼þÃû±»','¸ô¿ªÇÒ¸³Öµ¸øfileFileName
- *µ±ÓÐ¶à¸öÎÄ¼þÊ±£¬²»ºÃ¸³Öµ¸øFile£¬pojo·½Ê½Ö»Ó¦¸ÃÉÏ´«Ò»¸öÍ¬Ãûinput¡£
+ *ï¿½ï¿½Ö»ï¿½Ç¶ï¿½ï¿½ï¿½pojoÊ±ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½inputï¿½ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½
+ *ï¿½ï¿½Ê±ï¿½ï¿½Í¬ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½','ï¿½ï¿½ï¿½ï¿½ï¿½Ò¸ï¿½Öµï¿½ï¿½fileFileName
+ *ï¿½ï¿½ï¿½Ð¶ï¿½ï¿½ï¿½Ä¼ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½Öµï¿½ï¿½Fileï¿½ï¿½pojoï¿½ï¿½Ê½Ö»Ó¦ï¿½ï¿½ï¿½Ï´ï¿½Ò»ï¿½ï¿½Í¬ï¿½ï¿½inputï¿½ï¿½
  */
 public class MultiUploadAction extends  ActionSupport{
 
@@ -142,7 +142,7 @@ public class MultiUploadAction extends  ActionSupport{
 	 
 	@Override
 	public String execute() throws Exception {
-		 µ±ÊôÐÔÎªÊý×é £ºOK
+		 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½OK
 		for (File file : uploadFile1) {
 			System.out.println(file.getName());
 		}
@@ -158,7 +158,7 @@ public class MultiUploadAction extends  ActionSupport{
 		
 		//System.out.println(uploadFile2.length);
 		
-		 //µ±ÊôÐÔÎªÁÐ±í £ºOK£¬ÊôÐÔ¿ÉÒÔ²»½øÐÐ³õÊ¼»¯£¬ÒªÌá¹©setter
+		 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½Ð±ï¿½ ï¿½ï¿½OKï¿½ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½Ô²ï¿½ï¿½ï¿½ï¿½Ð³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Òªï¿½á¹©setter
 		for (File file : uploadFile1) {
 			System.out.println(file.getName());
 		}

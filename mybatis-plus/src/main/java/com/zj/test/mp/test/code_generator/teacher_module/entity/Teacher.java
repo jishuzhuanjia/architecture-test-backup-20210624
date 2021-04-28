@@ -1,8 +1,8 @@
 package com.zj.test.mp.test.code_generator.teacher_module.entity;
 
 /*import 你自己的父类实体,没有就不用设置!;*/
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * <p>

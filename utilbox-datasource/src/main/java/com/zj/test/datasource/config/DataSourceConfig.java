@@ -1,11 +1,9 @@
 package com.zj.test.datasource.config;
 
-import com.zj.test.util.TestHelper;
 import com.zj.util.datasource.dynamic.config.AbstractDataSourceConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 

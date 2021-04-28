@@ -4,7 +4,6 @@ import com.zj.test.jpa.test.field_mapping.enums.SexEnum;
 import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Timestamp;

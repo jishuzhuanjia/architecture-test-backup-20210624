@@ -1,12 +1,8 @@
 package com.zj.test.spring.spring_beans.copy_properties;
 
 import com.zj.test.spring.spring_beans.po.UserDO;
-import com.zj.test.spring.spring_beans.po.UserDOEditable;
 import com.zj.test.spring.spring_beans.po.UserDTO;
 import com.zj.test.util.TestHelper;
-import lombok.Getter;
-import lombok.Setter;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 

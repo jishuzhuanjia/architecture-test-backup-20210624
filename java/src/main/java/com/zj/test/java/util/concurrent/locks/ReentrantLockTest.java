@@ -3,7 +3,6 @@ package com.zj.test.java.util.concurrent.locks;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
-import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 

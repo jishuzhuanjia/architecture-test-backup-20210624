@@ -106,7 +106,7 @@ public class FindUnitTest {
     @Test
     public void find_() throws NoSuchMethodException {
 
-        TestHelper.printSubTitle("findPropertyForMethod测试");
+        TestHelper.startTest("findPropertyForMethod测试");
         PropertyDescriptor getI = BeanUtils.findPropertyForMethod(FindUnitTest.class.getMethod("getI"));
         TestHelper.println("findPropertyForMethod测试i属性getter结果", getI.getName());
 

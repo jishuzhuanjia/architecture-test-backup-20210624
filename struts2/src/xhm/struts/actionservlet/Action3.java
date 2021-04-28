@@ -1,17 +1,15 @@
 package xhm.struts.actionservlet;
 
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-
+import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.interceptor.ServletRequestAware;
 import org.apache.struts2.interceptor.SessionAware;
 import org.apache.struts2.util.ServletContextAware;
 
-import com.opensymphony.xwork2.ActionSupport;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 /*
- * 3:通过实现接口来得到原生request,servletcontext，session*/
+ * 3:通锟斤拷实锟街接匡拷锟斤拷锟矫碉拷原锟斤拷request,servletcontext锟斤拷session*/
 public class Action3 extends ActionSupport implements ServletContextAware,ServletRequestAware,SessionAware {
 
 	private static final long serialVersionUID = 1L;

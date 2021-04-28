@@ -1,21 +1,21 @@
 package xhm.struts.download;
 
+import com.opensymphony.xwork2.ActionSupport;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-import com.opensymphony.xwork2.ActionSupport;
+/*ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½*/
 
-/*ÎÄ¼þÏÂÔØ*/
-
-/*ÅäÖÃÎÄ¼þÅäÖÃ£º
+/*ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Ã£ï¿½
  * <action name="download" class="xhm.struts.download.DownloadAction">
     		<result type="stream">
     			<param name="contentType">application/octet-stream</param>
     			<param name="inputName">fileInputStream</param>
-    			<param name="contentDisposition">attachment;filename="ideaIU-2019.2.1ºº»¯°æ.exe"</param>
+    			<param name="contentDisposition">attachment;filename="ideaIU-2019.2.1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.exe"</param>
     			<param name="bufferSize">1024</param>
-    			<!-- ÎÄ¼þ´óÐ¡ £ºµ¥Î»b:¾ÍËã¿ª·¢ÕßÄ¬ÈÏÏÂ¸Ä±ä´ËÊôÐÔÒ²ÐèÒªÖØÐÂ²¿ÊðÏîÄ¿ -->
+    			<!-- ï¿½Ä¼ï¿½ï¿½ï¿½Ð¡ ï¿½ï¿½ï¿½ï¿½Î»b:ï¿½ï¿½ï¿½ã¿ªï¿½ï¿½ï¿½ï¿½Ä¬ï¿½ï¿½ï¿½Â¸Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò²ï¿½ï¿½Òªï¿½ï¿½ï¿½Â²ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ -->
     			<!-- <param name="contentLength">2048</param> -->
     			<param name="contentLength">${fileSize}</param>
     		</result>
@@ -24,7 +24,7 @@ import com.opensymphony.xwork2.ActionSupport;
  * */
 public class DownloadAction extends ActionSupport {
 	
-	//ÎÄ¼þ´óÐ¡
+	//ï¿½Ä¼ï¿½ï¿½ï¿½Ð¡
 	long fileSize;
 	
 	String fileName;
@@ -42,7 +42,7 @@ public class DownloadAction extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	//ÊµÏÖJava.io.InputStreamµÄÀà
+	//Êµï¿½ï¿½Java.io.InputStreamï¿½ï¿½ï¿½ï¿½
 	InputStream fileInputStream;
 
 	public InputStream getFileInputStream() {
@@ -52,12 +52,12 @@ public class DownloadAction extends ActionSupport {
 	@Override
 	public String execute() throws Exception {
 		/*
-		 * ÎÄ¼þÃû£ºÐèÒª×ª»»³ÉISO8859-1±àÂëµÄ×Ö·û´®¡£
+		 * ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òª×ªï¿½ï¿½ï¿½ï¿½ISO8859-1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½
 		 * 
 		 * */
-		fileName = new String("ideaIU-2019.2.1ºº»¯°æ.exe".getBytes(), "ISO8859-1");
+		fileName = new String("ideaIU-2019.2.1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.exe".getBytes(), "ISO8859-1");
 		
-		File downloadFile = new File("E:/°²×°°ü/ideaIU-2019.2.1.exe");
+		File downloadFile = new File("E:/ï¿½ï¿½×°ï¿½ï¿½/ideaIU-2019.2.1.exe");
 		fileSize = downloadFile.length();
 		
 		fileInputStream = new FileInputStream(downloadFile);

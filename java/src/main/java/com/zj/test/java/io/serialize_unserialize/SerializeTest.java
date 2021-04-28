@@ -7,12 +7,7 @@
  */
 package com.zj.test.java.io.serialize_unserialize;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.*;
 
 /**(1).简介
  * 序列化允许将一个对象写入到一个byte流中,并且可以从其他的地方把byte流中的数据读出来,重新构造一个相同的对象

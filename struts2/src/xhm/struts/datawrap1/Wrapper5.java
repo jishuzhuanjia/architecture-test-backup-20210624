@@ -1,19 +1,18 @@
 package xhm.struts.datawrap1;
 
-import java.util.Map;
-
 import com.opensymphony.xwork2.ActionSupport;
-
 import xhm.struts.datawrap.User;
 
-/*5.Êý¾Ý·â×°µ½Map
+import java.util.Map;
+
+/*5.ï¿½ï¿½ï¿½Ý·ï¿½×°ï¿½ï¿½Map
  * 
- * Ç°¶ËÓÐÁ½ÖÖÐ´·¨£º¶¼ÐèÒª´Ómap¿ªÊ¼Ð´
+ * Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½mapï¿½ï¿½Ê¼Ð´
  * 1.userMap['user1'].name
  * 2.userMap.user1.name
- * ¶¼¿ÉÒÔ
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
- * 	Map²»ÐèÒªÊµÀý»¯map
+ * 	Mapï¿½ï¿½ï¿½ï¿½ÒªÊµï¿½ï¿½ï¿½ï¿½map
  * */
 public class Wrapper5 extends ActionSupport {
 
@@ -22,23 +21,23 @@ public class Wrapper5 extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 579144554782982200L;
 
-	/*formÖÐ: 
-	 * ÐÕÃû: <input type="text" name="userMap['user1'].name"><br>
-	 * ÐÔ±ð: <input type="text" name="userMap['user1'].sex" value="ÄÐ"><br>
-	 * ÄêÁä: <input type="text" name="userMap['user1'].age" ><br> 
-	 * ÐÕÃû: <input type="text" name="userMap['user2'].name"><br>
-	 * ÐÔ±ð: <input type="text" name="userMap['user2'].sex" value="ÄÐ"><br>
-	 * ÄêÁä: <input type="text" name="userMap['user2'].age" ><br> 
+	/*formï¿½ï¿½: 
+	 * ï¿½ï¿½ï¿½ï¿½: <input type="text" name="userMap['user1'].name"><br>
+	 * ï¿½Ô±ï¿½: <input type="text" name="userMap['user1'].sex" value="ï¿½ï¿½"><br>
+	 * ï¿½ï¿½ï¿½ï¿½: <input type="text" name="userMap['user1'].age" ><br> 
+	 * ï¿½ï¿½ï¿½ï¿½: <input type="text" name="userMap['user2'].name"><br>
+	 * ï¿½Ô±ï¿½: <input type="text" name="userMap['user2'].sex" value="ï¿½ï¿½"><br>
+	 * ï¿½ï¿½ï¿½ï¿½: <input type="text" name="userMap['user2'].age" ><br> 
 	 * 
-	 * ÏÂÃæµÄÊéÐ´ÐÎÊ½´íÎó£º
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½
 	 * <input type="text" name="userMap.user1.age" ><br> 
 	 * Unexpected Exception caught setting 'user1.name' on 'class xhm.struts.datawrap1.Wrapper5: Error setting expression 'user1.name' with value ['zhoujian', ]
-	 * ¾ÍËã½«mapÊµÀý»¯ÇÒÌí¼Óuser1 keyµÄUserÒ²²»ÐÐ
+	 * ï¿½ï¿½ï¿½ã½«mapÊµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½user1 keyï¿½ï¿½UserÒ²ï¿½ï¿½ï¿½ï¿½
 	 * Unexpected Exception caught setting 'user1.age' on 'class xhm.struts.datawrap1.Wrapper5: Error setting expression 'user1.age' with value ['54', ]
 	 * 
-	 *×¢Òâ:  formÖÐkeyµÄÊéÐ´ÒªÇó
-	 * ²»ÄÜÊéÐ´¿Õ¸ñ£¬ÈÎºÎÎ»ÖÃ¶¼²»ÐÐ,Èç: 
-	 * Èç [' user1'].name,['user1 '].name,['us er1'].name //¶¼ÊÇÎÞÐ§µÄ
+	 *×¢ï¿½ï¿½:  formï¿½ï¿½keyï¿½ï¿½ï¿½ï¿½Ð´Òªï¿½ï¿½
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½Õ¸ï¿½ï¿½Îºï¿½Î»ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½: 
+	 * ï¿½ï¿½ [' user1'].name,['user1 '].name,['us er1'].name //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½
 	 * */
 	Map<String,User> userMap;
 
@@ -55,7 +54,7 @@ public class Wrapper5 extends ActionSupport {
 
 		if(userMap != null) {
 			for ( String key: userMap.keySet()) {
-				//mapÖÐkeySetË³ÐòÊÇ²»¿ÉÔ¤ÁÏµÄ
+				//mapï¿½ï¿½keySetË³ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½Ô¤ï¿½Ïµï¿½
 				User user = userMap.get(key);
 				System.out.println(key+":" + user.name + user.age+user.sex);
 			}
@@ -67,7 +66,7 @@ public class Wrapper5 extends ActionSupport {
 	public Wrapper5() {
 		
 		//Unexpected Exception caught setting 'user1.age' on 'class xhm.struts.datawrap1.Wrapper5: Error setting expression 'user1.age' with value ['54', ]
-		System.out.println("Action³õÊ¼»¯");
+		System.out.println("Actionï¿½ï¿½Ê¼ï¿½ï¿½");
 		//userMap = new HashMap<String, User>();
 		//User user1 = new User();
 		/*User user2 = new User();

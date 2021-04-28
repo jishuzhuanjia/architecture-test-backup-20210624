@@ -76,7 +76,7 @@ public class ArraysTest {
         //TestHelper.println(integers.get(1));//ok
         //integers.set(1, 2); //ok
         // asList参数为不同类型测试
-        TestHelper.printSubTitle("asList参数为不同类型测试");
+        TestHelper.startTest("asList参数为不同类型测试");
         TestHelper.println(Arrays.asList(1, 1f, 2d, "hello", 'c'));
     }
 

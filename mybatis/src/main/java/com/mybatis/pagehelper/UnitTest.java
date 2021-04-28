@@ -6,7 +6,6 @@ import com.github.pagehelper.PageInfo;
 import com.github.pagehelper.PageSerializable;
 import com.github.pagehelper.page.PageMethod;
 import com.mybatis.MybatisApplication;
-import com.mybatis.UserPO;
 import com.mybatis.mapper.zj.PageHelperTestMapper;
 import com.zj.test.util.TestHelper;
 import com.zj.test.util.TimeHelper;
@@ -15,14 +14,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.sql.Time;
-import java.util.Map;
 
 /* @author: zhoujian
  * @create-time: 2020年9月17日 12:12:36

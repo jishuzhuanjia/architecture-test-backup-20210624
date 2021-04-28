@@ -11,7 +11,7 @@ import org.junit.Test;
  * @finished: false
  * @finished-time:
  */
-public class ThreadTest_Backup {
+public class ThreadInterruptTest {
 
     /**
      * author: 2025513

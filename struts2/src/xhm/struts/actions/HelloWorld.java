@@ -1,18 +1,17 @@
 package xhm.struts.actions;
 
 import org.apache.struts2.convention.annotation.Action;
-
 import org.apache.struts2.convention.annotation.Result;
 
 
-/* ×Ô¶¯É¨Ãè°üµÄĞÎÊ½£º
- *  ×¢Òâstruts.convention.package.locators.basePackageÏÂµÄActionĞèÒªÖ¸¶¨namespace×¢½â
- * ·ñÔòÈÎºÎnamespace¶¼ÄÜ·ÃÎÊ´ËAction
- * Èç¹ûÏëÒª/webapp/name.action½øĞĞ·ÃÎÊ
- * ÔòÉèÖÃ@namespace(value="/")
+/* ï¿½Ô¶ï¿½É¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½
+ *  ×¢ï¿½ï¿½struts.convention.package.locators.basePackageï¿½Âµï¿½Actionï¿½ï¿½ÒªÖ¸ï¿½ï¿½namespace×¢ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½namespaceï¿½ï¿½ï¿½Ü·ï¿½ï¿½Ê´ï¿½Action
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Òª/webapp/name.actionï¿½ï¿½ï¿½Ğ·ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@namespace(value="/")
  * 
- * struts.convention.package.locators.basePackage×Ó°üÏÂµÄAction¿ÉÒÔ²»ÓÃnamespace
- * namespace¾ÍÊÇ°üÃû
+ * struts.convention.package.locators.basePackageï¿½Ó°ï¿½ï¿½Âµï¿½Actionï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½namespace
+ * namespaceï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
  * */
 /*@Namespace(value="/test1")*/
 public class HelloWorld implements com.opensymphony.xwork2.Action{

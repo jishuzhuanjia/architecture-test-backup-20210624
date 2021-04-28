@@ -1,7 +1,5 @@
 package com.zj.test.spring.proxy.service;
 
-import lombok.extern.slf4j.Slf4j;
-
 /* @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/3 23:19

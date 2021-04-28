@@ -1,27 +1,23 @@
 package actions;
 
 
-import org.apache.struts2.convention.annotation.Action;
-import org.apache.struts2.convention.annotation.InterceptorRef;
-import org.apache.struts2.convention.annotation.Namespace;
-import org.apache.struts2.convention.annotation.ParentPackage;
-import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.*;
 
-/* Í¨¹ý struts.convention.action.packages À´Ö¸¶¨
+/* Í¨ï¿½ï¿½ struts.convention.action.packages ï¿½ï¿½Ö¸ï¿½ï¿½
  * 
  * 
- * 1.ÊÇ·ñÐèÒªÌí¼Ó @Namespace? 
- * ×¢Òâ£ºstruts.convention.action.packagesÏÂµÄActionÐèÒªÖ¸¶¨namespace×¢½â
- * ·ñÔòÈÎºÎnamespace¶¼ÄÜ·ÃÎÊ,struts.convention.action.packages×Ó°üÖÐAction¿ÉÒÔ²»Ö¸¶¨namespace£¬
- * ÒòÎª×Ó°ü»á×÷Îªnamespace¡£
+ * 1.ï¿½Ç·ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ @Namespace? 
+ * ×¢ï¿½â£ºstruts.convention.action.packagesï¿½Âµï¿½Actionï¿½ï¿½ÒªÖ¸ï¿½ï¿½namespace×¢ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½namespaceï¿½ï¿½ï¿½Ü·ï¿½ï¿½ï¿½,struts.convention.action.packagesï¿½Ó°ï¿½ï¿½ï¿½Actionï¿½ï¿½ï¿½Ô²ï¿½Ö¸ï¿½ï¿½namespaceï¿½ï¿½
+ * ï¿½ï¿½Îªï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½Îªnamespaceï¿½ï¿½
  * */
 
 
-/*ÈçºÎÒýÓÃ¹ýÂËÆ÷£¿
- * 1.Ö¸¶¨@ParentPackage("testInterceptorAnnotation") testInterceptorAnnotationÊÇxmlÖÐpackageµÄnameÊôÐÔ£¬
+/*ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * 1.Ö¸ï¿½ï¿½@ParentPackage("testInterceptorAnnotation") testInterceptorAnnotationï¿½ï¿½xmlï¿½ï¿½packageï¿½ï¿½nameï¿½ï¿½ï¿½Ô£ï¿½
  * 
- * 2.¶¨Òå¸¸°ü
- * xmlÖÐpackage²»ÓÃ¶¨ÒånamespaceÊôÐÔ£º
+ * 2.ï¿½ï¿½ï¿½å¸¸ï¿½ï¿½
+ * xmlï¿½ï¿½packageï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½namespaceï¿½ï¿½ï¿½Ô£ï¿½
  * <package name="testInterceptorAnnotation" extends="struts-default">
     	<interceptors>
     		<interceptor name="myInterceptorOne" class="xhm.struts.interceptor.MyInterceptor1"/>
@@ -34,7 +30,7 @@ import org.apache.struts2.convention.annotation.Result;
     
     
     </package>
- * 3.ÒýÓÃ£º¿ÉÒÔÒýÓÃµ¥¸öÀ¹½ØÆ÷interceptor»òÕßinterceptor-stack
+ * 3.ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½interceptorï¿½ï¿½ï¿½ï¿½interceptor-stack
  * interceptorRefs= {@InterceptorRef("myInterceptorOne")}
  * */
 @ParentPackage("testInterceptorAnnotation")

@@ -79,7 +79,7 @@ public class FieldReflectTest {
         //Field parentDefaultInt = testClass.getField("parentDefaultInt");
 
         // 全部是public修饰的属性
-        TestHelper.printSubTitle("getFields()返回的值: ");
+        TestHelper.startTest("getFields()返回的值: ");
         for(Field field: testClass.getFields()){
             TestHelper.println(field);
         }
@@ -90,7 +90,7 @@ public class FieldReflectTest {
          *
          * 注意：可以获取[public|private|protected] [static]修饰的属性。
          */
-        TestHelper.printSubTitle("Class#getDeclaredField(java.lang.String)");
+        TestHelper.startTest("Class#getDeclaredField(java.lang.String)");
         Field privateInt = testClass.getDeclaredField("privateInt");
         Field privateStaticInteger = testClass.getDeclaredField("privateStaticInteger");
         Field defaultInt = testClass.getDeclaredField("defaultInt");
@@ -99,7 +99,7 @@ public class FieldReflectTest {
         //Field parentPublicInt1 = testClass.getDeclaredField("parentPublicInt");
 
         // 全部都是本类中的属性，不包含父类中的属性
-        TestHelper.printSubTitle("getDeclaredFields()返回的值:");
+        TestHelper.startTest("getDeclaredFields()返回的值:");
         for (Field field: testClass.getDeclaredFields()){
             TestHelper.println(field);
         }

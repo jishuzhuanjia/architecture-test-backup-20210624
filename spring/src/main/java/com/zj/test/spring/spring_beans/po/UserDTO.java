@@ -1,6 +1,5 @@
 package com.zj.test.spring.spring_beans.po;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

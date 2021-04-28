@@ -1,23 +1,22 @@
 package xhm.struts.datawrap1;
 
-import java.util.List;
-
 import com.opensymphony.xwork2.ActionSupport;
-
 import xhm.struts.datawrap.User;
 
-/*4.Êý¾Ý²ÎÊý·â×°µ½List<User>
- * ÐèÒªÌá¹©pojo¶ÔÏóµÄsetter,getter
- * ÁÐ±í²»ÐèÒªÊµÀý»¯
+import java.util.List;
+
+/*4.ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½ï¿½List<User>
+ * ï¿½ï¿½Òªï¿½á¹©pojoï¿½ï¿½ï¿½ï¿½ï¿½setter,getter
+ * ï¿½Ð±ï¿½ï¿½ï¿½ÒªÊµï¿½ï¿½ï¿½ï¿½
  * */
 public class Wrapper4 extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
 
-	//formÖÐinput£ºname="userList[0].name"
-	//formÖÐinput£ºname="userList[0].age"
-	//formÖÐinput£ºname="userList[1].name"
-	//formÖÐinput£ºname="userList[1].age"
+	//formï¿½ï¿½inputï¿½ï¿½name="userList[0].name"
+	//formï¿½ï¿½inputï¿½ï¿½name="userList[0].age"
+	//formï¿½ï¿½inputï¿½ï¿½name="userList[1].name"
+	//formï¿½ï¿½inputï¿½ï¿½name="userList[1].age"
 	List<User> userList;
 
 	public void setUserList(List<User> userList) {
@@ -31,7 +30,7 @@ public class Wrapper4 extends ActionSupport {
 	@Override
 	public String execute() throws Exception {
 
-		//ÐèÒªÅÐ¶ÏÊôÐÔ²»ÄÜÎª¿Õ£¬Îª¿Õ»áÒì³£¡£
+		//ï¿½ï¿½Òªï¿½Ð¶ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½ï¿½Îªï¿½Õ£ï¿½Îªï¿½Õ»ï¿½ï¿½ì³£ï¿½ï¿½
 		if(userList != null) {
 			for (User user : userList) {
 				System.out.println(user.name + "," + user.sex + "," +user.age);

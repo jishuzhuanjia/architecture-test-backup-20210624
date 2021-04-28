@@ -1,10 +1,10 @@
 package com.zj.test.java.lang.string.regexp;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *正则表达式测试类

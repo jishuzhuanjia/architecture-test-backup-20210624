@@ -1,7 +1,6 @@
 package com.zj.test.transaction.service;
 
 import com.zj.test.transaction.exception.TransactionTestException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 

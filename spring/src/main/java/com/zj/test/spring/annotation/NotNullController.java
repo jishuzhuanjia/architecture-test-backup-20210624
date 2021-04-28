@@ -1,6 +1,5 @@
 package com.zj.test.spring.annotation;
 
-import com.zj.test.util.TestResultTips;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +22,6 @@ public class NotNullController {
     @RequestMapping("notnull")
     public String test1(@Valid @NotNull String content){
         System.out.println(content);
-        return TestResultTips.SEE_AT_CONSOLE;
+        return "请在控制台查看运行结果";
     }
 }

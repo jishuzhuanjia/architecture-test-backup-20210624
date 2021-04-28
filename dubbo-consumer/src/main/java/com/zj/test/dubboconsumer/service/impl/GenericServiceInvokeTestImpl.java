@@ -3,10 +3,7 @@ package com.zj.test.dubboconsumer.service.impl;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.dubbo.rpc.service.GenericService;
-import com.zj.test.dobboprovider.service.DubboProviderTestService;
-import com.zj.test.dubboconsumer.service.DubboConsumerTestService;
 import com.zj.test.dubboconsumer.service.GenericServiceInvokeService;
-import com.zj.test.util.TestHelper;
 
 /* @author: zhoujian
  * @qq: 2025513

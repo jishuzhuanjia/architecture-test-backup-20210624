@@ -1,7 +1,7 @@
 package test.frame;
 
-import java.awt.Component;
-import javax.swing.JButton;
+import javax.swing.*;
+import java.awt.*;
 
 /**
   * @time：2019年12月26日 下午9:21:35

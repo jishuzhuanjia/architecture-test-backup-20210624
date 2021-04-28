@@ -1,19 +1,20 @@
 package xhm.struts.actionservlet;
 
-import java.util.Map;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
-/*1.ActioContext·½Ê½
- * ½âñîºÏµÄ·½Ê½²Ù×÷Óò¶ÔÏóÊı¾İ:Ö»ÄÜÓÃÓÚ´æ´¢Êı¾İ£¬¶ø²»ÄÜµ÷ÓÃÆäËûµÄÓò¶ÔÏóapi¡£
- * Í¨¹ıActionContext¿ÉÒÔÖ±½Ó»ñÈ¡application,sessionÓò£¬
- * ActionContextµÄÉè¼Æ¾ÍÊÇÎªÁËÌæ´úrequestµÄÊ¹ÓÃ£¬¶ørequestÔòÈÏÎªÊÇActionContext±¾Éí£¬
- * »ñµÃµÄÓòÊµ¼ÊÉÏ¾ÍÊÇÒ»¸öMap£¬Í¨¹ı¶ÔMapµÄ²Ù×÷¾ÍÊÇ¶ÔÓòµÄ²Ù×÷£¬¶ørequestÓò¾ÍÊÇActionContext±¾Éí¡£
+import java.util.Map;
+
+/*1.ActioContextï¿½ï¿½Ê½
+ * ï¿½ï¿½ï¿½ï¿½ÏµÄ·ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:Ö»ï¿½ï¿½ï¿½ï¿½ï¿½Ú´æ´¢ï¿½ï¿½ï¿½İ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½apiï¿½ï¿½
+ * Í¨ï¿½ï¿½ActionContextï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ó»ï¿½È¡application,sessionï¿½ï¿½
+ * ActionContextï¿½ï¿½ï¿½ï¿½Æ¾ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½requestï¿½ï¿½Ê¹ï¿½Ã£ï¿½ï¿½ï¿½requestï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ActionContextï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½Ãµï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½Ï¾ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Mapï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Mapï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½requestï¿½ï¿½ï¿½ï¿½ï¿½ActionContextï¿½ï¿½ï¿½ï¿½
  * 
- *×¢Òâ£ºActionContextµÄ»ñÈ¡£º¾²Ì¬·½·¨¶ø²»ÊÇnew£º
+ *×¢ï¿½â£ºActionContextï¿½Ä»ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½newï¿½ï¿½
  * ActionContext ac = ActionContext.getContext();
  * 
- *ActionContext¿ÉÒÔ»ñÈ¡µÄÓò
+ *ActionContextï¿½ï¿½ï¿½Ô»ï¿½È¡ï¿½ï¿½ï¿½ï¿½
  * application
  * session
  * request - ActionContext
@@ -25,26 +26,26 @@ public class Action extends ActionSupport {
 
 	public String value() {
 		/*
-		 * ActionContextÉúÃüÖÜÆÚºÍrequestÏàÍ¬
+		 * ActionContextï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Úºï¿½requestï¿½ï¿½Í¬
 		 * */
 		
 		ActionContext ac = ActionContext.getContext();
 		
-		/*1.»ñÈ¡Óò£º¿ÉÒÔÈÏÎªac¾ÍÊÇrequestÓò
+		/*1.ï¿½ï¿½È¡ï¿½ò£º¿ï¿½ï¿½ï¿½ï¿½ï¿½Îªacï¿½ï¿½ï¿½ï¿½requestï¿½ï¿½
 		 * 1.1 application
-		 * ¶ÔmapµÄ²Ù×÷¾ÍÊÇ¶ÔÓòµÄ²Ù×÷*/
+		 * ï¿½ï¿½mapï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½ï¿½ï¿½Ä²ï¿½ï¿½ï¿½*/
 		Map<String,Object> applicationScope = ac.getApplication();
 		applicationScope.put("application", "application");
 		
-		//1.2»ñÈ¡session
+		//1.2ï¿½ï¿½È¡session
 		Map<String,Object> sessionScope = ac.getSession();
 		sessionScope.put("session", "session");
 		
-		//1.3»ñÈ¡ÖµÕ»
+		//1.3ï¿½ï¿½È¡ÖµÕ»
 		ac.getValueStack();
 		
 		//1.4request
-		//¾­¹ı²âÊÔ£º´Ë·½·¨µÈÍ¬request.setAttribute(key,value);
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½Í¬request.setAttribute(key,value);
 		ac.put("request", "request");
 		
 		return "ok";

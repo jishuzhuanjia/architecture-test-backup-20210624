@@ -1,7 +1,6 @@
 package com.zj.test.spring.proxy.dynamic_proxy;
 
 import com.zj.test.spring.proxy.service.ProxyTestService;
-import com.zj.test.spring.proxy.service.impl.ProxyTestServiceImpl;
 import com.zj.test.util.TestHelper;
 import lombok.extern.slf4j.Slf4j;
 

@@ -84,7 +84,7 @@ public class ArrayListTest {
         4.验证addAll是否会修改参数list
         结果：不会
         */
-        TestHelper.startSubTest("验证addAll是否破坏参数emptyArrayList2...");
+        TestHelper.startTest("验证addAll是否破坏参数emptyArrayList2...");
         TestHelper.println("emptyArrayList2", emptyArrayList2);
         TestHelper.println("没有破坏");
     }
@@ -153,7 +153,7 @@ public class ArrayListTest {
         emptyArrayList.remove("W");
         TestHelper.println("emptyArrayList.remove(\"W\")", emptyArrayList);
 
-        TestHelper.startSubTest("测试remove(Object o)是否可移除多个元素");
+        TestHelper.startTest("测试remove(Object o)是否可移除多个元素");
         emptyArrayList.remove("l");
         TestHelper.println("emptyArrayList.remove(\"l\")", emptyArrayList);
 

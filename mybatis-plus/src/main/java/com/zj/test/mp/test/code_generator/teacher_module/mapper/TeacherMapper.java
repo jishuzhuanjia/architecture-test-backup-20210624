@@ -1,7 +1,7 @@
 package com.zj.test.mp.test.code_generator.teacher_module.mapper;
 
-import com.zj.test.mp.test.code_generator.teacher_module.entity.Teacher;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zj.test.mp.test.code_generator.teacher_module.entity.Teacher;
 
 /**
  * <p>

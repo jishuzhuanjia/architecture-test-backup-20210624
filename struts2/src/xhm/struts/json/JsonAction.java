@@ -1,18 +1,17 @@
 package xhm.struts.json;
 
 import com.opensymphony.xwork2.Action;
-
 import xhm.struts.datawrap.User;
 
-/* Json测试action */
+/* Json锟斤拷锟斤拷action */
 public class JsonAction implements Action {
 	
 	private User jsonUser;
 	
-	/*返回Json数据方式：
-	 * 1.传统方式返回ajax数据：这种方式不需要在配置文件中配置。
+	/*锟斤拷锟斤拷Json锟斤拷锟捷凤拷式锟斤拷
+	 * 1.锟斤拷统锟斤拷式锟斤拷锟斤拷ajax锟斤拷锟捷ｏ拷锟斤拷锟街凤拷式锟斤拷锟斤拷要锟斤拷锟斤拷锟斤拷锟侥硷拷锟斤拷锟斤拷锟矫★拷
 	 * 
-	 * 2.struts2返回json数据，需要在struts.xml配置要返回的数据。
+	 * 2.struts2锟斤拷锟斤拷json锟斤拷锟捷ｏ拷锟斤拷要锟斤拷struts.xml锟斤拷锟斤拷要锟斤拷锟截碉拷锟斤拷锟捷★拷
 	 * 
 	 * */
 	
@@ -20,14 +19,14 @@ public class JsonAction implements Action {
 		return jsonUser;
 	}
 
-	/* struts返回json */
+	/* struts锟斤拷锟斤拷json */
 	public String testStrutsJson() {
 		
 		jsonUser = new xhm.struts.datawrap.User();
 		
 		jsonUser.setName("xiaohongmao");
 		jsonUser.setAge(25);
-		jsonUser.setSex("男");
+		jsonUser.setSex("锟斤拷");
 		
 		return SUCCESS;
 	}

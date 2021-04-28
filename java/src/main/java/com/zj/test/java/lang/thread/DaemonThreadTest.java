@@ -1,5 +1,7 @@
 package com.zj.test.java.lang.thread;
 
+import com.zj.test.util.TestHelper;
+
 /**
  *
  * 守护线程测试
@@ -12,13 +14,14 @@ package com.zj.test.java.lang.thread;
 public class DaemonThreadTest {
 
     public static void main(String[] args) {
+        TestHelper.startTest("守护线程测试");
 
         // 守护线程
         Thread daemonThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
-                    System.out.println("Daemon Thread is Running");
+                    TestHelper.println("守护线程正在运行...");
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
@@ -28,10 +31,10 @@ public class DaemonThreadTest {
             }
         });
 
-        // 必须在start之前调用,在start方法调用之后设置无效。
+        // 必须在start之前调用,在start方法调用会报错且不生效：Exception in thread "main" java.lang.IllegalThreadStateException
         daemonThread.setDaemon(true);
-        daemonThread.start();
 
+        daemonThread.start();
         // 主线程等待一会，否则可能无法看到守护线程输出的内容
         try {
             Thread.sleep(1000);
