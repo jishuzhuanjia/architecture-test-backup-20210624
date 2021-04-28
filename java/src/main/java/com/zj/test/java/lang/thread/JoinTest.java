@@ -20,8 +20,12 @@ public class JoinTest {
         Thread subThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 1; i <= 1000; i++) {
-                    TestHelper.println("subThread进度", i/(double)1000);
+                for (int i = 1; i <= 50; i++) {
+                    double process = i/(double)50;
+                    TestHelper.println("subThread进度", process);
+                    if(process==1){
+                        TestHelper.println("subThread执行完成.");
+                    }
                     try {
                         Thread.sleep(300);
                     } catch (InterruptedException e) {
@@ -61,14 +65,22 @@ public class JoinTest {
          subThread.join(1000);
          如果指定的时间内指定线程没有执行完成，会继续执行后面的代码。
          指定的线程会继续执行，不会被强制停止。
+
+         nanos有效值: 0~999999
          */
-        try {
+        /*try {
             subThread.join(1000,999999);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        try {
+            subThread.join(10000,0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        System.out.println("mainThread继续执行");
+        TestHelper.println("mainThread继续执行");
 
         /*
         死亡状态(执行完)的线程不能重新开始
