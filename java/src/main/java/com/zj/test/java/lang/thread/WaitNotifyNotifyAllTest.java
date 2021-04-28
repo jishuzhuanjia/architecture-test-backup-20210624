@@ -2,6 +2,8 @@ package com.zj.test.java.lang.thread;
 
 import com.zj.test.util.TestHelper;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * author: zhoujian
  * corporation: none
@@ -39,6 +41,10 @@ import com.zj.test.util.TestHelper;
  * 调用wait()后的线程，线程会一直等待，不会主动抢夺锁，除非被其他线程调用notify或notifyAll唤醒。
  *
  * 注意：因为wait()后面的代码不会执行，所以notify()或notifyAll()的调用应在wait()之前。
+ *
+ * 当synchronized代码块执行完成后，线程就会放弃锁，这样可以保证同步代码块的代码全部被执行
+ * 而wait()虽然可以主动放弃锁，但是wait()后面的代码不会被执行，总是需要其他的线程唤醒它才可能
+ * 将synchronized代码块中的代码全部执行。
  *
  * 4.notify()和notifyAll()比较
  * 两者都是唤醒因调用wait()而睡眠的线程，从而参与cpu资源的抢夺。
@@ -108,15 +114,15 @@ class TicketPool implements Runnable {
         // Exception in thread "Thread-0" Exception in thread "Thread-2" Exception in thread "Thread-1" java.lang.IllegalMonitorStateException
         // lock.notifyAll();
 
-        TestHelper.println("[" + Thread.currentThread().getName() + "] - code before synchronized");
+        TestHelper.println("code before synchronized");
 
         synchronized (lock) {
-            TestHelper.println("线程 [" + Thread.currentThread().getName() + "] 获得锁，开始售票服务");
+            TestHelper.println("获得锁，开始售票服务");
             for (int i = 0; i < 100; i++) {
                 tickCount--;
-                TestHelper.println("[" + Thread.currentThread().getName() + "] - " + "售票成功,剩余总票数: " + (tickCount));
+                TestHelper.println("售票成功,剩余总票数: " + (tickCount));
                 if (tickCount == 0) {
-                    TestHelper.println("[ " + Thread.currentThread().getName() + "] - " + "票已卖完...");
+                    TestHelper.println("票已卖完...");
 
                     // 票卖光了，唤醒所有线程，让他们把继续执行后面的代码
                     lock.notifyAll();
@@ -132,23 +138,23 @@ class TicketPool implements Runnable {
 
                 // 某售票机线程持续卖票100张,会进入等待,并唤醒其他要卖票的售票机线程
                 if (i == 99) {
-                    TestHelper.println("[" + Thread.currentThread().getName() + "] - 100张已卖完, going to wait...");
+                    TestHelper.println("100张已卖完, going to wait...");
                     // 唤醒某个售票机线程进行售票,需要调用wait()本线程才会真正释放锁
                     lock.notify();
 
                     // 释放锁，立即释放cpu资源，并根据算法使得某个竞争锁的线程获取锁并开始执行 本线程会一直等待，不再主动获取锁。
-                    try {
+                    /*try {
                         lock.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                    }
+                    }*/
 
-                    TestHelper.println("[" + Thread.currentThread().getName() + "] - after wait");
+                    TestHelper.println("code after wait");
                 }
             }
-            TestHelper.println("[" + Thread.currentThread().getName() + "] -  code after for");
+            TestHelper.println("code after for");
         }
-        TestHelper.println("[" + Thread.currentThread().getName() + "] - code after synchronized");
+        TestHelper.println("code after synchronized");
     }
 }
 
