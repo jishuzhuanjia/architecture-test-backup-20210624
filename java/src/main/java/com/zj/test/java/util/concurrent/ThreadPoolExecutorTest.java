@@ -59,9 +59,8 @@ import java.util.concurrent.*;
  * 1.需要修改拒绝策略。
  * 2.并将阻塞队列长度设定一个合理的值。
  * 因为默认阻塞队列长度Integer.MAX_VALUE,将其填满几乎不可能。
- */
-
-/**
+ *
+ *
  构造函数
  1.public ThreadPoolExecutor(int corePoolSize,
  int maximumPoolSize,

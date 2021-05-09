@@ -71,7 +71,7 @@ public class FutureTaskTest {
             e.printStackTrace();
         }
 
-        // 可以执行其他的代码
+        // 可以执行其他的代码，随机可以检测任务是否结束
 
         while (true) {
             if (futureTask.isDone()) {
