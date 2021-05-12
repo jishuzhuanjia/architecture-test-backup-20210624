@@ -6,15 +6,17 @@ import org.junit.Test;
 import java.util.List;
 import java.util.concurrent.*;
 
-/* @author: zhoujian
+/**
+ * @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/6 10:15
  * @description: ThreadPoolExecutor测试
  * @version: 1.0
  * @finished: false
  * @finished-time:
- */
-/**
+ *
+ * --------------------------------- 线程池ThreadPoolExecutor ---------------------------------------
+ *
  * 架构/面试
  *
  * 阿里巴巴java开发手册线程池规范
@@ -33,85 +35,62 @@ import java.util.concurrent.*;
  *
  * --------------------------------------------
  *
- * 1.【ThreadPoolExecutor拒绝策略】
+ * 1.ThreadPoolExecutor拒绝策略
  *
  * 【拒绝策略作用】
  * 当线程池的任务缓存队列已满并且没有空闲线程时，此时如果还有任务到来时采取的策略，通常有以下四种策略：
- * 1，ThreadPoolExecutor.AbortPolicy(默认)：丢弃任务并抛出RejectedExecutionException异常。
- * 2.ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常，不会影响已经提交的任务。
+ * 1.ThreadPoolExecutor.AbortPolicy：默认，丢弃任务并抛出RejectedExecutionException异常，
+ * 如果任务提交者没有显示捕获异常，则任务提交者抛出异常，代码中断，该策略对于任务提交者是可感知的。
+ * 2.ThreadPoolExecutor.DiscardPolicy：丢弃任务，但是不抛出异常，不会影响已经提交的任务，但是调用者不会接收到反馈。
  * 3.ThreadPoolExecutor.DiscardOldestPolicy：丢弃最先提交的任务，然后重新提交被拒绝的任务。
  * 4.ThreadPoolExecutor.CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务。
  *
  * -------------------------------------------------------------------------
- * 2.【核心池的默认创建策略】
+ *
+ * 2.核心池的默认创建策略
  * 当有新任务提交时，才开始创建核心线程，并且每次提交的任务会创建新的核心线程来执行，直到核心线程数达到corePoolSize才开始复用。
  *
  * ----------------------------------------------------------------------
- * 3.【ThredPoolExecutor存在的缺陷】
- * ThreadPoolExecutor存在的缺陷：
- * 1.线程数一直是corePoolSize
- * 因为只有当没有空闲线程且队列满，然后有新的任务提交并被接受时，才会创建新的线程，否则线程数一直是corePoolSize。
+ * 3.创建非核心池线程的条件
+ * 只有当没有空闲线程且队列满，然后有新的任务提交并被接受时，才会创建新的线程，否则线程数一直是corePoolSize。
  *
- * 而又因为ThreadPoolExecutor使用的默认拒绝策略为new AbortPolicy();即队列满之后不再接受任何任务。
+ * -----------------------------------------------------------------
+ *
+ * 4.ThredPoolExecutor线程池存在的缺陷
+ * 1.线程数一直是corePoolSize：
+ * 因为ThreadPoolExecutor使用的默认拒绝策略为AbortPolicy即队列满之后不再接受任何任务，不满足创建非核心池线程的条件，
  * 因此线程数永远是corePoolSize。
  *
  * 解决线程数一直是corePoolSize的情况：
  * 1.需要修改拒绝策略。
- * 2.并将阻塞队列长度设定一个合理的值。
+ * 2.并将阻塞队列长度设定一个合理的值，这里的合理指的是实际提交任务可能填满阻塞队列。
  * 因为默认阻塞队列长度Integer.MAX_VALUE,将其填满几乎不可能。
  *
+ * -----------------------------------------------------------
+ * 5.线程池ThreadPoolExecutor核心参数
  *
- 构造函数
- 1.public ThreadPoolExecutor(int corePoolSize,
- int maximumPoolSize,
- long keepAliveTime,
- TimeUnit unit,
- BlockingQueue<Runnable> workQueue)
-
- 参数说明：
- corePoolSize：线程池核心池线程数量。
- maximumPoolSize：线程池最大线程数量。
- keepAliveTime：线程最大空闲时间，到达空闲时间线程会被销毁，默认指的是corePoolSize外的线程。
- unit: keepAliveTime参数的时间单位。
- workQueue：存储任务的队列。
-
- 缺点：
- 该线程池构造方法有个缺陷：
- 必须没有空闲线程并且队列满，然后有新的任务提交并被接受，才会创建新的线程，否则线程数一直是corePoolSize，
- 而又因为该构造方法使用的默认拒绝策略为new AbortPolicy();即队列满之后不再接受任何任务。
- 因此线程数永远是corePoolSize
-
- 如果想要解决线程池不变的情况，需要修改拒绝策略，并将阻塞队列长度设定一个合理的值。
- 因为默认阻塞队列长度Integer.MAX_VALUE,那样将太难填满了。
+ * 构造方法
+ * public ThreadPoolExecutor(int corePoolSize,
+ *                               int maximumPoolSize,
+ *                               long keepAliveTime,
+ *                               TimeUnit unit,
+ *                               BlockingQueue<Runnable> workQueue,
+ *                               ThreadFactory threadFactory,
+ *                               RejectedExecutionHandler handler)
+ *
+ * 参数说明：
+ * corePoolSize：线程池核心池线程数量。
+ * maximumPoolSize：线程池最大线程数量。
+ * keepAliveTime：线程最大空闲时间：到达空闲时间线程会被销毁，默认情况下不作用到核心池线程。
+ * unit：keepAliveTime参数的时间单位。
+ * workQueue：任务存储队列。
+ * threadFactory：线程工厂，用来创建线程池线程。
+ * handler：拒绝策略。
  */
 public class ThreadPoolExecutorTest {
 
-    @Test
-    public void threadPoolExecutor1() {
-        // FixedThreadPool阻塞队列也是LinkedBlockingQueue
-
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(20, 50, 0, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10000));
-
-        for (int i = 0; i < 10000; i++) {
-            threadPoolExecutor.execute(() -> {
-                TestHelper.println("thread name", Thread.currentThread().getName());
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-        try {
-            Thread.sleep(Integer.MAX_VALUE);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
-     * 2.测试：线程池线程数量增加的时机
+     * 1.测试：非核心池线程创建时机
      *
      * ThreadPoolExecutor(int corePoolSize,
      *                               int maximumPoolSize,
@@ -128,23 +107,54 @@ public class ThreadPoolExecutorTest {
      * 核心池corePoolSize中没有空闲线程，并且任务队列已满，接受新任务时。
      */
     @Test
-    public void ThreadPoolExecutor2() {
+    public void nonCorePoolThreadCreateTest() {
 
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 50, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10000), new ThreadPoolExecutor.AbortPolicy());
+        // 1.
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10,
+                20,
+                10,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>(100),
+                new ThreadPoolExecutor.DiscardPolicy());
 
-        for (int i = 0; i < 10000; i++) {
+        // 占用核心线程
+        for (int i = 1; i <= 10; i++) {
+            int finalI = i;
             threadPoolExecutor.execute(() -> {
-                TestHelper.println("thread name", Thread.currentThread().getName());
+                TestHelper.println("核心线程持续占用");
                 try {
-                    Thread.sleep(200);
+                    new CountDownLatch(1).await();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+            });
+
+        }
+
+        // 测试没有空闲线程，队列未满是否会创建非核心线程
+        // 测试结果，不会，会一直等待空闲线程的出现
+        /*for (int i = 1; i <=10 ; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println("task-" + finalI);
+            });
+
+        }*/
+
+        // 测试，当队列满且没有空闲线程时，是否会创建新线程t来执行提交的新任务?
+        // 测试结果：会。
+        // 新创建的线程在执行完提交后的任后，又可以继续执行队列头或新提交的任务，至于先执行队列头还是新提交的任务，是抢夺式的，无序
+        // 而可以肯定的是创建的新线程肯定会首先执行新提交的任务
+        for (int i = 1; i <=10000 ; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println("task-" + finalI);
             });
         }
 
         try {
-            Thread.sleep(Integer.MAX_VALUE);
+            new CountDownLatch(1).await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
