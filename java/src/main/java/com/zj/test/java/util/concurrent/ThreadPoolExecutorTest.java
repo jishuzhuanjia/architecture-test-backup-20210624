@@ -250,6 +250,7 @@ public class ThreadPoolExecutorTest {
      *
      * 5.测试：
      * 1.ThreadPoolExecutor完成构造时线程池线程数量?
+     * 0
      *
      * 2.核心池线程数是如何增长的?
      *
@@ -277,46 +278,38 @@ public class ThreadPoolExecutorTest {
      */
     @Test
     public void allowsCoreThreadTimeOut() {
-        // 设置线程空闲销毁时间为1s
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 20,
-                1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+                30, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
-        // 0
+        // 0 - 线程池构造后池中线程数为0，只有执行任务时才开始构造核心线程。
         TestHelper.println("threadPoolExecutor.getPoolSize()", threadPoolExecutor.getPoolSize());
 
-        for (int i = 0; i < 10; i++) {
+        /* ----------------------------------------- 测试：初始化核心池过程中是否会复用核心线程 ---------------------------------------- */
+        // 结论：不会复用，等到corePoolSize个核心线程全部创建，再提交任务时才开始复用核心线程。
+        // 1.先创建3个核心线程
+        for (int i = 1; i <= 3; i++) {
+            int finalI = i;
             threadPoolExecutor.execute(() -> {
-                TestHelper.println(Thread.currentThread().getName() + " is running...");
+                TestHelper.println("task-" + finalI);
             });
-
-            /*
-            睡眠一会，等待核心池线程空闲，用来测试是否会使用核心池中空闲线程来执行新任务。
-            结果：不会。会创建新的核心池线程来执行新任务。
-            */
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
 
-        // 等待线程池10个线程都空闲超时
+        // 2.等待上面3个核心线程空闲下来
         try {
-            Thread.sleep(5000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        // 10
-        TestHelper.println("threadPoolExecutor.getPoolSize()", threadPoolExecutor.getPoolSize());
-
-        //threadPoolExecutor.allowCoreThreadTimeOut(true);
-
-        try {
-            new CountDownLatch(1).await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        TestHelper.println("此时线程池线程数",threadPoolExecutor.getPoolSize());
+        // 3.此时再创建7个任务，查看是否会使用已经创建的3个核心线程来执行任务
+        for (int i = 4; i <= 10; i++) {
+            int finalI = i;
+            threadPoolExecutor.execute(() -> {
+                TestHelper.println("task-" + finalI);
+            });
         }
+
     }
 
     /**
@@ -937,7 +930,7 @@ public class ThreadPoolExecutorTest {
      * 【测试结果】
      *  main: 我是个被拒绝的任务，但是我执行了
      * 【结论】
-     * 会，当没有空闲线程并且队列满时
+     * 会，当没有空闲线程并且队列满时且线程池线程数达到最大。
      *
      * 【优点】
      * 【缺点】
@@ -1015,7 +1008,9 @@ public class ThreadPoolExecutorTest {
      *
      * 此时有空闲线程,最终任务执行顺序:
      * 11 12 3 4 5 6 7 8 9 10
+     *
      * 【优点】
+     * 这是典型的插队行为，对于队列中其他任务是不公平的。
      * 【缺点】
      */
     @Test
@@ -1027,7 +1022,7 @@ public class ThreadPoolExecutorTest {
         for (int i = 0; i < 10; i++) {
             int finalI = i;
             threadPoolExecutor.execute(() -> {
-                TestHelper.println(Thread.currentThread().getName() + ": task-" + (finalI + 1) + " is running...");
+                TestHelper.println("task-" + (finalI + 1) + " 正在占用核心线程...");
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
@@ -1046,7 +1041,7 @@ public class ThreadPoolExecutorTest {
                     e.printStackTrace();
                 }
 
-                TestHelper.println(Thread.currentThread().getName() + ": task-" + (finalI + 1 + 10) + " is running...");
+                TestHelper.println("队列任务: task-" + (finalI + 1) + " is running...");
 
             });
         }
@@ -1054,11 +1049,21 @@ public class ThreadPoolExecutorTest {
         // 此时添加一个任务，看15个任务中哪个任务没有执行。就知道抛弃了哪个任务。
 
         threadPoolExecutor.execute(() -> {
-            TestHelper.println("我是个被拒绝的任务，我由调用线程" + Thread.currentThread().getName() + "执行了");
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            TestHelper.println("我是个被拒绝的任务1，我由调用线程" + Thread.currentThread().getName() + "执行了");
         });
 
         threadPoolExecutor.execute(() -> {
-            TestHelper.println("我是个被拒绝的任务，我由调用线程" + Thread.currentThread().getName() + "执行了");
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            TestHelper.println("我是个被拒绝的任务2，我由调用线程" + Thread.currentThread().getName() + "执行了");
         });
 
         try {
