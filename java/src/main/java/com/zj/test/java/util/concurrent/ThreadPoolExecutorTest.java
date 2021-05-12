@@ -1010,8 +1010,9 @@ public class ThreadPoolExecutorTest {
      * 11 12 3 4 5 6 7 8 9 10
      *
      * 【优点】
-     * 这是典型的插队行为，对于队列中其他任务是不公平的。
+     *
      * 【缺点】
+     * 这是典型的插队行为，对于队列中其他任务是不公平的。
      */
     @Test
     public void discardOldestPolicyTest() {
