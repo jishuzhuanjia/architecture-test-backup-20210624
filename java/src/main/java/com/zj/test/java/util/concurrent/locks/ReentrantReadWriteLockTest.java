@@ -304,4 +304,168 @@ public class ReentrantReadWriteLockTest {
         }
 
     }
+
+    /**
+     * 读操作内部进行写操作
+     *
+     * 虽然可重入，但是读操作内部写操作无法获取到锁，导致线程阻塞在这里。
+     */
+    public static void readWithWrite() {
+        try {
+            readLock.lock();
+            TestHelper.println("正在读...");
+
+            writeLock.lock();
+            TestHelper.println("读操作正在写...");
+            writeLock.unlock();
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            readLock.unlock();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 测试：读操作内部是否可以进行写操作？
+     *
+     * 【结论】
+     * 不可以，虽然可重入，但是读操作内部无法获取到写锁，导致该线程阻塞，并使得后续的第一个写操作阻塞，
+     * 而该写操作的阻塞也会导致后续的所有读写线程全部阻塞。
+     *
+     * 因此必须避免读操作内部进行写操作。
+     */
+    @Test
+    public void readWithWriteTest() {
+        new Thread(()->{
+            readWithWrite();
+        }).start();
+
+        // 线程2
+        /*new Thread(()->{
+            write();
+        }).start();*/
+
+        // 线程3
+        // 如果线程2在线程3之前，线程2无法获取写锁，导致线程3无法获取读锁
+        // 但是，如果线程3读操作在线程2之前，是可以进行读操作的。
+        new Thread(()->{
+            read();
+        }).start();
+
+        new Thread(()->{
+            write();
+        }).start();
+
+        new Thread(()->{
+            read();
+        }).start();
+
+
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 写操作内部进行读操作
+     */
+    public static void writeWithRead() {
+        try {
+            writeLock.lock();
+            TestHelper.println("正在写...");
+
+            readLock.lock();
+            TestHelper.println("写操作正在读...");
+            //readLock.unlock();
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            writeLock.unlock();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 【锁降级测试】
+     * 线程获取读锁条件测试：本线程获取写锁是否可以获取读锁
+     *
+     * 【结论】
+     * 1.获取写锁的线程可以继续获取读锁，以降级。但是必须等待写线程放弃锁，别的读线程才能继续读。
+     *
+     * 2.写锁内部读锁一定不要忘记unlock:
+     * 如果忘记unlock,虽然写锁放弃后，其他线程虽然可以获取读锁进行读操作，因为是读之间是共享的。
+     * 但是如果有线程想要获取写锁进行写操作，会失败，因为写锁内部读锁没有释放，虽然读操作完成了，但是读锁计数仍然大于0，表示依然有线程在读，因此
+     * 无法获取写锁。
+     */
+    @Test
+    public void writeWithReadTest() {
+        new Thread(() -> {
+            writeWithRead();
+        }).start();
+
+        // 保证线程1已经lock
+        try {
+            Thread.sleep(6);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 如果写操作内部读锁未释放，仍然可以读，因为读操作是共享的。
+        /*new Thread(()->{
+            read();
+        }).start();*/
+
+        new Thread(() -> {
+            write();
+        }).start();
+
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 有线程在读，其他线程是否可写？
+     */
+    @Test
+    public void test() {
+        // 读线程
+        new Thread(() -> {
+            read();
+        }).start();
+
+        try {
+            Thread.sleep(6);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // 写线程
+        new Thread(() -> {
+            write();
+        }).start();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
