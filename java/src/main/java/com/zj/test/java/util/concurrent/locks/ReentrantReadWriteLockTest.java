@@ -341,7 +341,7 @@ public class ReentrantReadWriteLockTest {
      */
     @Test
     public void readWithWriteTest() {
-        new Thread(()->{
+        new Thread(() -> {
             readWithWrite();
         }).start();
 
@@ -353,18 +353,17 @@ public class ReentrantReadWriteLockTest {
         // 线程3
         // 如果线程2在线程3之前，线程2无法获取写锁，导致线程3无法获取读锁
         // 但是，如果线程3读操作在线程2之前，是可以进行读操作的。
-        new Thread(()->{
+        new Thread(() -> {
             read();
         }).start();
 
-        new Thread(()->{
+        new Thread(() -> {
             write();
         }).start();
 
-        new Thread(()->{
+        new Thread(() -> {
             read();
         }).start();
-
 
 
         try {
@@ -460,6 +459,68 @@ public class ReentrantReadWriteLockTest {
         new Thread(() -> {
             write();
         }).start();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /* ----------------------------------------- 公平读写锁测试 ---------------------------------------- */
+    /**
+     * 公平读写锁
+     */
+    private static ReentrantReadWriteLock fairLock = new ReentrantReadWriteLock(true);
+    private static ReadLock fairReadLock = fairLock.readLock();
+    private static WriteLock fairWriteLock = fairLock.writeLock();
+
+    /**
+     * 公平读
+     */
+    private static void fairRead() {
+        try {
+            fairReadLock.lock();
+            TestHelper.println("公平读...");
+            fairReadLock.unlock();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 公平写
+     */
+    private static void fairWrite() {
+        try {
+            fairWriteLock.lock();
+            TestHelper.println("公平写...");
+            fairWriteLock.unlock();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * <p>
+     * 公平读测试
+     * </p>
+     */
+    @Test
+    public void fairReadTest() {
+        for (int i = 0; i < 100; i++) {
+            new Thread(() -> {
+                fairRead();
+            }).start();
+
+            // 保证上一个线程已经lock
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         try {
             new CountDownLatch(1).await();
