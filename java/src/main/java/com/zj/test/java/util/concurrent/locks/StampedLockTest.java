@@ -300,6 +300,7 @@ public class StampedLockTest {
      * </p>
      *
      * 【结论】
+     * 不管哪个操作在前，都不会影响另外的操作
      *
      */
     @Test
