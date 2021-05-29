@@ -7,7 +7,6 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.aggregations.support.ValuesSource;
 import org.elasticsearch.search.aggregations.support.ValuesSourceAggregationBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -242,49 +241,13 @@ public class AggregationTest {
      *                         "from": 40.0,
      *                         "to": 60.0
      *                     }
-     *                 ], {
-     *                     "aggregations": {
-     *                         "age_aggregation": {
-     *                             "range": {
-     *                                 "field": "age",
-     *                                 "missing": 1,
-     *                                 "ranges": [{
-     *                                         "from": 1.0,
-     *                                         "to": 18.0
-     *                                     }, {
-     *                                         "from": 18.0,
-     *                                         "to": 40.0
-     *                                     }, {
-     *                                         "from": 40.0,
-     *                                         "to": 60.0
-     *                                     }
-     *                                 ],
-     *                                 "keyed": false
-     *                             }
-     *                         },
-     *                         "password_aggregation": {
-     *                             "terms": {
-     *                                 "field": "password",
-     *                                 "size": 10,
-     *                                 "min_doc_count": 1,
-     *                                 "shard_min_doc_count": 0,
-     *                                 "show_term_doc_count_error": false,
-     *                                 "order": [{
-     *                                         "_count": "desc"
-     *                                     }, {
-     *                                         "_key": "asc"
-     *                                     }
-     *                                 ]
-     *                             }
-     *                         }
-     *                     }
-     *                 }
+     *                 ],
      *                 "keyed": false
      *             }
      *         },
-     *         "hobbies_aggregation": {
+     *         "password_aggregation": {
      *             "terms": {
-     *                 "field": "hobbies",
+     *                 "field": "password",
      *                 "size": 10,
      *                 "min_doc_count": 1,
      *                 "shard_min_doc_count": 0,
@@ -480,10 +443,6 @@ public class AggregationTest {
      *
      */
     @Test
-    public void test(){
-
-    }
-    @Test
     public void rangeAggregationAndTermsAggregation(){
         TransportClient transportClient = ElasticsearchUtil.getClient();
 
@@ -519,6 +478,190 @@ public class AggregationTest {
         TermsAggregationBuilder termsAggregationBuilder = AggregationBuilders.terms("password_aggregation").field("password");
 
         searchRequestBuilder.addAggregation(termsAggregationBuilder);
+
+        SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+    }
+
+    /**
+     * <p>
+     *     2.测试: avg,max....等聚合
+     * </p>
+     *
+     * 【出入参记录】
+     * 1、统计所有人物平均年龄(有数据)
+     * {
+     *     "aggregations": {
+     *         "avg_aggregation": {
+     *             "avg": {
+     *                 "field": "age"
+     *             }
+     *         }
+     *     }
+     * }
+     *
+     * -- 出参
+     * {
+     *     "took": 7,
+     *     "timed_out": false,
+     *     "_shards": {
+     *         "total": 5,
+     *         "successful": 5,
+     *         "skipped": 0,
+     *         "failed": 0
+     *     },
+     *     "_clusters": {
+     *         "total": 0,
+     *         "successful": 0,
+     *         "skipped": 0
+     *     },
+     *     "hits": {
+     *         "total": 89,
+     *         "max_score": 1.0,
+     *         "hits": [{
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "VJjr2ngBAg1PKR2UKZuD",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "周二",
+     *                     "teachers_nested": {
+     *                         "name": "杨久平",
+     *                         "subject": "数学"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "t--c2HgB5xzHVj-T8tsj",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "teachers_default": [{
+     *                             "name": "mayun",
+     *                             "subject": "吹牛"
+     *                         }, {
+     *                             "name": "马化腾",
+     *                             "subject": "资本家"
+     *                         }
+     *                     ]
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "YJgG23gBAg1PKR2U3Zt1",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "周xasds",
+     *                     "teachers_nested": {
+     *                         "name": "杨久平",
+     *                         "subject": "d"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "VZjr2ngBAg1PKR2UmJsU",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "周三",
+     *                     "teachers_nested": {
+     *                         "name": "邓宁",
+     *                         "subject": "数学"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "Wpj42ngBAg1PKR2UXptd",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "xxxxxxxx",
+     *                     "teachers_nested": {
+     *                         "name": "e",
+     *                         "subject": "数学"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "w--j2HgB5xzHVj-TK9uu",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "teachers_default": [{
+     *                             "name": "ma hua teng",
+     *                             "subject": "小学生收割艺术"
+     *                         }
+     *                     ]
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "qVI8tXgBZ2Ot5CV1VZpn",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "刘强东1",
+     *                     "password": "123456",
+     *                     "hobbies": "make money computer games"
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "vlJntXgBZ2Ot5CV1-Zo7",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "movie大写",
+     *                     "password": "123456",
+     *                     "hobbies": "MOVIE"
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "v1JntXgBZ2Ot5CV1_JqG",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "movie大写",
+     *                     "password": "123456",
+     *                     "hobbies": "MOVIE"
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "tlJQtXgBZ2Ot5CV115rO",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "",
+     *                     "password": "123456",
+     *                     "hobbies": "movie"
+     *                 }
+     *             }
+     *         ]
+     *     },
+     *     "aggregations": {
+     *         "avg_aggregation": {
+     *             "value": 18.0
+     *         }
+     *     }
+     * }
+     *
+     * 【结论】
+     *
+     * 【注意点】
+     *
+     */
+    @Test
+    public void avgAggregation(){
+
+        TransportClient transportClient = ElasticsearchUtil.getClient();
+
+        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("structured-query-test");
+        searchRequestBuilder.setTypes("type");
+
+        ValuesSourceAggregationBuilder builder;
+
+        //最大年纪
+        //builder = AggregationBuilders.avg("avg_aggregation").field("age");
+
+        builder = AggregationBuilders.avg("max_aggregation").field("age");
+        searchRequestBuilder.addAggregation(builder);
 
         SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
     }
