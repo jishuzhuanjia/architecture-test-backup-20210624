@@ -7,6 +7,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.bucket.range.RangeAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.valuecount.ValueCountAggregationBuilder;
 import org.elasticsearch.search.aggregations.support.ValuesSourceAggregationBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -661,6 +662,186 @@ public class AggregationTest {
         //builder = AggregationBuilders.avg("avg_aggregation").field("age");
 
         builder = AggregationBuilders.avg("max_aggregation").field("age");
+        searchRequestBuilder.addAggregation(builder);
+
+        SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+    }
+
+    /**
+     * <p>
+     *     3.测试: 计数聚合
+     * </p>
+     *
+     * 【出入参记录】
+     * --1
+     * 入参
+     * {"aggregations":{"password_aggregation":{"value_count":{"field":"password"}}}}
+     *
+     * 出参
+     * {
+     *     "took": 1,
+     *     "timed_out": false,
+     *     "_shards": {
+     *         "total": 5,
+     *         "successful": 5,
+     *         "skipped": 0,
+     *         "failed": 0
+     *     },
+     *     "_clusters": {
+     *         "total": 0,
+     *         "successful": 0,
+     *         "skipped": 0
+     *     },
+     *     "hits": {
+     *         "total": 89,
+     *         "max_score": 1.0,
+     *         "hits": [{
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "VJjr2ngBAg1PKR2UKZuD",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "周二",
+     *                     "teachers_nested": {
+     *                         "name": "杨久平",
+     *                         "subject": "数学"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "t--c2HgB5xzHVj-T8tsj",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "teachers_default": [{
+     *                             "name": "mayun",
+     *                             "subject": "吹牛"
+     *                         }, {
+     *                             "name": "马化腾",
+     *                             "subject": "资本家"
+     *                         }
+     *                     ]
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "YJgG23gBAg1PKR2U3Zt1",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "周xasds",
+     *                     "teachers_nested": {
+     *                         "name": "杨久平",
+     *                         "subject": "d"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "VZjr2ngBAg1PKR2UmJsU",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "周三",
+     *                     "teachers_nested": {
+     *                         "name": "邓宁",
+     *                         "subject": "数学"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "Wpj42ngBAg1PKR2UXptd",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "name": "xxxxxxxx",
+     *                     "teachers_nested": {
+     *                         "name": "e",
+     *                         "subject": "数学"
+     *                     }
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "w--j2HgB5xzHVj-TK9uu",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "teachers_default": [{
+     *                             "name": "ma hua teng",
+     *                             "subject": "小学生收割艺术"
+     *                         }
+     *                     ]
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "qVI8tXgBZ2Ot5CV1VZpn",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "刘强东1",
+     *                     "password": "123456",
+     *                     "hobbies": "make money computer games"
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "vlJntXgBZ2Ot5CV1-Zo7",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "movie大写",
+     *                     "password": "123456",
+     *                     "hobbies": "MOVIE"
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "v1JntXgBZ2Ot5CV1_JqG",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "movie大写",
+     *                     "password": "123456",
+     *                     "hobbies": "MOVIE"
+     *                 }
+     *             }, {
+     *                 "_index": "structured-query-test",
+     *                 "_type": "type",
+     *                 "_id": "tlJQtXgBZ2Ot5CV115rO",
+     *                 "_score": 1.0,
+     *                 "_source": {
+     *                     "username": "",
+     *                     "password": "123456",
+     *                     "hobbies": "movie"
+     *                 }
+     *             }
+     *         ]
+     *     },
+     *     "aggregations": {
+     *         "password_aggregation": {
+     *             "value": 37
+     *         }
+     *     }
+     * }
+     *
+     * 【结论】
+     * 1.value count统计的满足查询条件的所有数据中字段有数据的文档个数，不受分页参数的影响。
+     *
+     * 【注意点】
+     *
+     */
+    @Test
+    public void test(){
+
+        TransportClient transportClient = ElasticsearchUtil.getClient();
+
+        SearchRequestBuilder searchRequestBuilder = transportClient.prepareSearch("structured-query-test");
+        searchRequestBuilder.setTypes("type");
+
+        ValuesSourceAggregationBuilder builder;
+
+        // 注意：这里设置的是聚合的名字
+        builder = AggregationBuilders.count("password_aggregation");
+        // 注意：这里设置的才是统计的字段名,只能统计一个字段，重复调用此方法会覆盖前字段。
+        ((ValueCountAggregationBuilder)builder).field("password");
+        //((ValueCountAggregationBuilder)builder).field("username");
+
         searchRequestBuilder.addAggregation(builder);
 
         SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
