@@ -1,25 +1,28 @@
-package com.zj.test.java.util.collection;
+package com.zj.test.java.util.stream;
 
+import com.zj.test.java.po.User;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-/*
+/**
+ *
+ * <p>
+ *     Collection.stream()使用demo,只列举常用
+ * </p>
+ *
  * @author: zhoujian
  * @create-time: 2020/9/23 16:00
- * @description: Collection.stream()使用demo,只列举常用
- * @version: 1.0
  */
-public class CollectionStreamTest {
+public class StreamTest {
 
     // Collection.stream()测试PO
     /*@Setter
     @Getter*/
-    public class ListStreamTestUserPO {
+    /*public class User {
         public String getUsername() {
             return username;
         }
@@ -50,7 +53,7 @@ public class CollectionStreamTest {
 
         @Override
         public String toString() {
-            return "ListStreamTestUserPO{" +
+            return "User{" +
                     "username='" + username + '\'' +
                     ", password='" + password + '\'' +
                     ", age=" + age +
@@ -66,12 +69,12 @@ public class CollectionStreamTest {
             if (o == null || getClass() != o.getClass()) return false;
 
             // 相同类型，进行比较
-            ListStreamTestUserPO that = (ListStreamTestUserPO) o;
+            User that = (User) o;
             return age == that.age &&
-                    /*
+                    *//*
                     002.Objects.euqls可用来进行对象比较
                     注意：Objects.equals(null,null) -> true
-                    */
+                    *//*
                     Objects.equals(username, that.username) &&
                     Objects.equals(password, that.password);
         }
@@ -80,7 +83,7 @@ public class CollectionStreamTest {
         public int hashCode() {
             return Objects.hash(username, password, age);
         }
-    }
+    }*/
 
     /**
      * 1.collection.stream().map()测试
@@ -88,21 +91,13 @@ public class CollectionStreamTest {
      * 从已有list元素中提取某个属性，返回由该属性组成的List。
      */
     @Test
-    public void test1() {
+    public void map() {
         TestHelper.startTest("Collection.streamm().map()测试");
-        List<ListStreamTestUserPO> testList = new ArrayList<>();
+        List<User> testList = createTestList(10);
 
-        // 添加10条数据用以测试
-        for (int i = 1; i <= 10; i++) {
-            ListStreamTestUserPO insertPO = new ListStreamTestUserPO();
-            insertPO.setUsername("username" + i);
-            insertPO.setPassword("password" + i);
-            insertPO.setAge(i);
-            testList.add(insertPO);
-        }
         TestHelper.println("测试List插入数据条数: " + testList.size());
         TestHelper.println("测试List: " + testList);
-        TestHelper.println("usernameList", testList.stream().map(i -> i.getUsername()).collect(Collectors.toList()));
+        TestHelper.println("提取nameList", testList.stream().map(i -> i.getUsername()).collect(Collectors.toList()));
         TestHelper.println("passwordList", testList.stream().map(i -> i.getPassword()).collect(Collectors.toList()));
         // 1.一个参数时,i的括号可以省略
         // 如果只有一条有返回值的表达式x，则可以直接写i->x，可以不加{return  ;},如果是多条语句需要加{return  ;}
@@ -119,11 +114,11 @@ public class CollectionStreamTest {
 
     /*创建测试list
      *@param size 需要创建的list元素个数*/
-    private List<ListStreamTestUserPO> createTestList(int size) {
-        List<ListStreamTestUserPO> testList = new ArrayList<>(size);
+    private List<User> createTestList(int size) {
+        List<User> testList = new ArrayList<>(size);
         // 添加10条数据用以测试
         for (int i = 1; i <= size; i++) {
-            ListStreamTestUserPO insertPO = new ListStreamTestUserPO();
+            User insertPO = new User();
             insertPO.setUsername("username" + i);
             insertPO.setPassword("password" + i);
             insertPO.setAge(i);
@@ -135,16 +130,21 @@ public class CollectionStreamTest {
 
     /**
      * 2.collection.stream().filter()测试：
+     *
+     *
      * 作用：用来从已有的List中过滤元素。
      *
      * demo: 返回年龄大于等于18的用户。
+     *
+     * 【注意】
+     * filter会保留那些返回值为true的数据。
      */
     @Test
-    public void test2() {
-        List<ListStreamTestUserPO> testList = createTestList(50);
+    public void filter() {
+        List<User> testList = createTestList(50);
         TestHelper.startTest("list.stream().filter()测试");
         TestHelper.println("原来的list: ", testList);
-        List<ListStreamTestUserPO> filterList = testList.stream().filter(o -> {
+        List<User> filterList = testList.stream().filter(o -> {
             //  {}中必须有return语句
             /*1.返回true,则该元素符合要求，会被添加到结果List中*/
             if (o.getAge() >= 18)
@@ -162,18 +162,18 @@ public class CollectionStreamTest {
      * 注意：元素类需要实现equals（）和hascode()。
      */
     @Test
-    public void test3() {
+    public void distinct() {
         TestHelper.startTest("list.stream().distinct()测试");
-        List<ListStreamTestUserPO> testList = new ArrayList<>(5);
-        ListStreamTestUserPO po1 = new ListStreamTestUserPO();
+        List<User> testList = new ArrayList<>(5);
+        User po1 = new User();
         po1.setUsername("zhou");
-        ListStreamTestUserPO po2 = new ListStreamTestUserPO();
+        User po2 = new User();
         po2.setUsername("zhou");
-        ListStreamTestUserPO po3 = new ListStreamTestUserPO();
+        User po3 = new User();
         po3.setUsername("zhou");
-        ListStreamTestUserPO po4 = new ListStreamTestUserPO();
+        User po4 = new User();
         po4.setUsername("li");
-        ListStreamTestUserPO po5 = new ListStreamTestUserPO();
+        User po5 = new User();
         po5.setUsername("li");
 
         testList.add(po1);
@@ -181,7 +181,7 @@ public class CollectionStreamTest {
         testList.add(po3);
         testList.add(po4);
         testList.add(po5);
-        // distinct后的结果: [ListStreamTestUserPO{username='zhou', password='null', age=0}, ListStreamTestUserPO{username='li', password='null', age=0}]
+        // distinct后的结果: [User{username='zhou', password='null', age=0}, User{username='li', password='null', age=0}]
         TestHelper.println("distinct后的结果", testList.stream().distinct().collect(Collectors.toList()));
     }
 }

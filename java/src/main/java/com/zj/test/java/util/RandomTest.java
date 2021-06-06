@@ -42,21 +42,32 @@ public class RandomTest {
     public void nextInt() {
 
         // public int nextInt()测试过程
-        /*while (true) {
+        /*输出记录：
+        [main] - nextInt(): -1453197523
+        [main] - nextInt(): -168407976
+        [main] - nextInt(): -1254418229
+        [main] - nextInt(): -1695365434
+        [main] - nextInt(): 600649819
+        [main] - nextInt(): 707640642
+        [main] - nextInt(): 1570472555
+        [main] - nextInt(): 2136335301
+        [main] - nextInt(): 1348649068
+        [main] - nextInt(): -460592623*/
+        while (true) {
             TestHelper.println("nextInt()", random.nextInt());
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
-        while (true) {
+        /*while (true) {
             //java.lang.IllegalArgumentException: bound must be positive
             //TestHelper.println("nextInt", random.nextInt(-5));
 
             // 可产生负数
-            //TestHelper.println("nextInt(2)", random.nextInt());
+            //TestHelper.println("nextInt()", random.nextInt());
 
             // !Random.nextInt()
             // !nextInt()
@@ -68,7 +79,7 @@ public class RandomTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     /**
@@ -101,7 +112,7 @@ public class RandomTest {
      * author: 2025513
      *
      * 3.测试public double nextDouble()
-     * 等概率的返回[0,1)之间的一个double值。
+     * 与nextInt()随机返回一个int值不同，nextDouble()等概率的返回[0,1)之间的一个double值。
      *
      * 测试思路:
      *
