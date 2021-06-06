@@ -1,6 +1,9 @@
 package com.zj.question.internet;
 
-/* @author: zhoujian
+import com.zj.test.util.TestHelper;
+
+/**
+ * @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/11/28 15:41
  * @description:
@@ -46,7 +49,12 @@ public class Collection_Map {
 
     数组是：Node<K,V>[] table;
     Node<K,V>类有一个next，就是指向链表的下一个对象。
-    数组下标表示的是键对象的hash值。
+
+    hash值转下表算法：(下表最大值)&hash,源代码：
+    if ((p = tab[i = (n - 1) & hash]) == null)
+    tab[i] = newNode(hash, key, value, null);
+    注意：根据该算法，不同的hash值可转换成相同下标值。
+    链结构上的元素key是通过keyObject.equals()进行比较的。
 
     链表：
     链表则是为了解决哈希冲突而存在。
@@ -102,4 +110,8 @@ public class Collection_Map {
     7.List、Set、Map之间的区别是什么？
 
      */
+
+    public static void main(String[] args) {
+        TestHelper.println(100&20000);
+    }
 }
