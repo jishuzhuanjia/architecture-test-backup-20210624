@@ -36,10 +36,10 @@ public class TestServiceImpl1 implements TestService {
     // 并且@Autowired(required = false)也不能取消其强制性
     // 因此，如果不要求强制注入，请总是为实体类添加默认参数构造函数。
     //@Autowired(required = true)
-    public TestServiceImpl1(TestServiceImpl2 testServiceImpl2, String requireTestStr) {
+    /*public TestServiceImpl1(TestServiceImpl2 testServiceImpl2, String requireTestStr) {
         this.testServiceImpl2 = testServiceImpl2;
         this.requireTestStr = requireTestStr;
-    }
+    }*/
 
     /*
     请注意:
