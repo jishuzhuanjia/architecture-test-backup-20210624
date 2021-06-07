@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+	
+	<import resource="applicationContext-mybatis.xml"/>
+	
+	<!-- spring事务管理配置 -->
+	<import resource="applicationContext-transaction.xml"/>
+	
+	<!-- spring计划任务配置 -->
+	<import resource="applicationContext-task.xml"/>
+	
+	<!-- spring cache:ehcache -->
+	<import resource="applicationContext-ehcache.xml"/>
+	
+	<!-- 消息队列(Message Queue) -->
+	<import resource="applicationContext-activemq.xml"/>
+	
+	<!-- Shiro -->
+	<import resource="applicationContext-shiro.xml"/>
+	
+	<!-- 会扫描子包下的类，扫描带有@Service,@Component,@Repository,@Controller注解类  -->
+	<context:component-scan base-package="com.zj.service.impl"/>
+	
+	
+	
+	<!-- 开启bean相关注解扫描,默认扫描@Controller,@Service,@Component,@Repository-->
+	<context:annotation-config/> 
+	
+	<!-- 开启@Aspect注解扫描，否则此注解无效 -->
+	<aop:aspectj-autoproxy/>
+	
+</beans>

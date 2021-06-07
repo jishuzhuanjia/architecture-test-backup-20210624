@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zj.dao.TestMapper" >
+    <select id="dynamicDataSourceTest" resultType="Integer">
+    	select id from test where id in 
+    	<foreach collection="idsList" open="(" close=")" separator="," item="item">
+    	#{item}
+    	</foreach>
+    	; 
+    </select>
+    
+    <insert id="insertARow">
+    	insert into test(age) values(#{0})
+    </insert>
+    
+</mapper>

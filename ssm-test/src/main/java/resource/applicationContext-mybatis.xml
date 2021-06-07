@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+	 <!-- 配置文件 -->
+    <context:property-placeholder location="classpath:resource/*.properties"/>
+     
+    <!-- 以下配置BasicDataSource及SqLSessionFactoryBean，
+            配置方便，缺点是不能动态更改数据源，因此选择DruidDataSource(alibaba)
+	          包:commons-dbcp-1.2.2.jar-->
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />       driverClassName
+		<property name="url" value="${jdbc.url}" />						 url
+		<property name="username" value="${jdbc.username}" />    	     username
+		<property name="password" value="${jdbc.password}" />			 password
+		<property name="maxActive" value="10" />							 maxActive
+		<property name="maxIdle" value="5" />   						 maxIdle
+	</bean>
+	
+	Mybatis的工厂
+		包: mybatis-spring-1.2.2.jar
+	<bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		核心配置文件的位置
+		<property name="configLocation" value="classpath:sqlMapConfig.xml"/>
+	</bean> -->
+	
+	<!-- 阿里巴巴 DruiddDataSource  -->
+    <bean id="basicDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+    	<property name="driverClassName" value="${jdbc.driver}"/>
+    	<property name="initialSize" value="${dbcp.initialSize}"/> 
+    	<property name="minIdle" value="${dbcp.minIdle}" />
+    	<property name="maxActive" value="${dbcp.maxActive}"/>
+    	<property name="maxWait" value="${dbcp.maxWait}" />
+    	<property name="testOnBorrow" value="${dbcp.testOnBorrow}" />
+    	<property name="testOnReturn" value="${dbcp.testOnReturn}" />
+    	<!-- 此项配置为true即可，不影响性能，并且保证安全性。意义为：申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效 -->
+        <property name="testWhileIdle" value="${dbcp.testWhileIdle}" />
+        <property name="timeBetweenEvictionRunsMillis" value="${dbcp.timeBetweenEvictionRunsMillis}" />
+        <property name="minEvictableIdleTimeMillis" value="${dbcp.minEvictableIdleTimeMillis}" />
+         <property name="removeAbandoned" value="${dbcp.removeAbandoned}" />
+         <!-- 超过时间限制时间（单位秒），目前为5分钟，如果有业务处理时间超过5分钟，可以适当调整。 -->
+         <property name="removeAbandonedTimeout" value="${dbcp.removeAbandonedTimeout}" />
+         <!-- #链接回收的时候控制台打印信息，测试环境可以加上true，线上环境false。会影响性能。 -->
+        <property name="logAbandoned" value="${dbcp.logAbandoned}" />
+        <property name="validationQuery" value="${dbcp.validationQuery}" />
+        <!-- 映射慢sql -->
+         <property name="proxyFilters">
+            <list>
+                <ref bean="statfilter"/>
+                <ref bean="logFilter"/>
+                 <!--<ref bean="wall-filter"/> -->
+            </list>
+        </property>
+    </bean>
+    
+    
+     <!-- 慢SQL记录  -->
+    <bean id="statfilter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!-- 开启合并sql -->
+        <property name="mergeSql" value="true"/>
+        <!-- 开启慢查询语句,1000毫秒 -->
+        <property name="slowSqlMillis" value="200"/>
+        <property name="logSlowSql" value="true"/>
+    </bean>
+    
+    <!-- log4j.appender.druid.File=D:/druid-slow-sql.log
+   	 不管有没有发生慢查询，会首先在对应目录下创建此文件。 -->
+    <bean id="logFilter" class="com.alibaba.druid.filter.logging.Log4jFilter">
+    	<property name="dataSourceLogEnabled" value="true" />
+   	<property name="statementExecutableSqlLogEnable" value="true" />
+	</bean>
+
+    <!-- parent指明此类的父类，可以覆盖父类的属性。 -->
+    <bean id="masterDataSource" parent="basicDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${master.jdbc.url}" />
+        <property name="username" value="${master.jdbc.username}" />
+        <property name="password" value="${master.jdbc.password}" />
+        <!-- 配置初始化大小最小最大 --> 
+    </bean> 
+    
+    <bean id="slaveDataSource" parent="basicDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${slave.jdbc.url}" />
+        <property name="username" value="${master.jdbc.username}" />
+        <property name="password" value="${master.jdbc.password}" />
+        <!-- 配置初始化大小最小最大 --> 
+    </bean>
+    
+     <!-- 动态数据源(AbstractRoutingDataSource)，根据service接口上的注解来决定取哪个数据源 -->
+    <bean id="dataSource" class="resource.util.datasource.DynamicDataSouce">  
+    	<!-- 所有的备选数据源 -->
+        <property name="targetDataSources">      
+          <map key-type="java.lang.String">      
+              <!-- write or slave -->    
+              <!-- 注意： value-ref bean必须存在-->
+             <entry key="slave" value-ref="slaveDataSource"/>      
+             <!-- read or master   -->  
+             <entry key="master" value-ref="masterDataSource"/>      
+          </map>               
+        </property> 
+        <!-- 如果DynamicDataSouce返回不存在targetDataSources的值或null，则使用默认数据源 -->  
+        <property name="defaultTargetDataSource" ref="masterDataSource"/>      
+      
+    </bean>
+    
+    <!-- 动态数据库通知bean -->
+    <bean id="dynamicDataSourceAdvisor" class="resource.util.datasource.DynamicDataSourceAdvisor"/>
+    
+    <!-- 动态数据库切面配置：切面=切点+通知 -->
+    <aop:config>
+        <!-- ref配置切面的通知 -->
+    	<aop:aspect id="dataSourceAspect" ref="dynamicDataSourceAdvisor">
+    		<aop:pointcut  id="dynamicPointCut" expression="execution(* com.zj.service.impl..*.*(..)) "/>
+    		<aop:before pointcut-ref="dynamicPointCut" method="before" />
+    	</aop:aspect>
+    
+    </aop:config>
+    
+    <!-- mybatis SqlSessionFactoryBean：id可随意 -->
+	<bean id="sqlsessionfactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 提取设置单独到一个文件 -->
+		 <property name="configLocation" value="classpath:resource/mybatisConfig.xml"/>
+		 <!-- mapper文件 -->
+		<property name="mapperLocations" value="classpath:com/zj/xml/*.xml"/> 
+	</bean>
+	
+    <!-- Mapper扫描：.java扫描 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 注意不要用ref  -->
+		<property name="sqlSessionFactoryBeanName" value="sqlsessionfactory"/>
+		<property name="basePackage" value="com.zj.dao"/>
+	</bean>
+	
+	<!-- 还需要配置druid aop以监控数据库状况 -->
+	   <!-- 配置druid监控spring jdbc -->  
+    <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor" />  
+   
+    <bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut" scope="prototype">  
+        <property name="patterns">  
+            <list>  
+                <value>com.zj.service.*</value>  
+                <value>com.zj.dao.*</value>  
+            </list>  
+        </property>  
+    </bean>  
+      
+    <aop:config>  
+    	<!-- 通知配置 -->
+        <aop:advisor advice-ref="druid-stat-interceptor" pointcut-ref="druid-stat-pointcut" />  
+    </aop:config>
+    
+</beans>

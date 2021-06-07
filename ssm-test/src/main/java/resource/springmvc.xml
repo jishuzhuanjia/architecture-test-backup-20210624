@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:util="http://www.springframework.org/schema/util"  
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:task="http://www.springframework.org/schema/task"  
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+   	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+       http://www.springframework.org/schema/util 
+       http://www.springframework.org/schema/util/spring-util-3.0.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/mvc 
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd 
+       http://www.springframework.org/schema/task
+	   http://www.springframework.org/schema/task/spring-task-4.0.xsd"> <!-- MVC -->
+
+	<!-- 配置自动扫描包 :可以配置多个包，用,连接 当spring与mvc分开加载时，mvc在扫描到@Service等注解时，可能会重新实例化实例，导致bean失效。 
+		注意use-default-filters="false"这个属性：默认为true，会扫描到@Service与@Reposity等，所以配置成false，只扫描白名单中的bean注解。如果不更改此属性，需要添加exclude黑名单 
+		context:component-scan作用： package对应的路径或者该路径的子包下面的java文件，如果扫描到文件中带有@Service,@Component,@Repository,@Controller等这些注解的类，则把这些类注册为bean 
+		注：在注解后加上例如@Component(value=”abc”)时，注册的这个类的bean的id就是adc. -->
+	<context:component-scan
+		base-package="ssm.test,cn.xhm,test.controller"
+		use-default-filters="false">
+		<!-- 就相当于只实例化@Controller注解的类 -->
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+
+	<!-- 配置注解式处理器映射器，DefaultAnnotationHandlerMapping，AnnotationMethodHandlerAdapter被遗弃 -->
+	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/> 
+		配置处理器适配器 <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/> -->
+
+	<!-- 注解驱动：快速配置映射器和处理器 -->
+	<!-- 会自动注册RequestMappingHandlerMapping与RequestMappingHandlerAdapter两个Bean,这是Spring 
+		MVC为@Controller分发请求所必需的，并且提供了数据绑定支持 -->
+	<mvc:annotation-driven
+		conversion-service="formattingConversionServiceFactoryBean" />
+
+	<!-- 在springMVC-servlet.xml中配置<mvc:default-servlet-handler />后， 会在Spring 
+		MVC上下文中定义一个org.springframework.web.servlet.resource.DefaultServletHttpRequestHandler， 
+		它会像一个检查员，对进入DispatcherServlet的URL进行筛查，如果发现是静态资源的请求，就将该请求转由Web应用服务器默认的Servlet处理， 
+		如果不是静态资源的请求，才由DispatcherServlet继续处理。 一般Web应用服务器默认的Servlet名称是"default"，因此DefaultServletHttpRequestHandler可以找到它。 
+		如果你所有的Web应用服务器的默认Servlet名称不是"default"，则需要通过default-servlet-name属性显示指定： <mvc:default-servlet-handler 
+		default-servlet-name="所使用的Web服务器默认使用的Servlet名称" /> -->
+
+	<!-- 注：添加此配置，静态资源已经可以正常访问了。 -->
+	<mvc:default-servlet-handler />
+
+	<!-- 格式转换服务工厂bean -->
+	<bean id="formattingConversionServiceFactoryBean"
+		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+		<!-- 注意： 是converters 而不是convertors -->
+		<property name="converters">
+			<list>
+				<!-- 如果添加转换器于此处添加 -->
+				<!-- <bean class="..."></bean> -->
+			</list>
+		</property>
+	</bean>
+
+	<!-- 自定义异常处理页面：手动实现HandlerExceptionResolver，不需要为bean指定id 
+	使用异常映射处理器代替，更加快捷，易于管理。
+	-->
+	<bean class="ssm.test.controller.MyHandlerExceptionResolver" />
+
+	<!-- 映射异常处理器，不需要定义处理类 ，更方便快捷，便于管理-->
+	<bean id="simpleMappingExceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<!-- 注意：也会受到视图名解析器的影响：/SsmDevProject/html/html/test-exceptionResolver/ArithmeticException.html.html -->
+				<prop key="java.lang.ArithmeticException">test-exceptionResolver/ArithmeticException</prop>
+			</props>
+		</property>
+
+	</bean>
+
+	<!-- 多部文件上传处理器 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 配置上传文件总大小，单位byte,我这里设置了5M -->
+		<property name="maxUploadSize" value="5242880" />
+	</bean>
+
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 拦截所有请求是/** 而不是/*, /*无效 注意： 如果要为指定的路径使用拦截器，应填写uri(不需要项目名部分),如下：注意，如果有.action后缀不能省略后缀.action -->
+			<mvc:mapping path="/ssmtest/controllerTest.action" />
+			<bean class="ssm.test.controller.MyInterceptor" />
+		</mvc:interceptor>
+
+		<!-- 配置国际化拦截器 -->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean
+				class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+				<!-- 拦截的属性名 -->
+				<property name="paramName" value="lang" />
+			</bean>
+		</mvc:interceptor>
+
+	</mvc:interceptors>
+
+	<!-- 国际化消息源: 必须id为messageSource 实现类： StaticMessageSource DelegatingMessageSource 
+		ResourceBundleMessageSource ReloadableResourceBundleMessageSource -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<!-- 消息源位置：basenames -->
+		<property name="basenames"
+			value="classpath:resource/i18n/msg" />
+		<!-- 热加载间隔：cacheSeconds -->
+		<property name="cacheSeconds" value="60" />
+	</bean>
+
+	<!-- 国际化处理器: 必须id为localeResolver 实现类: FixedLocaleResolver AccpetHeaderLocaleResolver 
+		CookieLocaleResolver - cookieName,cookieMaxAge,defaultLocale SessionLocaleResolver 
+		- defaultLocale -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en_US" />
+	</bean>
+
+	<!-- 话题讨论：静态资源访问：解决/*情况下静态资源无法访问的问题 不仅是静态资源，其实jsp也无法访问 -->
+	<!-- <mvc:default-servlet-handler/> -->
+
+	<!-- 注意location必须以/结尾 -->
+	<!-- <mvc:resources location="/html/" mapping="/html/**"/> -->
+
+	<!-- <mvc:resources location="/jsp/" mapping="/jsp/**"/> -->
+
+	<!-- 此时虽然已经解决了静态资源的直接访问，但是jsp文件和主页就成了问题 -->
+	<!-- 解决方式就是对请求uri进行判断，转发/jsp/index.jsp -->
+
+	<!-- 模型视图名称解析 
+	注意：prefix会直接和视图文件名拼接，因此prefix如果是一个文件夹，需要以/结尾，否则prefix应该是视图文件名的一部分。
+	当prefix="html" suffix=".html" return "success";结果如下：
+	/SsmDevProject/ssmtest/htmlsuccess.html
+	
+	注：prefix是否以/开头都可以，如果没有，则自动添加。
+	-->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/html/" />
+		<property name="suffix" value=".html" />
+		<!-- spring默认内部资源解析类 -->
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.InternalResourceView" />
+	</bean>
+	
+	<!-- spring注解 - 开启定时任务 
+	1.Timer比较单一，这个类允许你调度一个java.util.TimerTask任务。使用这种方式可以让你的程序按照某一个频度执行，但不能在指定时间运行，一般用的较少。 
+	2.Quartz是一个功能比较强大的的调度器，可以让你的程序在指定时间执行，也可以按照某一个频度执行，配置起来有些复杂。 
+	3.Spring3.0以后自带的task，可以将它看成一个轻量级的Quartz，而且使用起来比Quartz简单许多。
+	
+	这里不详细介绍...如果有此类需求可百度了解。
+	-->  
+    <task:annotation-driven /> 
+    
+   <!-- 使用@Resource、@PostConstruct、@PreDestroy,@Autowired需要事先声明相应的bean，如：
+    AutowiredAnnotationBeanPostProcessor
+            这样并不优雅，即使用<context:annotation- config/>隐式地向 Spring容器注册
+    AutowiredAnnotationBeanPostProcessor、RequiredAnnotationBeanPostProcessor、
+ 	CommonAnnotationBeanPostProcessor以及PersistenceAnnotationBeanPostProcessor
+  	这4个BeanPostProcessor。
+    -->
+    <context:annotation-config />  
+    
+    <!-- 避免IE执行AJAX时，返回JSON出现下载文件 
+    <bean id="mappingJacksonHttpMessageConverter"
+          class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json; charset=utf-8</value>
+            </list>
+        </property>
+    </bean> -->
+    
+    <!-- 必须加上以下两个bean，且必须放在springmvc配置文件中，否则shiro不起作用 -->
+   <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor"/>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+</beans>
+
+         
+        

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:aop="http://www.springframework.org/schema/aop"   
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
+	
+	<!-- 如果文件不存在，会报错，可以使用通配符* -->
+	<context:property-placeholder 
+		location="classpath:resource/*.properties" />  
+		
+	<context:component-scan
+		base-package="test.frame.spring"></context:component-scan>
+	
+	<!-- 1.通知advisor Bean -->
+	<bean id="myAdvice" class="test.frame.spring.aop.MyAdvice">
+	</bean>
+	
+	<aop:config>
+		<!-- 2.切入点 -->
+		<!-- 注意：只有public和缺省(默认)的非静态方法才会被AOP处理 -->
+		<!-- Spring execution表达式 -->
+		<!-- execution(* ...) - 会处理public和缺省权限修饰符的所有方法-->
+		<!-- execution(void ...) ... - 只会处理缺省,且返回类型为void方法 -->
+		<!-- execution(public ...)  - 只处理public方法,不处理缺省-->
+		<!-- <aop:pointcut id="pc" expression="execution(* test.frame.spring.aop.MyCutPoints.methodWithParam(..))"/> -->
+		<!-- 定义切点参数类型 -->
+		<!-- 参数类型定义要求: 
+		1.String,int,float,double,boolean,Integer...Boolean包装类型可直接书写,也可以给定包路径,都是可以的。
+		2.Integer不能捕获int的方法,只能捕获Integer,其他包装类类似。
+		 -->
+		<!-- <aop:pointcut id="pc" expression="execution(* test.frame.spring.aop.MyCutPoints.methodWithParam(String,boolean))"/>
+		<aop:pointcut id="pc" expression="execution(* test.frame.spring.aop.MyCutPoints.methodWithParam(String,double))"/> -->
+		<!-- <aop:pointcut id="pc" expression="execution(* test.frame.spring.aop.MyCutPoints.methodWithParam(java.lang.String,boolean))"/> -->
+		<!-- <aop:pointcut id="pc" expression="execution(* test.frame.spring.aop.MyCutPoints.methodWithParam(java.lang.String,boolean))"/> -->
+		<!-- <aop:pointcut id="pc" expression="execution(* test.frame.spring.aop.MyCutPoints.methodWithParam(java.lang.String,Integer))"/> -->
+		<!-- 拦截第一个参数为String的所有方法,包括只有一个String参数的方法-->
+		<aop:pointcut id="pc" expression="execution(* test.frame.spring.aop.MyCutPoints..methodWithParam(String,..))"/>
+		<!-- 3.切面：切点+ 通知 ,这种配置方式，通知方法定义更加灵活-->
+		<aop:aspect ref="myAdvice">
+			<!-- 4.通知执行顺序：
+			4.1.before
+			4.2.round-before
+			4.3.{des method code...}
+			4.4.afterThrowing: 如果发生异常: 打印异常栈
+			4.5.round-after
+			4.6.afterReturing 
+			4.7.after
+			发生异常时：around-before和around-after，after都会执行,after-throwing会在around-after之前调用
+			
+			可以按照如下顺序进行配置：
+			1.after-throwing：通知方法在目标方法执行后执行
+			2.before
+			3.around
+			4.after-returning
+			5.after -->
+			<aop:after-throwing method="afterThrowing" pointcut-ref="pc" />
+			<aop:before method="before" pointcut-ref="pc" />
+			<aop:around method="around" pointcut-ref="pc" />
+			<aop:after-returning method="afterReturning" pointcut-ref="pc" />
+			<aop:after method="after" pointcut-ref="pc" />
+		</aop:aspect>
+		
+		<!-- aop:advisor也有切点和通知，但是通知类需要实现Advice接口 -->
+		<!-- < aop:advisor>大多用于事务管理。
+		< aop:aspect>大多用于日志，缓存 -->
+		<!-- <aop:advisor advice-ref="sleepHelper" pointcut-ref="sleepPointcut" pointcut="" /> -->
+	</aop:config>
+</beans>

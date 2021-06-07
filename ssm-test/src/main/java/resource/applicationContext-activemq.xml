@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task" 
+    xmlns:amq="http://activemq.apache.org/schema/core" 
+    xmlns:jms="http://www.springframework.org/schema/jms" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd  
+	http://www.springframework.org/schema/jms 
+    http://www.springframework.org/schema/jms/spring-jms-4.0.xsd
+    http://activemq.apache.org/schema/core
+    http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd">
+	
+	<!-- 消息队列(ActiveMQ)配置文件 -->
+	
+	 <!-- 首先添加amq和jms限制文件 -->
+	 
+	 <!-- 1.ActiveMQ连接工厂bean
+	 ActiveMQ原生连接工厂，相当于代码：
+	 ConnectionFacatory connectionFactory = new ActiveMQConnectionFactory();
+	  相当于xml：
+	 <bean id="amqConnectionFactory" class="org.apache.activemq.spring.ActiveMQConnectionFactory">
+    	<property name = "brokerURL" value="tcp://localhost:8161" />
+    	<property name="userName" value="admin"/>
+    	<property name="password" value="admin"/>
+	 </bean>
+	 
+	 java连接ActiveMQ时报错：Unknown data type: 47
+	   注意：默认端口是61616，,8161是管理端口。 -->
+	 <amq:connectionFactory id="amqConnectionFactory" brokerURL="tcp://localhost:61616" 
+	 	userName="admin" password="admin"/>
+	 	
+	 <!-- 2.Spring Caching连接工厂 -->
+	 <!-- 用于管理消息队列中的连接，提高连接效率 -->
+	 <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+	 	<!-- 目标ConnectionFactory对应可以产生JMS Connection的ConnectionFactory -->
+	 	<property name="targetConnectionFactory" ref="amqConnectionFactory"/>
+	 	<!-- session(会话)缓存数量 -->
+	 	<property name="sessionCacheSize" value="100"/>
+	 </bean>
+	 
+	 <!-- 3.配置消息发送模板 -->
+	 <!-- 实例用于发送消息 -->
+	 <!-- 3.1.P2P模型发送模板 -->
+	 <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+	 	<!-- 注入连接工厂 -->
+	 	<property name="connectionFactory" ref="connectionFactory"/>
+	 	<!-- 1.是否为pub/sub模型 
+	 	false - queue
+	 	true - topic -->
+	 	<property name="pubSubDomain" value="false"/>
+	 	
+	 	<!-- 1.配置默认Destination -->
+	 	<!-- jmsQueueTemplate.send(MessageCreator)默认发送的queue实例 -->
+	 	<!-- <property name="defaultDestination" ref="queueDestination"/> -->
+	 	<!-- 默认发送queue队列名 -->
+	 	<property name="defaultDestinationName" value="135.queue"/>
+	 	
+	 	<!-- 错误：
+	 	setDeliveryDelay requires JMS 2.0
+	 	默认-1 -->
+	 	<!-- <property name="deliveryDelay" value="5000"></property> -->
+	 	
+	 	<!-- 2.设置持久化，生产环境设置
+	 	只有当explicitQosEnabled==true时奏效
+	 	NON_PERSISTENT = 1;
+    	PERSISTENT = 2;  默认-->
+	 	<!-- <property name="deliveryMode" value="2"/> -->
+	 	<!-- 等效于deliveryMode，直接调用setter(没有deliveryPersistent属性，但是也可以调用setter)
+	 	  	 true：2 
+	 		 false：1 -->
+	 	<property name="deliveryPersistent" value="true"/>
+	 	
+	 	<!--3.消息的生存期 ，单位毫秒，默认0，无限，负数也表示无限存活
+	 		只有当explicitQosEnabled==true时奏效-->
+	 	<property name="timeToLive" value="0"/>
+	 	
+	 	<!-- 4.OQS控制开关
+	 		如果想要deliveryMode,priority,tomeToLive属性起作用，需要设置为true -->
+	 	<property name="explicitQosEnabled" value="true"/>
+	 	
+	 	<!-- 5.默认0- 没有超时的阻塞接收。 
+	 		 作用还未知-->
+	 	<!-- <property name="receiveTimeout" value="1000"></property> -->
+	 	
+	 	</bean>
+	 
+	 <!--3.2.PUB/SUB模型发送模板  -->
+	 <bean id="jmsTopicTemplate" class="org.springframework.jms.core.JmsTemplate">
+	 	<!-- 注入连接工厂 -->
+	 	<constructor-arg ref="connectionFactory"/>
+	 	<property name="pubSubDomain" value="true"/>
+	 </bean>
+	 
+	   <!-- 4.定义消息队列 Queue Destination 
+	   		不能发送PUB/SUB信息
+	   -->
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+        <!-- 目标queue Id -->
+        <constructor-arg>
+            <value>135.queue</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="topicDestination" class="org.apache.activemq.command.ActiveMQTopic">
+        <!-- 目标queue Id -->
+        <constructor-arg>
+            <value>135.topic</value>
+        </constructor-arg>
+    </bean>
+	 
+	 <!-- 5.配置监听器 -->
+	 <!-- 5.1.P2P - queue监听器
+	 	  每个监听器都可以处理队列中的消息(空闲的处理器)，但是每个消息只能被消费一次 -->
+	<jms:listener-container destination-type="queue" container-type="default"
+	 	connection-factory="connectionFactory" acknowledge="auto">
+	 	<!-- <jms:listener destination="135.queue" ref="myTestQueueListener2" method="onMessage"/> -->
+	 	<!-- <jms:listener destination="135.queue" ref="myTestQueueListener" method="onMessage"/> -->
+	 </jms:listener-container>
+	 
+	 <!-- 5.2.PUB/SUB - topic监听器
+		       配置所有topic监听器
+		      多个监听器可监听同1topic事件，事件可以被多次消费 -->
+	 <jms:listener-container destination-type="topic" container-type="default"
+	 	connection-factory="connectionFactory" acknowledge="auto">
+	 	<!-- <jms:listener destination="135.topic" ref="myTestTopicListener" method="onMessage"/>
+	 	<jms:listener destination="135.topic" ref="myTestTopicListener2" method="onMessage"/> -->
+	 </jms:listener-container>
+	 
+	 <!-- 6.监听器实例 -->
+	 <!-- <bean id="myTestQueueListener" class="test.activemq.MyTestQueueListener"/>
+	 <bean id="myTestQueueListener2" class="test.activemq.MyTestQueueListener2"/>
+	 <bean id="myTestTopicListener" class="test.activemq.MyTestTopicListener"/>
+	 <bean id="myTestTopicListener2" class="test.activemq.MyTestTopicListener2"/> -->
+	 
+	 <!-- 7.开启注解驱动-->
+	 <jms:annotation-driven/>
+	 
+	 <!-- 管理queue监听器工厂bean，名必须为jmsListenerContainerFactory -->
+	 <bean id="jmsListenerContainerFactory" class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+        <property name="connectionFactory" ref="connectionFactory"/>
+    </bean>
+    
+    <bean id="jmsListenerContainerTopicFactory"
+		class="org.springframework.jms.config.DefaultJmsListenerContainerFactory">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<!-- pub/sub模型（发布/订阅） -->
+		<property name="pubSubDomain" value="true" />
+	</bean>
+    
+    <!-- applicationContext模块开发时，此句注释-->
+    <context:annotation-config/>
+    <context:component-scan base-package="test.activemq"/>
+    
+    <!-- 消息处理器：不必须配置 -->
+    <bean id="jmsMessageConverter" class="org.springframework.jms.support.converter.SimpleMessageConverter" />
+</beans>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" version="2.5">
+	<display-name>SsmDevProject</display-name>
+	
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:resource/applicationContext.xml</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	
+	<!-- 解决post请求和响应body中文乱码：
+	if (this.encoding != null && (this.forceEncoding || request.getCharacterEncoding() == null)) {
+			request.setCharacterEncoding(this.encoding);
+			if (this.forceEncoding) {
+				response.setCharacterEncoding(this.encoding);
+			}
+		}
+	 -->
+	<filter>
+		<filter-name>encode</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>encode</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- shiro-->
+	<!-- <listener>
+		<listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+	</listener> -->
+	
+	<filter>
+		<filter-name>shiroFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>shiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<servlet>
+		<servlet-name>springmvc</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:resource/springmvc.xml</param-value>
+		</init-param>
+	</servlet>
+	
+	<!-- 
+	实际开发中url-parttern：/
+	注意：*.jsp不会被拦截，会默认被JspServlet处理。
+	因此可以将首页写成jsp文件，但是需要注意的是要将index.jsp写在第一个-推荐(或者其他的首页文件不存在)
+	但是这样不会经过Controller/Servlet不容易绑定数据
+	
+	但是诸如html.png,css等静态资源,虽然请求被mvc拦截了，但是springmvc默认是不会处理的，所以只会返回404，
+	如果需要正常访问静态资源，需要配置<mvc:default-servlet-handler/>
+	 -->
+	<servlet-mapping>
+		<servlet-name>springmvc</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- 使得springmvc下静态资源能够正常访问，其他资源如jpg等需要像这样添加 -->
+	<!-- <servlet-mapping>
+		<servlet-name>default</servlet-name>
+	    不正确的写法，需要写成两个servlet-mapping
+		<url-pattern>*.html,*.png</url-pattern>
+		<url-pattern>*.html</url-pattern>
+	</servlet-mapping> -->
+	
+	<!-- <servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern></url-pattern>
+	</servlet-mapping> -->
+</web-app>

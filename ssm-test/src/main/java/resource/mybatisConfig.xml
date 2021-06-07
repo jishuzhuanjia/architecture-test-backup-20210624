@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+ <settings>
+ 	   <!-- 延迟加载，默认值false,当调用实体类实例相关getter时，延迟加载开始，如assosiate的select,
+ 	          如果设为‘false’，则所有相关联的属性都会被初始化加载。 -->
+       <setting name="lazyLoadingEnabled" value="false" />
+       
+ 		<setting name="logImpl" value="STDOUT_LOGGING" />
+ 		
+ 		<!-- 在null时也调用 setter,适应于返回Map,3.2版本以上可用 -->
+ 		<setting name="callSettersOnNulls" value="true"/>
+ 		
+ 		 <!-- 二级缓存开启 -->
+ 		 <!-- 开启缓存,默认就是开启的,2层开关,需要在Mapper文件中也指定 cache 标签才会真正使用缓存 -->
+ 		 <setting name="cacheEnabled" value="true"/>
+ 		 
+ 		 <!-- 当设置为‘true’的时候，懒加载的对象可能被任何懒属性全部加载。否则，每个属性都按需加载。 -->
+ 		 <!-- 侵略性 lazy loading 开关, 默认为true, 这个属性比较搞笑,
+ 		 如果为true则当你访问任何一个属性都会加载所有的其他lazy load属性,即使你根本没有调用哪个lazy load属性,
+ 		 说白了就是aggressiveLazyLoading=true,则lazy load等于没用,所以要使用lazy load还是将其设为false -->
+        <setting name="aggressiveLazyLoading" value="true"/>
+</settings>
+	<plugins>
+		<!-- 分页插件，当使用逆向工程时，我们一般不更改mapper文件，而是使用插件
+		插件作用的位置是Executor执行器与mappedeStatement之间
+		在sql语句查询之前，添加 PageHelper.startPage(1, 10);
+		第一个参数是页数，第二个参数是每页返回的记录个数
+		-->
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!--com.github.pagehelper.dialect.helper.MySqlDialect.class  -->
+			<property name="helperDialect" value="mysql"/>
+		</plugin>
+	</plugins>
+	
+</configuration>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+	<description>Shiro安全框架配置文件</description>
+
+	<!-- rememberMeManager管理器，写cookie，取出cookie生成用户信息 -->
+	<bean id="rememberMeManager"
+		class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+		<property name="cookie" ref="rememberMeCookie" />
+	</bean>
+
+	<!-- 记住我cookie，有此Cookie可通过@RequiresUser权限控制，默认HttpOnly加密传输 -->
+	<!-- 实际的认证由sid Cookie生命周期和服务器session控制 -->
+	
+	<!-- 默认false，不保存Cookie到本地 -->
+	<!-- rememberMe=deleteMe; Path=/SsmDevProject; Max-Age=0; Expires=Fri, 24-Jan-2020 
+		03:32:50 GMT -->
+
+	<!-- 如果token.setRememberMe(true) 服务器返回Cookie并保存 -->
+	<!-- Set-Cookie:rememberMe=deleteMe; Path=/SsmDevProject; Max-Age=0; Expires=Fri, 
+		24-Jan-2020 04:24:54 GMT Set-Cookie:rememberMe=FUT++bPZ8SEZz6n7EZ3fW6L1QK/c29zT1irtwHn+um4WNZpU7yuSh9uYABUGXH10Wk8Z1zMLgOpFzFwJiceyjyH0Xcxx/1WpYfumBdw9kMh8ue/YOTqcL0DosUFxmOO1pQcSO/U3jY+/jGe4TBA+2nXCsXnBxzNSJFR7SG5P4MC5EuNcWJ49grACnREBlukgyxN9n64CEaGpMTd1uF9SWKXLwC66c2Dgp09cjz8qB3A/pCwoTN0tbnqpq0TKcDIHxRdIU/elNRjtFJc6hUv5qwIxZklZGWSAfZq+2piPTOVZxCaaLDLpT4HTq6+v5QBsphuGOJ8Y6bNY+al/ieu0IY0AzLi7KNnaxxsuOEtC6H6hbvgevJvB4nGEufRrxKSWAcuxzsI6ad2qIMYz2u9SQDDICq529LGeRjcgFyO3OkEqXe8e7fjH4EDhbRS/0pvMzjP3qsL4jeaBSpZ2Y/uS/0Xy++G29V8qZ39maf8tRU3zF8YcB1W+VvJP/pUIs0Pv; 
+		Path=/SsmDevProject; Max-Age=2592000; Expires=Mon, 24-Feb-2020 04:24:54 GMT; 
+		HttpOnly -->
+	<bean id="rememberMeCookie"
+		class="org.apache.shiro.web.servlet.SimpleCookie">
+		<!-- rememberMe是cookie的名字 -->
+		<constructor-arg value="rememberMe" />
+		<!-- 记住我cookie生效时间30天，单位秒 -->
+		<property name="maxAge" value="2592000" />
+	</bean>
+
+	<bean id="shiroFilter"
+		class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<!-- authc过滤器首先判断当前用户是否通过认证：
+			1.已通过验证，不会跳转到loginUrl，目标页面直接返回。
+			2.未通过验证，跳转到loginUrl完成认证，完成认证后不会自动跳转到目标页面，应该在loginUrl中完成目标页面的跳转。
+		-->
+		<property name="loginUrl" value="/ssmtest/testshiro" />
+		<!-- 请求被authc拦截，如果状态未登录，就会被跳到登录页面，登录成功后，会继续原请求页面，除非原请求就是successurl，才去successurl -->
+		<!-- 注意：loginUrl不应该返回视图，返回类型应该为void，否则不能跳转到目标url -->
+		<property name="successUrl" value="/html/success.html"/>
+		<!-- 无验证权限跳转，不采用此方式，统一使用异常处理 -->
+		<!-- <property name="unauthorizedUrl" value="success.jsp" /> -->
+		<property name="filters">
+			<map>
+				<!-- shiro有几种默认的拦截器，authc,anno,roles,user等 authc就是FormAuthenticationFilter的实例 -->
+				<entry key="authc" value-ref="formAuthenticationFilter" />
+				<!-- 不需要配置role/user权限过滤器，因为相关的权限注解会帮我们验证权限 -->
+				
+			</map>
+		</property>
+		
+		<!-- 哪些路径会被拦截器拦截 -->
+		<property name="filterChainDefinitions">
+			<!-- 对所有需要进行身份认证的url进行配置,并进行登录失败异常处理 -->
+			<value>
+				/login/**=anon
+				/ssmtest/** = authc
+				/person/** = authc
+			</value>
+		</property>
+	</bean>
+
+	<!-- 会话ID生成器 -->
+	<bean id="sessionIdGenerator"
+		class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator" />
+	<!-- 会话Cookie模板 -->
+	<bean id="sessionIdCookie"
+		class="org.apache.shiro.web.servlet.SimpleCookie">
+		<!-- Shiro存储session会话id Cookie -->
+		<!-- Set-Cookie:sid=b7c5f1bf-bd4b-4cd5-99fe-e18194a66f35; Path=/SsmDevProject; 
+			Max-Age=1800000; Expires=Fri, 14-Feb-2020 23:32:50 GMT; HttpOnly -->
+		<constructor-arg value="sid" />
+		<!-- 加密传输 -->
+		<property name="httpOnly" value="true" />
+		<!-- 单位毫秒，30分，这意味着三十分钟免验证 -->
+		<property name="maxAge" value="1800000" />
+	</bean>
+	<!-- 会话DAO -->
+	<bean id="sessionDAO"
+		class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+		<property name="activeSessionsCacheName"
+			value="shiro-activeSessionCache" />
+		<property name="sessionIdGenerator" ref="sessionIdGenerator" />
+	</bean>
+	<bean id="sessionValidationScheduler"
+		class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+		<property name="sessionValidationInterval" value="1800000" />
+		<property name="sessionManager" ref="sessionManager" />
+	</bean>
+	<!-- 会话管理器 -->
+	<bean id="sessionManager"
+		class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+		<property name="globalSessionTimeout" value="1800000" />
+		<property name="deleteInvalidSessions" value="true" />
+		<property name="sessionValidationSchedulerEnabled"
+			value="true" />
+		<property name="sessionValidationScheduler"
+			ref="sessionValidationScheduler" />
+		<property name="sessionDAO" ref="sessionDAO" />
+		<property name="sessionIdCookieEnabled" value="true" />
+		<property name="sessionIdCookie" ref="sessionIdCookie" />
+	</bean>
+	
+	<bean id="formAuthenticationFilter"
+		class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
+		<!-- usernameParam,passwordParam作用未知 -->
+		<property name="usernameParam" value="username" />
+		<property name="passwordParam" value="password" />
+		<property name="rememberMeParam" value="rememberMe" />
+	</bean>
+
+	<bean id="securityManager"
+		class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- Single realm app. If you have multiple realms, use the 'realms' property 
+			instead. -->
+		<property name="realm" ref="myShiroRealm" />
+		<property name="sessionManager" ref="sessionManager" />
+		<!-- <property name="cacheManager" ref="cacheManager"/> -->
+		<!-- 记住我 -->
+		<property name="rememberMeManager" ref="rememberMeManager" />
+	</bean>
+	<bean id="lifecycleBeanPostProcessor"
+		class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<bean id="myShiroRealm" class="test.shiro.realm.UserRealm">
+		<!-- <property name="userservice" ref="userservice"/> -->
+		<property name="cachingEnabled" value="true" />
+		<property name="authenticationCachingEnabled" value="true" />
+		<property name="authenticationCacheName"
+			value="authenticationCache" />
+		<property name="authorizationCachingEnabled" value="true" />
+		<property name="authorizationCacheName"
+			value="authorizationCache" />
+			
+		<!-- 加密-shiro加密代码实现：
+		String hashAlgorithmName = "MD5";
+        String credentials = "123456";
+        int hashIterations = 1024;
+        Object obj = new SimpleHash(hashAlgorithmName, credentials, null, hashIterations);
+        System.out.println(obj);
+		-->
+		<!-- 凭证匹配器，用于加密
+		数据库中密码应该是加密1024次的结果，而进行登录认证时用户密码是用户输入的密码明文。
+		MD5加密不可逆
+		 -->
+		<property name="credentialsMatcher">
+			<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+				<property name="hashAlgorithmName" value="MD5"/>
+				<!-- 加密次数 -->
+				<property name="hashIterations" value="1024"/>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 开启Shiro注解 -->
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+</beans>

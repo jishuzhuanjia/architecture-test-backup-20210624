@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd"> 
+    
+   	<!--  配置自动扫描包 -->
+   	<context:component-scan base-package="ssm.test"/>
+   	
+   	<!-- 配置注解式处理器映射器，DefaultAnnotationHandlerMapping被遗弃 -->
+   	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+   	
+   	配置处理器适配器
+   	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/> -->
+   	
+   	<!-- 注解驱动：快速配置映射器和处理器 -->
+   	<mvc:annotation-driven conversion-service="formattingConversionServiceFactoryBean"/>
+   	
+   	<!-- 格式转换工厂bean -->
+   	<bean id="formattingConversionServiceFactoryBean" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+   		<!-- 注意： 是converters 而不是convertors -->
+   		<property name="converters">
+   			<list>
+   				<!-- 如果添加转换器于此处添加 -->
+   				<!-- <bean class="..."></bean> -->
+   			</list>
+   		</property>
+   	</bean>
+   	
+   	<!-- 自定义异常处理页面：手动实现HandlerExceptionResolver，不需要为bean指定id -->
+   	<bean class="ssm.test.controller.MyHandlerExceptionResolver"/>
+   	
+   	<!-- 多部文件上传处理器 -->
+   	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+   		<!-- 配置上传文件总大小，单位byte,我这里设置了5M -->
+   		<property name="maxUploadSize" value="5242880"/>
+   	</bean>
+   	
+   	<!--  拦截器 -->
+   	<mvc:interceptors>
+   		<mvc:interceptor>
+   			<!-- 拦截所有请求是/** 而不是/*, /*无效 
+   			注意： 如果要为指定的路径使用拦截器，应填写uri,如下：注意，如果有.action后缀不能省略后缀.action
+   			-->
+   			<mvc:mapping path="/ssmtest/controllerTest.action"/>  
+   			<bean class="ssm.test.controller.MyInterceptor"/>
+ 		</mvc:interceptor> 
+ 		
+ 		<!-- 国际化拦截器 -->
+ 		<mvc:interceptor>
+ 			<mvc:mapping path="/**"/>
+ 			<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+ 				<!-- 拦截的属性名 -->
+ 				<property name="paramName" value="lang"/>
+ 			</bean>
+ 		</mvc:interceptor>
+ 		
+   	</mvc:interceptors>
+   	
+   	<!-- 国际化消息源: 必须id为messageSource
+   	实现类：
+   	StaticMessageSource
+   	DelegatingMessageSource
+   	ResourceBundleMessageSource
+   	ReloableResourceBundleMessageSource
+   	 -->
+   	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+   		<!-- 消息源位置 -->
+   		<property name="basenames" value="classpath:resource/i18n/msg"/>
+   		<property name="cacheSeconds" value="60"/>
+   	</bean>
+   	
+   	<!-- 国际化处理器: 必须id为localeResolver
+   	实现类:
+   	AccpetHeaderLocaleResolver
+   	FixedLocaleResolver
+   	CookieLocaleResolver - cookieName,cookieMaxAge,defaultLocale
+   	SessionLocaleResolver - defaultLocale
+   	-->
+   	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+   		<property name="defaultLocale" value="en_US"/>
+   	</bean>
+    
+</beans>
+
+         
+        

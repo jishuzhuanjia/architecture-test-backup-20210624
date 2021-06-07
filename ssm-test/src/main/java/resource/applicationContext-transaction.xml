@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd
+    http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-4.0.xsd
+    http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+	
+	<!-- spring事务管理器 ,必须是这个id -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- 事务管理器通知 -->
+	<tx:advice id="transactionManagerAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+		
+			<!-- 配置通知匹配的方法名 -->
+			<!-- propagation可选值，7种
+			REQUIRED：支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。 
+ 			SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行。 
+ 			MANDATORY：支持当前事务，如果当前没有事务，就抛出异常。 
+ 			REQUIRES_NEW：新建事务，如果当前存在事务，把当前事务挂起。 
+			NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。 
+			NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。 
+			NESTED：支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务 -->
+
+			<!--  如果不添加rollbackFor等属性，Spring碰到Unchecked Exceptions都会回滚，不仅是RuntimeException，也包括Error。 -->
+			<!-- checked(Exception基类) unchecked(RuntimeException基类) -->
+			<!-- 支持以下写法
+			tx:method name="*" rollback-for="com.cn.untils.exception.***Exception"
+			 -->
+			<tx:method name="*insert*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*delete*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="*update*" propagation="REQUIRED" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 事务管理aop -->
+    <aop:config>
+    	<!-- 切点：包下的所有实现类 -->
+    	<aop:pointcut id="transactionPointCut" expression="execution(* com.zj.service.impl..*ServiceImpl.*(..))" />
+    	<!-- 通知 -->
+    	<aop:advisor advice-ref="transactionManagerAdvice" pointcut-ref="transactionPointCut"/>
+    </aop:config>
+	
+</beans>
