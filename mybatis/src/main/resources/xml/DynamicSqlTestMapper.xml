@@ -38,6 +38,8 @@
             <if test="authorName!=null">
                 and author_name=#{authorName}
             </if>
+            <!--if外的and也可以被mybatis移除-->
+            <!--and xxx=xxxx-->
         </where>
         limit 5;
     </select>
