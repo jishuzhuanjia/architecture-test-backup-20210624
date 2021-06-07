@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<!-- 包路径 -->
 	<groupId>com.zj.test</groupId>
-	<artifactId>spring2</artifactId>
+	<artifactId>ssm-test-old</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>spring2</name>
+	<name>ssm-test-old</name>
 	<description>spring,springmvc,mybatis etc. test</description>
 	
 	<!-- 以下一步一步演示ssm开发环境的搭建 -->
