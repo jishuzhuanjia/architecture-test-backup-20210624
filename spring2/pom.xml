@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<!-- 包路径 -->
 	<groupId>com.zj.test</groupId>
-	<artifactId>ssm-test</artifactId>
+	<artifactId>spring2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>ssm-test</name>
+	<name>spring2</name>
 	<description>spring,springmvc,mybatis etc. test</description>
 	
 	<!-- 以下一步一步演示ssm开发环境的搭建 -->
@@ -229,8 +229,14 @@
 			<artifactId>test-util</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>9.0.41</version>
+			<scope>compile</scope>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 
 	<build>
 		<resources>

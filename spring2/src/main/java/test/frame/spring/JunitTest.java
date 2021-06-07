@@ -33,8 +33,8 @@ public class JunitTest {
 		
 		TestPojo testPojo = applicationContext.getBean(TestPojo.class);
 		testPojo.testServiceImpl.test1();
-		testPojo.testServiceImpl2.test1();
-		testPojo.testServiceImpl3.test1();
+		/*testPojo.testServiceImpl2.test1();
+		testPojo.testServiceImpl3.test1();*/
 		//testPojo.testServiceImpl4.test1();
 		
 		// 会导致bean 销毁方法的调用。

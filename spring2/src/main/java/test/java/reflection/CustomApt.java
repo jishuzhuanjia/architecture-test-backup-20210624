@@ -8,14 +8,14 @@ import java.lang.reflect.Method;
 import org.junit.Test;
 
 /* *
- * @time£º2020Äê2ÔÂ12ÈÕ ÏÂÎç5:07:50
- * @Author£ºzhoujian
- * @QQ£º2025513
- * @description£º×Ô¶¨Òå×¢½â´¦ÀíÆ÷
+ * @timeï¼š2020å¹´2æœˆ12æ—¥ ä¸‹åˆ5:07:50
+ * @Authorï¼šzhoujian
+ * @QQï¼š2025513
+ * @descriptionï¼šè‡ªå®šä¹‰æ³¨è§£å¤„ç†å™¨
  */
 
 /**
- * Àı£ºÍ¨¹ı¶ÔÏóÊµÀı»ñÈ¡ÆäÀà¡¢·½·¨¡¢ÊôĞÔ¡¢²ÎÊı¡¢·½·¨¾Ö²¿±äÁ¿´¦µÄ×¢½â¡£
+ * ä¾‹ï¼šé€šè¿‡å¯¹è±¡å®ä¾‹è·å–å…¶ç±»ã€æ–¹æ³•ã€å±æ€§ã€å‚æ•°ã€æ–¹æ³•å±€éƒ¨å˜é‡å¤„çš„æ³¨è§£ã€‚
  * */
 public class CustomApt {
 	
@@ -23,22 +23,22 @@ public class CustomApt {
 		Student student = new Student();
 	
 		Class<? extends Student> cls = student.getClass();
-		// 1.»ñÈ¡ÀàÉÏµÄAlertMessage×¢½â
-		// Èç¹ûÃ»ÓĞ£¬·µ»Ønull
+		// 1.è·å–ç±»ä¸Šçš„AlertMessageæ³¨è§£
+		// å¦‚æœæ²¡æœ‰ï¼Œè¿”å›null
 		AlertMessage classAnnotation = (AlertMessage) cls.getAnnotation(AlertMessage.class);
 		if(classAnnotation != null) {
 			for (int i = 0; i < classAnnotation.alertCount(); i++) {
-				System.out.println("[´óÀ®°ÈÍ¨Öª ]: " + classAnnotation.value() );
+				System.out.println("[å¤§å–‡å­é€šçŸ¥ ]: " + classAnnotation.value() );
 			}
 		}
 		
-		// 2.»ñÈ¡publicÊôĞÔusernameÊôĞÔµÄ×¢½â
+		// 2.è·å–publicå±æ€§usernameå±æ€§çš„æ³¨è§£
 		try {
 			Field usernameField = cls.getDeclaredField("username");
 			AlertMessage fieldAnnotation = (AlertMessage) usernameField.getAnnotation(AlertMessage.class);
 			if(classAnnotation != null) {
 				for (int i = 0; i < fieldAnnotation.alertCount(); i++) {
-					System.out.println("[´óÀ®°ÈÍ¨Öª ]: " + fieldAnnotation.value() );
+					System.out.println("[å¤§å–‡å­é€šçŸ¥ ]: " + fieldAnnotation.value() );
 				}
 			}
 			
@@ -50,10 +50,10 @@ public class CustomApt {
 			e.printStackTrace();
 		}
 		
-		// 3.»ñÈ¡privateÊôĞÔint×¢½â
+		// 3.è·å–privateå±æ€§intæ³¨è§£
 		
 		try {
-			// getFieldÖ»ÄÜ»ñÈ¡publicÊôĞÔ
+			// getFieldåªèƒ½è·å–publicå±æ€§
 			Field ageField = cls.getField("age");
 			AlertMessage ageFieldAlertMessage = ageField.getAnnotation(AlertMessage.class);
 			for(int i=0;i<ageFieldAlertMessage.alertCount();i++) {
@@ -68,7 +68,7 @@ public class CustomApt {
 			e.printStackTrace();
 		}
 		
-		// 4.doHomeWork·½·¨×¢½â»ñÈ¡
+		// 4.doHomeWorkæ–¹æ³•æ³¨è§£è·å–
 		try {
 			Method method4 = cls.getMethod("doHomeWork");
 			System.out.println(method4.getAnnotation(AlertMessage.class).value());
@@ -80,10 +80,10 @@ public class CustomApt {
 			e.printStackTrace();
 		}
 		
-		// »ñÈ¡Ë½ÓĞ·½·¨
-		// getMethodÖ»ÄÜ»ñÈ¡¹²ÓĞ·½·¨
+		// è·å–ç§æœ‰æ–¹æ³•
+		// getMethodåªèƒ½è·å–å…±æœ‰æ–¹æ³•
 		try {
-			// getDeclaredMethod¿ÉÒÔ»ñÈ¡Ë½ÓĞ·½·¨
+			// getDeclaredMethodå¯ä»¥è·å–ç§æœ‰æ–¹æ³•
 			Method method4 = cls.getDeclaredMethod("getInternetCafe");
 			System.out.println(method4.getAnnotation(AlertMessage.class).value());
 		} catch (NoSuchMethodException e) {
@@ -95,7 +95,7 @@ public class CustomApt {
 		}
 		
 		try {
-			// getMethod¿ÉÒÔ»ñÈ¡¸¸ÀàÖĞµÄpublic·½·¨
+			// getMethodå¯ä»¥è·å–çˆ¶ç±»ä¸­çš„publicæ–¹æ³•
 			Method method4 = cls.getMethod("toString");
 			//System.out.println(method4.getAnnotation(AlertMessage.class).value());
 		} catch (NoSuchMethodException e) {
@@ -107,7 +107,7 @@ public class CustomApt {
 		}
 		
 		try {
-			// getMethod¿ÉÒÔ»ñÈ¡¸¸ÀàÖĞµÄpublic·½·¨
+			// getMethodå¯ä»¥è·å–çˆ¶ç±»ä¸­çš„publicæ–¹æ³•
 			Method method4 = cls.getMethod("toString");
 			//System.out.println(method4.getAnnotation(AlertMessage.class).value());
 		} catch (NoSuchMethodException e) {
@@ -119,8 +119,8 @@ public class CustomApt {
 		}
 		
 		/*try {
-			// getMethod¿ÉÒÔ»ñÈ¡¸¸ÀàÖĞµÄpublic·½·¨
-			// getDeclaredMethod - Ö»ÄÜ»ñÈ¡ÀàÖĞ¶¨ÒåµÄ·½·¨(°üÀ¨ÊµÏÖ½Ó¿ÚµÄ·½·¨)£¬¿ÉÒÔÊÇÈÎºÎĞŞÊÎ·û£¬²»ÄÜ»ñÈ¡¸¸ÀàÖĞµÄ·½·¨
+			// getMethodå¯ä»¥è·å–çˆ¶ç±»ä¸­çš„publicæ–¹æ³•
+			// getDeclaredMethod - åªèƒ½è·å–ç±»ä¸­å®šä¹‰çš„æ–¹æ³•(åŒ…æ‹¬å®ç°æ¥å£çš„æ–¹æ³•)ï¼Œå¯ä»¥æ˜¯ä»»ä½•ä¿®é¥°ç¬¦ï¼Œä¸èƒ½è·å–çˆ¶ç±»ä¸­çš„æ–¹æ³•
 			// java.lang.NoSuchMethodException: test.java.reflection.Student.toString()
 			Method method5 = cls.getDeclaredMethod("toString");
 			//System.out.println(method4.getAnnotation(AlertMessage.class).value());
@@ -144,38 +144,38 @@ interface HomeWork{
 	public void doHomeWork();
 }
 
-@AlertMessage(value="×÷ÎªÑ§Éú,Äã±ØĞëÒª×ñÊØĞ£¼Í£¡£¡£¡ÖØÒªµÄÊÂÇéÎÒËµÈı±é",alertCount=3)
+@AlertMessage(value="ä½œä¸ºå­¦ç”Ÿ,ä½ å¿…é¡»è¦éµå®ˆæ ¡çºªï¼ï¼ï¼é‡è¦çš„äº‹æƒ…æˆ‘è¯´ä¸‰é",alertCount=3)
 class Student implements HomeWork{
 	
-	@AlertMessage(value="¹Ú×´²¡¶¾Í¬Ñ§,ÎÒÒÑ¾­¾¯¸æÄãÈı´ÎÁË£¬ÎÒÒª¶ÔÄã½øĞĞÇ¿ÖÆ´ëÊ©~")
+	@AlertMessage(value="å† çŠ¶ç—…æ¯’åŒå­¦,æˆ‘å·²ç»è­¦å‘Šä½ ä¸‰æ¬¡äº†ï¼Œæˆ‘è¦å¯¹ä½ è¿›è¡Œå¼ºåˆ¶æªæ–½~")
 	private String username;
 	
-	@AlertMessage("3ËêµÄ¹Ú×´²¡¶¾")
+	@AlertMessage("3å²çš„å† çŠ¶ç—…æ¯’")
 	public String age;
 	
-	/** Ñ§ÉúÈ¥Íø°ÉµÄ·½·¨ */
-	@AlertMessage(value="×÷ÎªÑ§Éú,Äã±ØĞëÒª×ñÊØĞ£¼Í£¡£¡£¡",alertCount=3)
+	/** å­¦ç”Ÿå»ç½‘å§çš„æ–¹æ³• */
+	@AlertMessage(value="ä½œä¸ºå­¦ç”Ÿ,ä½ å¿…é¡»è¦éµå®ˆæ ¡çºªï¼ï¼ï¼",alertCount=3)
 	private void getInternetCafe() {
 		
-		@AlertMessage(value="ßÏ,10¿éÇ®Ò»Ğ¡Ê±?Õâ´Î¸øÄã·£¿î1000",alertCount=1)
+		@AlertMessage(value="å‘¦,10å—é’±ä¸€å°æ—¶?è¿™æ¬¡ç»™ä½ ç½šæ¬¾1000",alertCount=1)
 		int pay;
 		
 	}
 
-	@AlertMessage("×ö×÷Òµ")
+	@AlertMessage("åšä½œä¸š")
 	public void doHomeWork() {
 		// TODO Auto-generated method stub
 		
 	}
 }
 
-// ´Ë×¢½âÓÃÀ´ÔÚÊ¹ÓÃËüµÄµØ·½Ìá¹©¾¯¸æĞÅÏ¢
+// æ­¤æ³¨è§£ç”¨æ¥åœ¨ä½¿ç”¨å®ƒçš„åœ°æ–¹æä¾›è­¦å‘Šä¿¡æ¯
 @Retention(value=RetentionPolicy.RUNTIME)
 @interface AlertMessage{
-	// ¾¯¸æĞÅÏ¢
+	// è­¦å‘Šä¿¡æ¯
 	public String value();
 	
-	// ¾¯¸æ´ÎÊı,Ä¬ÈÏÒ»´Î
+	// è­¦å‘Šæ¬¡æ•°,é»˜è®¤ä¸€æ¬¡
 	public int alertCount() default 1;
 }
 

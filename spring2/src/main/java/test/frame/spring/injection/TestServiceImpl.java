@@ -91,8 +91,8 @@ public class TestServiceImpl implements TestService{
 		TestHelper.println("TestServiceImpl: 无参构造函数");
 	}*/
 
-	public TestServiceImpl(String s){
+	/*public TestServiceImpl(String s){
 		TestHelper.println("TestServiceImpl: 有参构造函数");
-	}
+	}*/
 	
 }
