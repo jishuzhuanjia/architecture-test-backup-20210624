@@ -1,4 +1,4 @@
-package com.zj.test.java.lang.string.regexp;
+package com.zj.test.java.lang.regexp;
 
 import com.zj.test.util.TestHelper;
 import org.junit.Test;

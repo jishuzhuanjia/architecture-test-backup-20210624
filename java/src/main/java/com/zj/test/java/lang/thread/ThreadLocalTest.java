@@ -1,6 +1,6 @@
 package com.zj.test.java.lang.thread;
 
-import com.zj.test.java.lang.LangTest;
+import com.zj.test.java.LangTest;
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
 

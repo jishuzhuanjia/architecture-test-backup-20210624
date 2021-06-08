@@ -1,4 +1,4 @@
-package com.zj.test.java.lang;
+package com.zj.test.java;
 
 /* @author: zhoujian
  * @qq: 2025513

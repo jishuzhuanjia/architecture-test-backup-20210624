@@ -1,4 +1,4 @@
-package com.zj.test.java.lang;
+package com.zj.test.java;
 
 import com.zj.test.util.TestHelper;
 import org.junit.Test;
