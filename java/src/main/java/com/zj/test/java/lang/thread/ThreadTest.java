@@ -2,6 +2,8 @@ package com.zj.test.java.lang.thread;
 
 
 import com.zj.test.util.TestHelper;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -221,7 +223,6 @@ public class ThreadTest {
             }
         }
     }
-
     @Test
     public void interruptTest() {
 
@@ -240,5 +241,35 @@ public class ThreadTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 6.public final String getName()
+     * public long getId()
+     *
+     * 【作用/描述】
+     * 获取线程对象的名字/id, 名字和id在线程构造后就被初始化了。
+     *
+     * 【出/入参记录】
+     * [main] - thread.getName(): Thread-0
+     * [main] - thread.getId(): 12
+     * [main] - thread.getName(): Thread-0
+     * [main] - thread.getId(): 12
+     *
+     * 【使用注意点】
+     *
+     */
+    @Test
+    public void apitest(){
+
+        Thread thread = new Thread(() -> {
+
+        });
+        TestHelper.println("thread.getName()",thread.getName());
+        TestHelper.println("thread.getId()",thread.getId());
+        thread.start();
+        TestHelper.println("thread.getName()",thread.getName());
+        TestHelper.println("thread.getId()",thread.getId());
+
     }
 }
