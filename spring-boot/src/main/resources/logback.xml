@@ -65,7 +65,7 @@
     </root>
     <!--比如我只想打印错误日志，可以将level设置为ERROR，这样只会打印错误的日志-->
     <!--注意：当同时配置root level和logging.level时，后者会覆盖前者的设置，会导致root level设置无效-->
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
 </configuration>

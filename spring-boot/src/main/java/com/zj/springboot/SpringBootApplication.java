@@ -9,8 +9,11 @@ package com.zj.springboot;
  * @finished-time:
  */
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import java.util.Arrays;
 
 // SpringBootApplication是一个组合注解,也可以使用下面的多个注解来达到相同的效果:
 /*
@@ -19,6 +22,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 @ComponentScan
 */
 @org.springframework.boot.autoconfigure.SpringBootApplication
+@Slf4j
 public class SpringBootApplication {
 
     public static void main(String[] args) {
