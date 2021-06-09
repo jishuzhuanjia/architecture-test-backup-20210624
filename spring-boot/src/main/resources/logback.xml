@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 格式化输出：
+    %date表示日期时间和%d等效，可格式化，
+    %thread表示线程名，
+    %-5level：对齐等级长度，级别从左显示5个字符宽度,会在右边补充空格，让打印字符串对其，如对于INFO和ERROR:
+    INFO  message
+    ERROR message
+    而%5level则是在左边补充空格。
+
+    %logger: logger示例名， 通常为类的全路径
+    %msg：日志消息，
+    %n是换行符
+    -->
+    <!--12:23:37.271 [main] TRACE c.z.s.test.lombok.LombokTest - trace message-->
+
+    <property name="LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %10level %logger{36} - %msg%n"/>
+    <!-- 定义日志存储的路径，不要配置相对路径 -->
+    <!--最终文件名类似：demo.2021-06-09.0.log-->
+    <property name="FILE_PATH" value="E:/logs/demo.%d{yyyy-MM-dd}.%i.log"/>
+
+    <!-- 控制台输出日志 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- 按照上面配置的LOG_PATTERN来打印日志 -->
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!--每天生成一个日志文件，保存15天的日志文件。rollingFile是用来切分文件的 -->
+    <appender name="FILE"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${FILE_PATH}</fileNamePattern>
+            <!-- keep 15 days' worth of history -->
+            <maxHistory>15</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- 日志文件的最大大小 -->
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- project default level -->
+    <!--经测试当root不指定level时，该默认日志等级不会作用到root-->
+    <logger name="src" level="ERROR"/>
+
+    <!-- 日志输出级别 常用的日志级别按照从高到低依次为：ERROR、WARN、INFO、DEBUG。 -->
+    <!--如果指定了logging.config,如果没有以下配置，不会打印记录任何日志-->
+    <!--单个root时，level: 如果不指定，会打印级别>=debug的日志-->
+
+    <!--多个root时，如果不指定，会使用其他root的日志级别
+    在这里虽然设置level，但是最终会使用level=error
+
+    因此：请为所有root元素设置level属性。
+    -->
+
+    <root>
+        <appender-ref ref="FILE"/>
+    </root>
+    <!--比如我只想打印错误日志，可以将level设置为ERROR，这样只会打印错误的日志-->
+    <!--注意：当同时配置root level和logging.level时，后者会覆盖前者的设置，会导致root level设置无效-->
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
