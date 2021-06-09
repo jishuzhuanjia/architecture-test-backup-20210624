@@ -260,7 +260,7 @@ public class ThreadTest {
      *
      */
     @Test
-    public void apitest(){
+    public void getNameAndGetId(){
 
         Thread thread = new Thread(() -> {
 
@@ -270,6 +270,5 @@ public class ThreadTest {
         thread.start();
         TestHelper.println("thread.getName()",thread.getName());
         TestHelper.println("thread.getId()",thread.getId());
-
     }
 }
