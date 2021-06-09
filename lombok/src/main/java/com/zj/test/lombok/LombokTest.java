@@ -4,13 +4,17 @@ import com.zj.test.util.TestHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
-/* @author: zhoujian
+/**
+ * @author: zhoujian
  * @qq: 2025513
  * @create-time: 2020/10/22 15:07
  * @description: Slf4j Logger测试
  * @version: 1.0
  * @finished: 1
  * @finished-time: 2020年10月22日 15:42:46
+ *
+ * Log4j日志级别：trace(留痕) < debug(debug使用) < info(打印关键信息) < warn(警告信息) < error(发生了错误)
+ *
  */
 // 该注解相当于
 // private static final Logger log = org.slf4j.LoggerFactory.getLogger(LombokTest.class)
@@ -114,6 +118,24 @@ public class LombokTest {
         log.trace("this is a message of level trace");
     }
 
+    /**
+     * 8.String  getName()
+     *
+     * 【作用/描述】
+     * 返回logger实例名，@Slf4j生成的logger实例名等于类的全路径。
+     *
+     * 【出/入参记录】
+     * [main] - log.getName(): com.zj.test.lombok.LombokTest
+     *
+     * 【使用注意点】
+     *
+     */
+    @Test
+    public void apitest(){
+        TestHelper.println("log.getName()",log.getName());
+
+    }
+
     /** ----------------------------------------- lombok注解测试 ---------------------------------------- */
     /**
      *
@@ -152,4 +174,5 @@ public class LombokTest {
         // true
         TestHelper.println("user.equals(user2)",user.equals(user2));
     }
+
 }
