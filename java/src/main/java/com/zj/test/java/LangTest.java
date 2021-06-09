@@ -66,35 +66,35 @@ public class LangTest {
      * ==比较结论和Integer相同
      */
     @Test
-    public void testLong(){
+    public void testLong() {
         Long long1 = 1L;
         Long long2 = 1L;
-        TestHelper.println("long1==long2",long1==long2);
+        TestHelper.println("long1==long2", long1 == long2);
 
         // 上临界值测试
         // 127
         Long long3 = 127L;
         Long long4 = 127L;
         //true
-        TestHelper.println("long3==long4",long3==long4);
+        TestHelper.println("long3==long4", long3 == long4);
 
         //128
         Long long5 = 128L;
         Long long6 = 128L;
         //false
-        TestHelper.println("long5==long6",long5==long6);
+        TestHelper.println("long5==long6", long5 == long6);
 
         //下临界测试
         // -128
         Long long7 = -128L;
         Long long8 = -128L;
         //true
-        TestHelper.println("long7==long8",long7==long8);
+        TestHelper.println("long7==long8", long7 == long8);
 
         Long long9 = -129L;
         Long long10 = -129L;
         // false
-        TestHelper.println("long9==long10",long9==long10);
+        TestHelper.println("long9==long10", long9 == long10);
 
     }
 
@@ -107,29 +107,29 @@ public class LangTest {
      * 除了boolean，基础类型之间可以相互比较==，不需要类型转换，
      */
     @Test
-    public void test(){
+    public void test() {
         // 1.==用来比较对象
         User user1 = new User();
-        user1.username="zhou jian";
+        user1.username = "zhou jian";
 
         User user2 = user1;
         // true
-        TestHelper.println("user1==user2",user1==user2);
+        TestHelper.println("user1==user2", user1 == user2);
 
         user2 = new User();
-        user2.username="zhou jian";
+        user2.username = "zhou jian";
         // false
-        TestHelper.println("user1==user2",user1==user2);
+        TestHelper.println("user1==user2", user1 == user2);
 
         // 2.==用来比较基础类型
-        int i1=3;
-        int i2=3;
+        int i1 = 3;
+        int i2 = 3;
         // true
-        TestHelper.println("i1==i2",i1==i2);
+        TestHelper.println("i1==i2", i1 == i2);
 
         short s1 = 3;
         // true
-        TestHelper.println("i1==s1",i1==s1);
+        TestHelper.println("i1==s1", i1 == s1);
 
         TestHelper.startTest("不同类型==");
 
@@ -142,11 +142,11 @@ public class LangTest {
         double d = 13;
         char c = 'a';
         boolean b = false;
-        TestHelper.println(l==s);
-        TestHelper.println(l==i);
-        TestHelper.println(s==d);
-        TestHelper.println(c==d);
-        TestHelper.println(c==l);
+        TestHelper.println(l == s);
+        TestHelper.println(l == i);
+        TestHelper.println(s == d);
+        TestHelper.println(c == d);
+        TestHelper.println(c == l);
         // Operator '==' cannot be applied to 'boolean', 'long'
         //TestHelper.println(b==l);
         // Operator '==' cannot be applied to 'boolean', 'short'
@@ -198,14 +198,14 @@ public class LangTest {
     }
 
     // 可克隆的类
-    public static class User implements Cloneable{
+    public static class User implements Cloneable {
         public String username;
         public String password;
         public int age;
 
         @Override
         public Object clone() throws CloneNotSupportedException {
-            if(!(this instanceof Cloneable)){
+            if (!(this instanceof Cloneable)) {
                 throw new CloneNotSupportedException("类必须实现Cloneable接口");
             }
 
@@ -377,7 +377,43 @@ public class LangTest {
      * 【缺点】
      */
     @Test
-    public void array_weidu(){
+    public void array_weidu() {
         int[][][][][][][] arr = new int[1][1][1][1][1][1][1];
+    }
+
+    /**
+     * <p>
+     *     7.测试:  前++，后++
+     * </p>
+     *
+     * 【出入参记录】
+     *
+     * 【结论】
+     *
+     * 【注意点】
+     *
+     */
+    @Test
+    public void plusPlusTest() {
+        int i = 1;
+        //后++，先使用变量的值，后再执行+1操作
+        TestHelper.println("i", i++);    //1
+        TestHelper.println("i", i);      //2
+
+        int j = 1;
+        // 前++,先对变量进行+1操作，再使用变量值
+        TestHelper.println("j", ++j);    //2
+        TestHelper.println("j", j);      //2
+
+        int k = 1;
+        TestHelper.println("(k++)+(++k)", (k++) + (++k));  //4
+
+        int l = 1;
+        l = l++;                          // 右表达式先对l赋值，后被左表达式赋值覆盖。
+        TestHelper.println("l", l);      //1
+
+        int m = 1;
+        m = ++m;
+        TestHelper.println("m", m);      //2
     }
 }
