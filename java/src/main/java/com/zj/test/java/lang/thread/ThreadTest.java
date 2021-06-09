@@ -152,11 +152,11 @@ public class ThreadTest {
      * 【缺点】
      */
     @Test
-    public void getId(){
-        for (int i = 0; i <5 ; i++) {
+    public void getId() {
+        for (int i = 0; i < 5; i++) {
             Thread aThread = createAThread();
             aThread.start();
-            TestHelper.println("thread is running, id: " + aThread.getId() +", name: " + aThread.getName());
+            TestHelper.println("thread is running, id: " + aThread.getId() + ", name: " + aThread.getName());
         }
 
         try {
@@ -184,8 +184,61 @@ public class ThreadTest {
      * 【缺点】
      */
     @Test
-    public void getPriority(){
+    public void getPriority() {
         Thread aThread = createAThread();
-        TestHelper.println("aThread.getPriority()",aThread.getPriority());
+        TestHelper.println("aThread.getPriority()", aThread.getPriority());
+    }
+
+    /**
+     * <p>
+     *     5.测试: thread.interrupt()对阻塞状态的影响
+     * </p>
+     *
+     * 【出入参记录】
+     * [Thread-0] - 线程进入休眠
+     * [Thread-0] - thread.isInterrupted(): false
+     * java.lang.InterruptedException: sleep interrupted
+     * 	at java.lang.Thread.sleep(Native Method)
+     * 	at com.zj.test.java.lang.thread.ThreadTest$Thread1.run(ThreadTest.java:209)
+     *
+     * 【结论】
+     * 会打断阻塞状态，并且立即清除打断标记。
+     *
+     * 【注意点】
+     *
+     */
+    class Thread1 extends Thread implements Runnable {
+        @Override
+        public void run() {
+            try {
+                TestHelper.println("线程进入休眠");
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                // 如果线程休眠过程被打断，进入catch语句之前，打断标记已经被清除。
+                // [Thread-0] - thread.isInterrupted(): false
+                TestHelper.println("thread.isInterrupted()", isInterrupted());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Test
+    public void interruptTest() {
+
+        Thread1 thread1 = new Thread1();
+        thread1.start();
+
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        thread1.interrupt();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
