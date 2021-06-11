@@ -95,6 +95,13 @@ public class ObjectsTest {
      */
     @Test
     public void requireNonNull3() {
+        Objects.requireNonNull(null, ()->{
+            return "can not be null";
+
+        });
+        // 不会执行到
+        TestHelper.println("code after requireNonNull");
+
     }
 
     /**
@@ -115,8 +122,7 @@ public class ObjectsTest {
     /**
      * 4. boolean isNull(@Nullable Object obj)
      *
-     * <p>
-     * 返回obj对象是否为null
+     * 判断对象是否为null
      */
     @Test
     public void isNull() {
@@ -127,8 +133,7 @@ public class ObjectsTest {
     /**
      * 5.boolean nonNull(@Nullable Object obj)
      *
-     * <p>
-     * 非null返回true，与isNull相反
+     * 判断对象是否非空
      */
     @Test
     public void nonNull() {
@@ -151,8 +156,7 @@ public class ObjectsTest {
     @Test
     public void testToString() {
         // 相当于String.valueOf("Hello World")
-        TestHelper.println(Objects.toString("Hello World"));
-
+        TestHelper.println(Objects.toString("Hello World"),Objects.toString("Hello World"));
 
         TestHelper.println("toString(\"Hello World\",\"is null\")"
                 , Objects.toString("Hello World", "is null"));
@@ -162,6 +166,8 @@ public class ObjectsTest {
 
         TestHelper.println("toString(null,null)"
                 , Objects.toString(null, null));
+
+        TestHelper.println("Objects.toString(null)",Objects.toString(null));
     }
 
     /***
