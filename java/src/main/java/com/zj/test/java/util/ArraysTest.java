@@ -127,7 +127,7 @@ public class ArraysTest {
 
     /**
      * 4.public static boolean equals(@Nullable T[] a,@Nullable T[] a2)
-     * 比较两个同类型的简单类型数组是否相等, 相等的条件是长度和元素值都相等。
+     * 比较两个数组是否相等, 相等的条件是长度和元素值都相等。
      */
     @Test
     public void equals() {
