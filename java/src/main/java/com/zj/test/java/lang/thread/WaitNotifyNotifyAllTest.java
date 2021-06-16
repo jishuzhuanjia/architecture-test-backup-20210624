@@ -1,6 +1,7 @@
 package com.zj.test.java.lang.thread;
 
 import com.zj.test.util.TestHelper;
+import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -160,8 +161,36 @@ class TicketPool implements Runnable {
 
 public class WaitNotifyNotifyAllTest {
 
-    public static void main(String[] args) {
-        TestHelper.startTest("wait,notify,notifyAll测试");
+    private Object waitWith1ParamTestLock = new Object();
+
+    /**
+     * wait(long) api测试
+     */
+    private void waitWith1ParamTest() {
+
+        TestHelper.println("尝试获取锁");
+        synchronized (waitWith1ParamTestLock) {
+            TestHelper.println("得到了锁");
+
+            TestHelper.println("wait start: " + System.currentTimeMillis());
+            try {
+                waitWith1ParamTestLock.wait(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            TestHelper.println("wait end: " + System.currentTimeMillis());
+            TestHelper.println("code after wait");
+
+        }
+        TestHelper.println("code after synchronized");
+    }
+
+    /**
+     * 1.wait,notify,notifyAll测试————售票机demo
+     */
+    @Test
+    public void test1() {
+        TestHelper.startTest("wait,notify,notifyAll测试————售票机demo");
 
         // 售票机线程
         Runnable runnable = new TicketPool();
@@ -172,5 +201,129 @@ public class WaitNotifyNotifyAllTest {
         thread1.start();
         thread2.start();
         thread3.start();
+    }
+
+    /**
+     * 2.public final void wait(long timeout)
+     *
+     * 【作用/描述】
+     * 使线程放弃锁，并进入等待，除非其他线程调用了notify或notifyAll,或者等到超时时间。
+     *
+     * 这里的timeout指的是本线程最少阻塞时间，当阻塞的时长达到timeout后，如果锁空闲，本线程会被唤醒，但是如果其他线程
+     * 占用了锁，则会一直等待。
+     *
+     * 经测试，notifyAll可以提前结束wait(long)状态，但是不会抛出InterruptedException。
+     *
+     * 【出/入参记录】
+     * -- 测试1
+     * [Thread-1] - 尝试获取锁
+     * [Thread-1] - 得到了锁
+     * [Thread-0] - 尝试获取锁
+     * [Thread-1] - wait start: 1623828116408
+     * [Thread-0] - 得到了锁
+     * [Thread-0] - wait start: 1623828116408
+     * [Thread-0] - wait end: 1623828121410
+     * [Thread-0] - code after wait
+     * [Thread-0] - code after synchronized
+     * [Thread-1] - wait end: 1623828121410
+     * [Thread-1] - code after wait
+     * [Thread-1] - code after synchronized
+     *
+     * --测试2
+     * [Thread-0] - 尝试获取锁
+     * [Thread-0] - 得到了锁
+     * [Thread-0] - wait start: 1623829045071
+     * [Thread-1] - 占用了锁
+     * [Thread-1] - 放弃了锁
+     * [Thread-0] - wait end: 1623829065178
+     * [Thread-0] - code after wait
+     * [Thread-0] - code after synchronized
+     *
+     * --测试3
+     * [Thread-0] - 尝试获取锁
+     * [Thread-0] - 得到了锁
+     * [Thread-0] - wait start: 1623829537111
+     * [Thread-1] - 获取了锁
+     * [Thread-1] - 调用notyfyAll
+     * [Thread-0] - wait end: 1623829537213
+     * [Thread-0] - code after wait
+     * [Thread-0] - code after synchronized
+     *
+     * 【使用注意点】
+     *
+     */
+    @Test
+    public void waitWith1Param() {
+        //测试1
+        /*for (int i = 0; i <2 ; i++) {
+            new Thread(() -> {
+                waitWith1ParamTest();
+            }).start();
+        }
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        // 测试2：如果其他线程不放弃锁，wait(long)能否返回?
+        // 结论：不会
+        // 开启一个线程
+        /*new Thread(() -> {
+            waitWith1ParamTest();
+        }).start();
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //开启一个线程占用锁并不释放
+        new Thread(() -> {
+            synchronized (waitWith1ParamTestLock){
+                TestHelper.println("占用了锁");
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            TestHelper.println("放弃了锁");
+        }).start();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        //测试3.notifyAll能否强制打断wait(long)?
+        //测试结果：会，但是wait(long)不会抛出InterruptedException异常
+
+        new Thread(() -> {
+            waitWith1ParamTest();
+        }).start();
+
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        new Thread(() -> {
+            synchronized (waitWith1ParamTestLock) {
+                TestHelper.println("获取了锁");
+                TestHelper.println("调用notyfyAll");
+                waitWith1ParamTestLock.notifyAll();
+            }
+        }).start();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
