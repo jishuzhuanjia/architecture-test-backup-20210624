@@ -1,9 +1,11 @@
-package com.zj.test.elastic_search.util;
+package com.zj.test.elastic_search.test;
 
+import com.zj.test.elastic_search.util.ElasticsearchUtil;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.index.query.NestedQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.join.query.HasChildQueryBuilder;
 import org.elasticsearch.join.query.HasParentQueryBuilder;
@@ -214,5 +216,6 @@ public class JoinTypeTest {
         searchRequestBuilder.setQuery(hasParentQueryBuilder);
 
         SearchResponse searchResponse = searchRequestBuilder.execute().actionGet();
+
     }
 }

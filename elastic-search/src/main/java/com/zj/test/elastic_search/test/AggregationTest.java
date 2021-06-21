@@ -1,6 +1,7 @@
-package com.zj.test.elastic_search.util;
+package com.zj.test.elastic_search.test;
 
 import com.zj.test.elastic_search.EsApplication;
+import com.zj.test.elastic_search.util.ElasticsearchUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -30,7 +31,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class AggregationTest {
 
-    @Autowired ElasticsearchUtil elasticsearchUtil;
+    @Autowired
+    ElasticsearchUtil elasticsearchUtil;
 
     /**
      * <p>
