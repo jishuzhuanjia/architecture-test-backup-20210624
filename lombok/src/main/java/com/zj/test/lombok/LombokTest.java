@@ -131,7 +131,7 @@ public class LombokTest {
      *
      */
     @Test
-    public void apitest(){
+    public void getName(){
         TestHelper.println("log.getName()",log.getName());
 
     }
