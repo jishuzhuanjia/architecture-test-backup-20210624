@@ -147,6 +147,11 @@ public class ThreadTest {
      * 【作用】
      *
      * 【测试结果】
+     * [main] - thread is running, id: 12, name: Thread-0
+     * [main] - thread is running, id: 13, name: Thread-1
+     * [main] - thread is running, id: 14, name: Thread-2
+     * [main] - thread is running, id: 15, name: Thread-3
+     * [main] - thread is running, id: 16, name: Thread-4
      *
      * 【结论】
      *
@@ -158,6 +163,11 @@ public class ThreadTest {
         for (int i = 0; i < 5; i++) {
             Thread aThread = createAThread();
             aThread.start();
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             TestHelper.println("thread is running, id: " + aThread.getId() + ", name: " + aThread.getName());
         }
 
