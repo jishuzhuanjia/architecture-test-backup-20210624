@@ -76,11 +76,16 @@ public class StampedLockTest {
             e.printStackTrace();
         }
         stampedLock.unlockWrite(stamp);
+        TestHelper.println("写完成");
 
     }
 
     /**
-     * 乐观读
+     * 乐观读模式
+     *
+     * 乐观模式原理：
+     * 如果乐观读期间没有发生其他线程的写操作，则使用乐观读，否则使用普通读。
+     *
      */
     private static void optimisticRead() {
         long stamp = stampedLock.tryOptimisticRead();
@@ -162,24 +167,25 @@ public class StampedLockTest {
      */
     @Test
     public void optimisticReadTest() {
-        // 测试1：乐观读，中间没有读操作
+        /* ----------------------------------------- 测试1：乐观读，中间没有读操作 ---------------------------------------- */
         /*new Thread(() -> {
             optimisticRead();
         }).start();*/
 
-        // 测试2: 乐观读，中间加入写操作
+        /* ----------------------------------------- 测试2: 乐观读，中间加入写操作 ---------------------------------------- */
         /*
         测试输出：
         [Thread-0] - code after tryOptimisticRead
         [Thread-1] - 正在写...
         [Thread-0] - wait write lock to release
+        [Thread-1] - 写完成
         [Thread-0] - 普通读
 
         结论：
         1.在调用stampedLock.tryOptimisticRead后，如果有线程调用了stampedLock.writeLock,则stampedLock.validate(stamp)将为false，
         可能存在数据不同步问题，需要调用在调用stampedLock.readLock获取普通读锁。
          */
-        new Thread(() -> {
+       /* new Thread(() -> {
             optimisticRead();
         }).start();
 
@@ -194,9 +200,15 @@ public class StampedLockTest {
             write();
         }).start();
 
-        // 测试3：读操作是否会影响乐观读？
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        /* ----------------------------------------- 测试3：读操作是否会影响乐观读？ ---------------------------------------- */
         // 结论：不会
-        /*new Thread(() -> {
+        new Thread(() -> {
             optimisticRead();
         }).start();
 
@@ -205,7 +217,7 @@ public class StampedLockTest {
             Thread.sleep(10);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
 
         new Thread(() -> {
             read();
@@ -222,6 +234,12 @@ public class StampedLockTest {
      * <p>
      *     3.测试: StampedLock读读是否共享测试
      * </p>
+     *
+     * 【出入参记录】
+     * [Thread-1] - 正在读...
+     * [Thread-0] - 正在读...
+     * [Thread-0] - 读完成
+     * [Thread-1] - 读完成
      *
      * 【结论】
      * 是共享的。
@@ -305,8 +323,17 @@ public class StampedLockTest {
      */
     @Test
     public void test5() {
-        // 测试1：乐观读过程中是否可写
-        // 结论：可以
+        /* ----------------------------------------- 测试1：乐观读过程中是否可写 ---------------------------------------- */
+        /*
+        出参：
+        [Thread-0] - code after tryOptimisticRead
+        [Thread-1] - 正在写...
+        [Thread-0] - wait write lock to release
+        [Thread-1] - 写完成
+        [Thread-0] - 普通读
+
+        结论：可以，乐观读过程中如果有其他线程进行了写操作，乐观读就会成为普通读，会等待其他线程释放写锁。
+        */
         /*new Thread(() -> {
             optimisticRead();
         }).start();
@@ -319,24 +346,31 @@ public class StampedLockTest {
 
         new Thread(() -> {
             write();
-        }).start();*/
+        }).start();
 
-        //测试2：写的过程能否乐观读
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+
+        /* ----------------------------------------- 测试2：写的过程能否乐观读 ---------------------------------------- */
         /*
         结论：可以
         如果写的过程进行读乐观读操作，读操作在执行到stampedLock.validate(stamp)时，由于有线程正在写，因此validate的结果为false,
-        此时为了获取更新的数据，应该通过获取读锁来等待写操作完成，否则可能导致数据不同步。
+        此时为了获取更新的数据，应该通过获取读锁来等待写操作完成(此时乐观读就变成了普通读)，否则可能导致数据不同步。
          */
         new Thread(() -> {
             write();
         }).start();
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(20);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        // 执行此测试时，将optimisticRead方法中休眠5秒的代码注释掉
         new Thread(() -> {
             optimisticRead();
         }).start();
