@@ -198,4 +198,36 @@ public class CollectionsTest {
         TestHelper.println("userList", userList);
     }
 
+    /**
+     * 8.boolean addAll(Collection<? super T> c, T... elements)
+     *
+     * 【作用/描述】
+     * 将elements中的元素都添加到c中
+     *
+     * 【出/入参记录】
+     *
+     * 【使用注意点】
+     * 参数2是数组，要先将集合转换成数组
+     */
+    @Test
+    public void addAll() {
+        TestHelper.startTest("addAll(Collection<? super T> c, T... elements)");
+        List<User> userList = new ArrayList<>();
+        userList.add(new User("username1", "123456", 11));
+
+        List<User> userList2 = new ArrayList<User>();
+        userList2.add(new User("username2", "123456", 11));
+        userList2.add(new User("username3", "123456", 11));
+        userList2.add(new User("username4", "123456", 11));
+
+        TestHelper.println("userList", userList);
+        TestHelper.println("userList2", userList2);
+
+        TestHelper.startTest("将userList2元素添加到userList");
+
+        // toArray(@NotNull T[] a) - 如果a指定的数组长度不足以容纳集合所有的元素，会重新分配，因此这里可以创建长度为0的数组
+        Collections.addAll(userList, userList2.toArray(new User[0]));
+
+        TestHelper.println("合并后的userList", userList);
+    }
 }
