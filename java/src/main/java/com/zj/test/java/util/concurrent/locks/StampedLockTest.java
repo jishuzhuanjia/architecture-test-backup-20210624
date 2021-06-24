@@ -1,6 +1,8 @@
 package com.zj.test.java.util.concurrent.locks;
 
 import com.zj.test.util.TestHelper;
+import lombok.Getter;
+import lombok.Setter;
 import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
@@ -25,12 +27,11 @@ import java.util.concurrent.locks.StampedLock;
  * 写线程饥饿：ReentrantReadWriteLock在大多数的场景下，读操作是大量的，写操作是少量的，当有大量读操作时，可能导致写线程一直阻塞，导致饥饿，就算使用公平锁
  * 也不能解决。
  *
- * 1.StampedLock的特点
- * 在支持可重入读写锁的基础上，增加了乐观读锁，乐观读锁可以和写操作同时进行，不管是写操作在前还是乐观读在前，都不会阻塞，但是可能会导致
- * 数据同步问题，StampedLock也增加了验证数据是否同步的validate方法。
+ * 2.StampedLock与可重入读写锁
+ * 在支持可重入读写锁的基础上，增加了乐观读锁模式，该模式下，线程在进行读操作时，其他线程仍然可以写。
  *
+ * 3.StampedLock特点
  * StampedLock的主要特点概括一下，有以下几点：
- *
  * 1.所有获取锁的方法，都返回一个邮戳（Stamp），Stamp为0表示获取失败，其余都表示成功；
  * 2.所有释放锁的方法，都需要一个邮戳（Stamp），这个Stamp必须是和成功获取锁时得到的Stamp一致；
  * 3.StampedLock是不可重入的；无论是读内写，还是写内读，内部永远无法获取到锁。（如如果一个线程已经持有了写锁，再去获取写锁的话就会造成死锁）
@@ -43,7 +44,8 @@ import java.util.concurrent.locks.StampedLock;
  * StampedLock提供了读锁和写锁相互转换的功能，使得该类支持更多的应用场景。
  * 6.无论写锁还是读锁，都不支持Conditon等待
  * 我们知道，在ReentrantReadWriteLock中，当读锁被使用时，如果有线程尝试获取写锁，该写线程会阻塞。
- * 但是，在Optimistic reading中，即使读线程获取到了读锁，写线程尝试获取写锁也不会阻塞，这相当于对读模式的优化，但是可能会导致数据不一致的问题。所以，当使用Optimistic reading获取到读锁时，必须对获取结果进行校验。
+ * 但是，在Optimistic reading中，即使读线程获取到了读锁，写线程尝试获取写锁也不会阻塞，这相当于对读模式的优化，但是可能会导致数据不一致的问题。
+ * 所以，当使用Optimistic reading获取到读锁时，必须对获取结果进行校验。
  */
 public class StampedLockTest {
 
@@ -83,9 +85,12 @@ public class StampedLockTest {
     /**
      * 乐观读模式
      *
-     * 乐观模式原理：
-     * 如果乐观读期间没有发生其他线程的写操作，则使用乐观读，否则使用普通读。
+     * 【乐观模式原理】
+     * 乐观读不会占用锁，因此”写线程“可以轻易的获得写锁并进行写操作，解决了”写解饿“问题。
      *
+     * 【乐观读具体操作】
+     * 正确的乐观读操作是：尝试乐观读(tryOptimisticRead)后通过validate验证是否有写线程正在写，
+     * 如果没有，则使用乐观读，否则使用普通读。
      */
     private static void optimisticRead() {
         long stamp = stampedLock.tryOptimisticRead();
@@ -314,11 +319,9 @@ public class StampedLockTest {
 
     /**
      * <p>
-     *     5.测试: 乐观读可以和写操作不会阻塞
+     *     5.测试: 乐观读和写操作相互影响测试
      * </p>
      *
-     * 【结论】
-     * 不管哪个操作在前，都不会影响另外的操作
      *
      */
     @Test
@@ -392,7 +395,7 @@ public class StampedLockTest {
      *
      */
     @Test
-    public void test6(){
+    public void test6() {
         // 1.读内写
         /*StampedLock stampedLock = new StampedLock();
 
@@ -419,8 +422,195 @@ public class StampedLockTest {
 
 
     }
-}
 
+
+    /* ----------------------------------------- test7 ---------------------------------------- */
+    static String s_test7 = "old_string";
+
+    /**
+     * test7
+     */
+    private static void optimisticRead_test7() {
+        long stamp = stampedLock.tryOptimisticRead();
+        TestHelper.println("code after tryOptimisticRead");
+
+        // validate：如果期间没有发生写操作，返回true
+        if (!stampedLock.validate(stamp)) {
+            TestHelper.println("wait write lock to release");
+            stamp = stampedLock.readLock();
+            TestHelper.println("普通读");
+            stampedLock.unlockRead(stamp);
+        } else {
+            TestHelper.println("乐观读正在读取数据");
+
+            //模拟期间发生写操作
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            TestHelper.println("乐观读读取到数据：" + s_test7);
+        }
+
+    }
+
+    /**
+     * test7
+     */
+    private static void write_test7() {
+        long stamp = stampedLock.writeLock();
+        TestHelper.println("正在写...");
+        s_test7 = System.currentTimeMillis() + "";
+        stampedLock.unlockWrite(stamp);
+        TestHelper.println("写完成");
+
+    }
+
+    /**
+     * <p>
+     *     7.测试: 乐观读是否存在线程安全问题？
+     * </p>
+     *
+     * 【出入参记录】
+     * [Thread-0] - code after tryOptimisticRead
+     * [Thread-0] - 乐观读正在读取数据
+     * [main] - 正在写...
+     * [main] - 写完成
+     * [Thread-0] - 乐观读读取到数据：1624522862253
+     *
+     * 可以看到当stampedLock.validate(stamp)为true时，在乐观读的过程中，数据被其他线程更改了。
+     *
+     * 【结论】
+     * stampedLock.validate(stamp)为true，乐观读的过程中，数据可能被其他线程更改，
+     * 因此需要在此代码块中判断数据是否被修改。
+     *
+     * 【注意点】
+     *
+     */
+    @Test
+    public void test7() {
+
+        //
+        new Thread(() -> {
+            optimisticRead_test7();
+        }).start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        write_test7();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /* ----------------------------------------- test8 ---------------------------------------- */
+    @Setter
+    @Getter
+    static class SafeString {
+        String s_test8 = "old_string";
+        int version = 0;
+    }
+
+    static SafeString safeString_test8 = new SafeString();
+
+    /**
+     * test8
+     */
+    private static void optimisticRead_test8() {
+        long stamp = stampedLock.tryOptimisticRead();
+        TestHelper.println("code after tryOptimisticRead");
+
+
+        int oldVersion = safeString_test8.getVersion();
+        TestHelper.println("安全读正在读取数据版本: " + oldVersion);
+
+        // validate：如果期间没有发生写操作，返回true
+        if (!stampedLock.validate(stamp)) {
+            TestHelper.println("wait write lock to release");
+            stamp = stampedLock.readLock();
+            TestHelper.println("普通读");
+            stampedLock.unlockRead(stamp);
+        } else {
+            TestHelper.println("乐观读正在读取数据");
+
+            //模拟期间发生写操作
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            int newVersion = safeString_test8.getVersion();
+            if (oldVersion != newVersion)
+                TestHelper.println("数据已经被修改，读取放弃");
+            else {
+                TestHelper.println("乐观读读取数据", safeString_test8.getS_test8());
+            }
+        }
+
+    }
+
+    /**
+     * test8
+     */
+    private static void write_test8() {
+        long stamp = stampedLock.writeLock();
+        TestHelper.println("正在写...");
+        safeString_test8.setS_test8(System.currentTimeMillis() + "");
+        safeString_test8.setVersion(safeString_test8.getVersion() + 1);
+        stampedLock.unlockWrite(stamp);
+        TestHelper.println("写完成");
+    }
+
+    /**
+     * <p>
+     *     8.测试: 乐观读数据安全实现(解决test7问题)。
+     * </p>
+     *
+     * 【出入参记录】
+     * [Thread-0] - code after tryOptimisticRead
+     * [Thread-0] - 安全读正在读取数据版本: 0
+     * [Thread-0] - 乐观读正在读取数据
+     * [main] - 正在写...
+     * [main] - 写完成
+     * [Thread-0] - 数据已经被修改，读取放弃
+     *
+     * 【结论】
+     *
+     * 【注意点】
+     *
+     */
+    @Test
+    public void test8() {
+        //
+        new Thread(() -> {
+            optimisticRead_test8();
+        }).start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        write_test8();
+
+        try {
+            new CountDownLatch(1).await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
 // 官方demo
 // 注：在官方基础上，有所补充
